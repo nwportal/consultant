@@ -647,6 +647,238 @@
     .admin-table th, .admin-table td { padding: 8px 6px; }
   }
 
+  /* Mock Exam */
+  .mock-hero {
+    background: linear-gradient(135deg, var(--danger) 0%, #991B1B 100%);
+    color: white; border-radius: 12px; padding: 24px; margin-bottom: 16px;
+  }
+  .mock-hero h2 { margin: 0 0 6px 0; font-size: 22px; }
+  .mock-hero p { margin: 0; opacity: 0.9; font-size: 14px; }
+  .mock-config-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; margin-bottom: 14px;
+  }
+  .mock-config-card h3 { color: var(--primary); margin: 0 0 14px 0; font-size: 16px; }
+  .mock-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+  .mock-opt {
+    background: white; border: 2px solid var(--border); border-radius: 10px;
+    padding: 14px; text-align: center; cursor: pointer; transition: all 0.15s;
+    font-weight: 600;
+  }
+  .mock-opt:hover { border-color: var(--primary); }
+  .mock-opt.active { border-color: var(--primary); background: var(--blue-bg); }
+  .mock-opt .big { font-size: 22px; color: var(--primary); margin-bottom: 4px; }
+  .mock-opt .sub { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+
+  /* Active exam UI */
+  .exam-header {
+    position: sticky; top: 48px; z-index: 5;
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px 18px; margin-bottom: 14px; display: flex; gap: 14px; align-items: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05); flex-wrap: wrap;
+  }
+  .exam-timer {
+    font-family: 'SF Mono', Monaco, monospace; font-size: 22px; font-weight: 700;
+    color: var(--primary); background: var(--blue-bg);
+    padding: 6px 14px; border-radius: 8px; min-width: 110px; text-align: center;
+  }
+  .exam-timer.warn { background: var(--yellow-bg); color: var(--warning); }
+  .exam-timer.danger { background: var(--red-bg); color: var(--danger); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.7;} }
+  .exam-progress { flex: 1; min-width: 180px; }
+  .exam-progress .progress-bar { height: 8px; }
+  .exam-progress .label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+  .exam-submit-btn {
+    background: var(--danger); color: white; border: none; padding: 10px 18px;
+    border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 13px;
+  }
+  .exam-submit-btn:hover { background: #991B1B; }
+
+  .exam-question-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(34px, 1fr));
+    gap: 6px; padding: 14px; background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; margin-bottom: 14px;
+  }
+  .exam-q-dot {
+    width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--border);
+    background: white; cursor: pointer; font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; color: var(--text);
+    transition: all 0.15s;
+  }
+  .exam-q-dot:hover { border-color: var(--primary); }
+  .exam-q-dot.answered { background: var(--primary); color: white; border-color: var(--primary); }
+  .exam-q-dot.flagged { border-color: var(--warning); border-width: 3px; }
+  .exam-q-dot.current { transform: scale(1.15); box-shadow: 0 0 0 3px var(--blue-bg); }
+
+  .exam-result-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 24px; margin-bottom: 16px;
+  }
+
+  /* SRS Review */
+  .srs-hero {
+    background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+    color: white; border-radius: 12px; padding: 24px; margin-bottom: 16px;
+  }
+  .srs-hero h2 { margin: 0 0 6px 0; font-size: 22px; }
+  .srs-hero p { margin: 0; opacity: 0.9; font-size: 14px; }
+  .srs-stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px; margin-top: 14px;
+  }
+  .srs-stat {
+    background: rgba(255,255,255,0.15); padding: 10px 14px; border-radius: 8px;
+    text-align: center;
+  }
+  .srs-stat .n { font-size: 26px; font-weight: 700; }
+  .srs-stat .l { font-size: 11px; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.5px; }
+  .srs-rate-bar {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+    margin-top: 14px;
+  }
+  .srs-rate-btn {
+    padding: 12px 6px; border: 2px solid var(--border); background: white;
+    border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 13px;
+    transition: all 0.15s; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  }
+  .srs-rate-btn:hover { transform: translateY(-1px); }
+  .srs-rate-btn.again { color: var(--danger); border-color: #FECACA; }
+  .srs-rate-btn.again:hover { background: var(--red-bg); }
+  .srs-rate-btn.hard { color: var(--warning); border-color: #FDE68A; }
+  .srs-rate-btn.hard:hover { background: var(--yellow-bg); }
+  .srs-rate-btn.good { color: var(--green); border-color: #BBF7D0; }
+  .srs-rate-btn.good:hover { background: var(--green-bg); }
+  .srs-rate-btn.easy { color: #7C3AED; border-color: #DDD6FE; }
+  .srs-rate-btn.easy:hover { background: #EDE9FE; }
+  .srs-rate-btn .sub { font-size: 10px; opacity: 0.7; font-weight: 500; }
+
+  .srs-empty {
+    text-align: center; padding: 40px 20px; background: var(--card);
+    border: 1px solid var(--border); border-radius: 12px; color: var(--text-muted);
+  }
+  .srs-empty .icon { font-size: 48px; margin-bottom: 8px; }
+
+  /* Confidence rating */
+  .confidence-bar {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    padding: 10px 12px; background: #F9FAFB; border: 1px dashed var(--border);
+    border-radius: 8px; margin-bottom: 12px; font-size: 13px;
+  }
+  .confidence-bar.locked { opacity: 0.65; pointer-events: none; }
+  .confidence-bar .cf-label { color: var(--text-muted); font-weight: 600; }
+  .confidence-btn {
+    padding: 6px 12px; border: 1.5px solid var(--border); background: white;
+    border-radius: 16px; cursor: pointer; font-size: 12px; font-weight: 600;
+    color: var(--text); transition: all 0.15s;
+  }
+  .confidence-btn:hover { border-color: var(--primary); background: #F3F4F6; }
+  .confidence-btn.active.sure { background: var(--green); color: white; border-color: var(--green); }
+  .confidence-btn.active.doubt { background: var(--warning); color: white; border-color: var(--warning); }
+  .confidence-btn.active.guess { background: var(--danger); color: white; border-color: var(--danger); }
+  .confidence-pill {
+    display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px;
+    font-weight: 700; margin-left: 6px;
+  }
+  .confidence-pill.sure { background: var(--green-bg); color: var(--green); }
+  .confidence-pill.doubt { background: var(--yellow-bg); color: var(--warning); }
+  .confidence-pill.guess { background: var(--red-bg); color: var(--danger); }
+  .options.pre-confidence { opacity: 0.45; pointer-events: none; }
+  .options.pre-confidence .option { cursor: not-allowed; }
+
+  /* Personal notes per question */
+  .notes-section {
+    margin-top: 16px; padding: 12px 14px; background: #FFFBEB;
+    border-left: 4px solid var(--warning); border-radius: 6px;
+  }
+  .notes-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 8px;
+  }
+  .notes-title {
+    font-size: 13px; font-weight: 700; color: var(--warning);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .notes-save-status { font-size: 11px; color: var(--text-muted); }
+  .notes-textarea {
+    width: 100%; min-height: 60px; max-height: 240px; padding: 8px 10px;
+    border: 1px solid #FCD34D; border-radius: 6px; background: white;
+    font-family: inherit; font-size: 13px; resize: vertical; outline: none;
+    color: var(--text); line-height: 1.5;
+  }
+  .notes-textarea:focus { border-color: var(--warning); box-shadow: 0 0 0 2px rgba(180,83,9,0.1); }
+
+  /* Global Search */
+  .search-trigger {
+    position: absolute; top: 16px; left: 16px;
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+    color: white; padding: 8px 14px; border-radius: 20px; cursor: pointer;
+    font-size: 13px; display: flex; align-items: center; gap: 6px;
+    transition: all 0.15s;
+  }
+  .search-trigger:hover { background: rgba(255,255,255,0.25); }
+  .search-trigger .kbd {
+    background: rgba(0,0,0,0.2); padding: 1px 6px; border-radius: 4px;
+    font-size: 11px; margin-left: 4px;
+  }
+  .search-modal {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    display: none; align-items: flex-start; justify-content: center; z-index: 999;
+    padding: 60px 20px 20px;
+  }
+  .search-modal.show { display: flex; }
+  .search-box {
+    background: white; border-radius: 12px; width: 100%; max-width: 680px;
+    max-height: 70vh; display: flex; flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  }
+  .search-input-wrap {
+    padding: 14px 16px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .search-input-wrap input {
+    flex: 1; border: none; outline: none; font-size: 16px; padding: 4px;
+    font-family: inherit;
+  }
+  .search-input-wrap .search-close {
+    background: #F3F4F6; border: none; padding: 4px 10px; border-radius: 6px;
+    cursor: pointer; font-size: 12px; color: var(--text-muted);
+  }
+  .search-results {
+    flex: 1; overflow-y: auto; padding: 8px;
+  }
+  .search-result {
+    padding: 10px 12px; border-radius: 8px; cursor: pointer;
+    border-bottom: 1px solid #F3F4F6;
+  }
+  .search-result:hover { background: var(--blue-bg); }
+  .search-result .sr-type {
+    display: inline-block; background: var(--primary); color: white;
+    font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 600;
+    margin-bottom: 4px; letter-spacing: 0.5px;
+  }
+  .search-result .sr-type.case { background: var(--accent); }
+  .search-result .sr-type.advanced { background: #7C3AED; }
+  .search-result .sr-type.gotcha { background: var(--warning); }
+  .search-result .sr-type.workshop { background: var(--primary-light); }
+  .search-result .sr-title { font-weight: 600; font-size: 14px; color: var(--text); margin-bottom: 2px; }
+  .search-result .sr-snippet { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
+  .search-result mark { background: #FEF3C7; color: var(--text); padding: 0 2px; border-radius: 2px; }
+  .search-empty { text-align: center; padding: 30px; color: var(--text-muted); font-size: 14px; }
+  .search-hint {
+    padding: 10px 16px; background: #F9FAFB; border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--text-muted); display: flex; gap: 14px; flex-wrap: wrap;
+  }
+  .search-hint .kbd {
+    background: white; border: 1px solid var(--border); padding: 1px 6px;
+    border-radius: 4px; font-family: monospace;
+  }
+
+  @media (max-width: 640px) {
+    .search-trigger { padding: 6px 10px; font-size: 12px; }
+    .search-trigger .search-label { display: none; }
+    .search-modal { padding: 20px 12px; }
+  }
+
   /* Print styles */
   @media print {
     header, nav.tabs, .actions, .quiz-controls { display: none !important; }
@@ -654,7 +886,7 @@
     main { padding: 0; max-width: 100%; }
     .result-screen { box-shadow: none; border: 1px solid #ccc; page-break-after: avoid; }
     .panel { display: block !important; }
-    #quiz, #cases, #advanced, #gotchas { display: none !important; }
+    #quiz, #cases, #advanced, #gotchas, #srs, #mock, #bookmarks, #leaderboard, #admin, #workshop { display: none !important; }
     #stats { display: block !important; }
   }
 </style>
@@ -736,6 +968,25 @@
   </div>
 </div>
 
+<!-- Global Search modal -->
+<div id="search-modal" class="search-modal" onclick="if(event.target===this) closeSearch()">
+  <div class="search-box">
+    <div class="search-input-wrap">
+      <span style="font-size:18px;">🔍</span>
+      <input type="text" id="search-input" placeholder="Tìm câu hỏi, case study, gotcha, workshop... (gõ tiếng Việt không dấu cũng được)" autocomplete="off" />
+      <button class="search-close" onclick="closeSearch()">ESC</button>
+    </div>
+    <div id="search-results" class="search-results">
+      <div class="search-empty">Gõ từ khoá để tìm trong toàn bộ nội dung</div>
+    </div>
+    <div class="search-hint">
+      <span><span class="kbd">↑↓</span> Di chuyển</span>
+      <span><span class="kbd">↵</span> Mở</span>
+      <span><span class="kbd">ESC</span> Đóng</span>
+    </div>
+  </div>
+</div>
+
 <!-- Change password modal -->
 <div id="change-pw-modal" class="modal-overlay">
   <div class="modal-card">
@@ -753,6 +1004,9 @@
 </div>
 
 <header style="position:relative;">
+  <button class="search-trigger" onclick="openSearch()" id="search-trigger-btn" style="display:none;" title="Tìm kiếm (phím tắt: /)">
+    🔍 <span class="search-label">Tìm kiếm</span> <span class="kbd">/</span>
+  </button>
   <h1>📘 Luyện thi ERP Consultant</h1>
   <p>Phân phối Thực phẩm trên Microsoft Dynamics 365 Business Central</p>
   <div id="user-menu" class="user-menu" style="display:none;">
@@ -777,6 +1031,8 @@
 
 <nav class="tabs">
   <button class="tab-btn active" data-tab="quiz">📝 Trắc nghiệm</button>
+  <button class="tab-btn" data-tab="srs">🔁 Ôn tập SRS <span id="srs-badge" style="background:var(--danger); color:white; font-size:10px; padding:1px 6px; border-radius:8px; margin-left:2px; display:none;"></span></button>
+  <button class="tab-btn" data-tab="mock">🎯 Thi thử</button>
   <button class="tab-btn" data-tab="cases">💼 Tình huống</button>
   <button class="tab-btn" data-tab="advanced">🎯 Nâng cao</button>
   <button class="tab-btn" data-tab="gotchas">⚠️ Gotchas</button>
@@ -789,6 +1045,8 @@
 
 <main>
   <div id="quiz" class="panel active"></div>
+  <div id="srs" class="panel"></div>
+  <div id="mock" class="panel"></div>
   <div id="cases" class="panel"></div>
   <div id="advanced" class="panel"></div>
   <div id="gotchas" class="panel"></div>
@@ -3125,6 +3383,10 @@ let state = {
   answered: {},  // {questionId: {selected: 0|1|2|3, correct: bool, ts: timestamp}}
   bookmarks: {}, // {questionId: true} - legacy, kept for backwards compat
   bookmarkFolders: { "Đã đánh dấu": [] }, // { folderName: [qid, qid, ...] }
+  notes: {},     // {questionId: "user-written note"}
+  confidence: {},// {questionId: 'sure' | 'doubt' | 'guess'}
+  srs: {},       // {questionId: { interval, due, ease, lastReview, reps, lapses }}
+  mockExamHistory: [], // array of mock exam summaries
   currentIdx: 0,
   filter: "all",
   randomize: false,
@@ -3214,6 +3476,8 @@ function getFilteredQuestions() {
       qs = qs.filter(q => !state.answered[q.id]);
     } else if (state.filter === "wrong") {
       qs = qs.filter(q => state.answered[q.id] && !state.answered[q.id].correct);
+    } else if (state.filter === "noted") {
+      qs = qs.filter(q => state.notes && state.notes[q.id]);
     } else {
       qs = qs.filter(q => q.section === state.filter);
     }
@@ -3255,6 +3519,7 @@ function renderQuiz() {
           <option value="unanswered">Chưa làm</option>
           <option value="wrong">Đã làm sai</option>
           <option value="bookmarks">Đã đánh dấu</option>
+          <option value="noted">📝 Có ghi chú</option>
           ${sections.map(s => `<option value="${s}">${s}</option>`).join("")}
         </select>
         <button class="danger" onclick="resetProgress()">🔄 Reset tiến độ</button>
@@ -3283,6 +3548,7 @@ function renderQuiz() {
         <option value="unanswered" ${state.filter === "unanswered" ? "selected" : ""}>Chưa làm</option>
         <option value="wrong" ${state.filter === "wrong" ? "selected" : ""}>Đã làm sai</option>
         <option value="bookmarks" ${state.filter === "bookmarks" ? "selected" : ""}>Tất cả bookmarks (${totalBookmarks})</option>
+        <option value="noted" ${state.filter === "noted" ? "selected" : ""}>📝 Có ghi chú (${Object.keys(state.notes || {}).length})</option>
         ${folderList.map(f => `<option value="folder:${f}" ${state.filter === ('folder:'+f) ? "selected" : ""}>📁 ${f} (${(state.bookmarkFolders[f] || []).length})</option>`).join("")}
         ${sections.map(s => `<option value="${s}" ${state.filter === s ? "selected" : ""}>${s}</option>`).join("")}
       </select>
@@ -3305,7 +3571,25 @@ function renderQuiz() {
         <button class="bookmark-btn ${bookmarked ? 'active' : ''}" onclick="toggleBookmark(${q.id}, event)" title="Đánh dấu / chọn folder">★</button>
       </div>
       <div class="question-text">${q.q}</div>
-      <div class="options">
+      ${(() => {
+        const conf = state.confidence && state.confidence[q.id];
+        if (answer) {
+          if (!conf) return '';
+          const labels = { sure: '💪 Tự tin', doubt: '🤔 Phân vân', guess: '🎲 Đoán' };
+          return `<div class="confidence-bar locked">
+            <span class="cf-label">Độ tự tin của bạn:</span>
+            <span class="confidence-pill ${conf}">${labels[conf]}</span>
+          </div>`;
+        }
+        return `<div class="confidence-bar" id="cf-bar-${q.id}">
+          <span class="cf-label">Mức độ tự tin trước khi chọn:</span>
+          <button class="confidence-btn sure ${conf === 'sure' ? 'active' : ''}" onclick="setConfidence(${q.id}, 'sure')">💪 Tự tin</button>
+          <button class="confidence-btn doubt ${conf === 'doubt' ? 'active' : ''}" onclick="setConfidence(${q.id}, 'doubt')">🤔 Phân vân</button>
+          <button class="confidence-btn guess ${conf === 'guess' ? 'active' : ''}" onclick="setConfidence(${q.id}, 'guess')">🎲 Đoán</button>
+          <span style="margin-left:auto; font-size:11px; color:var(--text-muted);">${conf ? '✓ Hãy chọn đáp án' : 'Chọn 1 mức để mở khoá đáp án'}</span>
+        </div>`;
+      })()}
+      <div class="options${!answer && !(state.confidence && state.confidence[q.id]) ? ' pre-confidence' : ''}" id="options-${q.id}">
         ${q.options.map((opt, i) => {
           let cls = "option";
           if (answer) {
@@ -3328,6 +3612,16 @@ function renderQuiz() {
         <div class="explanation show">
           <h4>📖 Giải thích</h4>
           <ul>${q.exp.map(e => `<li>${e}</li>`).join("")}</ul>
+        </div>
+        <div class="notes-section">
+          <div class="notes-header">
+            <div class="notes-title">📝 Ghi chú cá nhân</div>
+            <span class="notes-save-status" id="notes-status-${q.id}"></span>
+          </div>
+          <textarea class="notes-textarea" id="notes-input-${q.id}"
+            placeholder="Ghi chú riêng của bạn (kinh nghiệm thực tế, link tài liệu, mẹo nhớ...). Tự động lưu khi bạn rời khỏi ô."
+            oninput="markNoteDirty(${q.id})"
+            onblur="saveNote(${q.id})">${escapeHtml(state.notes && state.notes[q.id] || '')}</textarea>
         </div>
         <div class="comments-section" id="comments-${q.id}">
           <div class="comments-header">
@@ -3366,14 +3660,43 @@ function bindFilter() {
   }
 }
 
+function setConfidence(qid, level) {
+  if (!state.confidence) state.confidence = {};
+  state.confidence[qid] = level;
+  saveState();
+  // Update buttons + unlock options without full re-render to keep focus
+  const bar = document.getElementById('cf-bar-' + qid);
+  if (bar) {
+    bar.querySelectorAll('.confidence-btn').forEach(b => b.classList.remove('active'));
+    const target = bar.querySelector('.confidence-btn.' + level);
+    if (target) target.classList.add('active');
+    const hint = bar.querySelector('span:last-child');
+    if (hint) hint.textContent = '✓ Hãy chọn đáp án';
+  }
+  const opts = document.getElementById('options-' + qid);
+  if (opts) opts.classList.remove('pre-confidence');
+}
+
 function selectOption(qid, idx) {
   const q = QUESTIONS.find(x => x.id === qid);
   if (!q) return;
+  // Block answer if confidence not yet picked
+  if (!state.confidence || !state.confidence[qid]) {
+    const bar = document.getElementById('cf-bar-' + qid);
+    if (bar) {
+      bar.style.transition = 'transform 0.1s';
+      bar.style.transform = 'scale(1.03)';
+      setTimeout(() => { bar.style.transform = ''; }, 200);
+    }
+    return;
+  }
   const correct = idx === q.correct;
   const now = Date.now();
   state.answered[qid] = { selected: idx, correct, ts: now };
   state.lastActivity = now;
   if (!state.firstStart) state.firstStart = now;
+  // Auto-schedule SRS based on confidence + correctness
+  scheduleSRSAfterAnswer(qid, correct, state.confidence[qid]);
   saveState();
   renderQuiz();
 }
@@ -3549,6 +3872,29 @@ function resetProgress() {
   saveState();
   renderQuiz();
   renderStats();
+}
+
+// ============ NOTES per question ============
+function markNoteDirty(qid) {
+  const statusEl = document.getElementById('notes-status-' + qid);
+  if (statusEl) statusEl.textContent = '✏️ Đang chỉnh sửa...';
+}
+
+function saveNote(qid) {
+  const input = document.getElementById('notes-input-' + qid);
+  if (!input) return;
+  const value = input.value.trim();
+  if (!state.notes) state.notes = {};
+  const old = state.notes[qid] || '';
+  if (value === old) return;
+  if (value) state.notes[qid] = value;
+  else delete state.notes[qid];
+  saveState();
+  const statusEl = document.getElementById('notes-status-' + qid);
+  if (statusEl) {
+    statusEl.textContent = '✓ Đã lưu';
+    setTimeout(() => { if (statusEl) statusEl.textContent = ''; }, 2000);
+  }
 }
 
 // ============ CASES ============
@@ -3884,6 +4230,17 @@ function renderStats() {
     "Nhóm 5 — Kỹ năng Workshop ERP Consultant": ["T. Kỹ năng Workshop ERP Consultant"]
   };
 
+  // Confidence-vs-accuracy breakdown
+  const confLevels = { sure: { right: 0, wrong: 0 }, doubt: { right: 0, wrong: 0 }, guess: { right: 0, wrong: 0 } };
+  Object.keys(state.answered || {}).forEach(qid => {
+    const a = state.answered[qid];
+    const c = state.confidence && state.confidence[qid];
+    if (!c || !confLevels[c]) return;
+    if (a.correct) confLevels[c].right++;
+    else confLevels[c].wrong++;
+  });
+  const confTotal = Object.values(confLevels).reduce((s, v) => s + v.right + v.wrong, 0);
+
   panel.innerHTML = `
     <div class="result-screen">
       <h2>📊 Báo cáo kết quả học tập</h2>
@@ -3903,6 +4260,38 @@ function renderStats() {
         <button class="btn-secondary danger-text" onclick="resetProgress()" style="color:var(--danger);">🔄 Làm lại từ đầu</button>
       </div>
     </div>
+
+    ${confTotal > 0 ? `
+      <div style="margin-top:24px; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px;">
+        <h3 style="color:var(--primary); margin:0 0 4px 0;">🧠 Độ tự tin vs Độ chính xác</h3>
+        <p style="font-size:13px; color:var(--text-muted); margin:0 0 14px 0;">
+          So sánh giữa cảm nhận của bạn lúc làm bài và kết quả thực tế. Cảnh báo nếu bạn "Tự tin" mà sai nhiều — đó là blind-spot lớn.
+        </p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px;">
+          ${[
+            { key: 'sure', label: '💪 Tự tin', color: 'var(--green)' },
+            { key: 'doubt', label: '🤔 Phân vân', color: 'var(--warning)' },
+            { key: 'guess', label: '🎲 Đoán', color: 'var(--danger)' }
+          ].map(c => {
+            const v = confLevels[c.key];
+            const t = v.right + v.wrong;
+            const pctRight = t > 0 ? Math.round(v.right / t * 100) : 0;
+            return `
+              <div style="background:#F9FAFB; border-left:4px solid ${c.color}; padding:12px; border-radius:6px;">
+                <div style="font-weight:700; color:${c.color}; font-size:14px;">${c.label}</div>
+                <div style="font-size:24px; font-weight:700; color:var(--text); margin:4px 0;">${pctRight}%</div>
+                <div style="font-size:12px; color:var(--text-muted);">${v.right} đúng / ${v.wrong} sai (${t} câu)</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+        ${confLevels.sure.wrong >= 3 && confLevels.sure.right + confLevels.sure.wrong > 0 && (confLevels.sure.right / (confLevels.sure.right + confLevels.sure.wrong)) < 0.85 ? `
+          <div style="margin-top:12px; padding:10px 12px; background:var(--red-bg); border-left:4px solid var(--danger); border-radius:6px; font-size:13px; color:var(--text);">
+            ⚠️ <strong>Blind-spot phát hiện:</strong> Có ${confLevels.sure.wrong} câu bạn "Tự tin" nhưng vẫn sai. Đây là nhóm cần ôn lại trước tiên — vì bạn đang nghĩ mình đã hiểu nhưng thực tế chưa.
+          </div>
+        ` : ''}
+      </div>
+    ` : ''}
 
     ${Object.entries(grouped).map(([groupName, sectionNames]) => {
       const groupQs = QUESTIONS.filter(q => sectionNames.includes(q.section));
@@ -3950,6 +4339,8 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
     if (tab === "admin") renderAdmin();
     if (tab === "leaderboard") renderLeaderboard();
     if (tab === "bookmarks") renderBookmarks();
+    if (tab === "srs") renderSRS();
+    if (tab === "mock") renderMockHome();
   });
 });
 
@@ -3963,6 +4354,7 @@ async function initApp() {
   renderCases("advanced", ADVANCED_CASES);
   renderGotchas();
   renderWorkshop();
+  updateSrsBadge();
 }
 
 async function handleAuthStateChange(user) {
@@ -4002,6 +4394,8 @@ async function handleAuthStateChange(user) {
   main.classList.remove('app-hidden');
 
   userMenu.style.display = 'block';
+  const searchBtn = document.getElementById('search-trigger-btn');
+  if (searchBtn) searchBtn.style.display = 'flex';
   const name = user.displayName || user.email.split('@')[0];
   document.getElementById('user-name').textContent = name;
   document.getElementById('user-email').textContent = user.email;
@@ -4140,8 +4534,11 @@ async function logout() {
   try { await window.fb.signOut(window.fb.auth); } catch(e) {}
   // Reset state
   state = {
-    answered: {}, bookmarks: {}, currentIdx: 0, filter: "all",
-    randomize: false, lastActivity: null, firstStart: null
+    answered: {}, bookmarks: {}, bookmarkFolders: { "Đã đánh dấu": [] },
+    notes: {}, confidence: {}, srs: {}, mockExamHistory: [],
+    currentIdx: 0, filter: "all",
+    randomize: false, lastActivity: null, firstStart: null,
+    publicProfile: true
   };
 }
 
@@ -4990,6 +5387,937 @@ async function copyShareImage() {
   }
 }
 
+// ============ MOCK EXAM ============
+let _mockState = null; // { qids: [...], answers: {qid: idx}, flags: {qid: true}, startTs, endTs, durationMs, currentIdx, scopeName, finishedAt, result }
+let _mockTimerInterval = null;
+const MOCK_CONFIG_KEY = 'erp-mock-config-v1';
+
+function loadMockConfig() {
+  try {
+    const s = localStorage.getItem(MOCK_CONFIG_KEY);
+    if (s) return JSON.parse(s);
+  } catch(e) {}
+  return { count: 50, duration: 60, scope: 'all' };
+}
+
+function saveMockConfig(cfg) {
+  try { localStorage.setItem(MOCK_CONFIG_KEY, JSON.stringify(cfg)); } catch(e) {}
+}
+
+function getMockScopes() {
+  return {
+    all: { label: 'Toàn bộ', filter: () => QUESTIONS },
+    bc: { label: 'Phần mềm BC', filter: () => QUESTIONS.filter(q => /^[A-F]\./.test(q.section)) },
+    mapping: { label: 'Mapping nghiệp vụ ↔ BC', filter: () => QUESTIONS.filter(q => /^[G-N]\./.test(q.section)) },
+    business: { label: 'Nghiệp vụ thuần', filter: () => QUESTIONS.filter(q => /^[O-T]\b|^[O-T]\d/.test(q.section)) }
+  };
+}
+
+function renderMockHome() {
+  const panel = document.getElementById('mock');
+  if (_mockState && !_mockState.finishedAt) {
+    renderMockExam();
+    return;
+  }
+  if (_mockState && _mockState.finishedAt) {
+    renderMockResult();
+    return;
+  }
+
+  const cfg = loadMockConfig();
+  const scopes = getMockScopes();
+  const history = state.mockExamHistory || [];
+
+  panel.innerHTML = `
+    <div class="mock-hero">
+      <h2>🎯 Thi thử (Mock Exam)</h2>
+      <p>Mô phỏng đề thi thực tế — có giờ, không xem giải thích trong khi làm, scorecard chi tiết khi kết thúc. Dùng để đo trình độ trước phỏng vấn / chứng chỉ.</p>
+    </div>
+
+    <div class="mock-config-card">
+      <h3>1. Phạm vi câu hỏi</h3>
+      <div class="mock-options" id="mock-scope-options">
+        ${Object.entries(scopes).map(([key, sc]) => {
+          const count = sc.filter().length;
+          return `<div class="mock-opt ${cfg.scope === key ? 'active' : ''}" onclick="setMockOpt('scope', '${key}')">
+            <div class="big">${count}</div>
+            <div>${sc.label}</div>
+            <div class="sub">câu trong kho</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <div class="mock-config-card">
+      <h3>2. Số câu</h3>
+      <div class="mock-options">
+        ${[20, 30, 50, 100].map(n => `
+          <div class="mock-opt ${cfg.count === n ? 'active' : ''}" onclick="setMockOpt('count', ${n})">
+            <div class="big">${n}</div>
+            <div>câu hỏi</div>
+            <div class="sub">${Math.round(n * 1.2)} phút khuyến nghị</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="mock-config-card">
+      <h3>3. Thời gian</h3>
+      <div class="mock-options">
+        ${[30, 60, 90, 120].map(m => `
+          <div class="mock-opt ${cfg.duration === m ? 'active' : ''}" onclick="setMockOpt('duration', ${m})">
+            <div class="big">${m}</div>
+            <div>phút</div>
+            <div class="sub">${Math.round(m * 60 / cfg.count)}s/câu</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div style="background:var(--yellow-bg); border-left:4px solid var(--warning); padding:14px; border-radius:8px; margin-bottom:14px; font-size:13px;">
+      <strong>📌 Quy tắc thi thử:</strong>
+      <ul style="margin:6px 0 0 18px; padding:0;">
+        <li>Không xem giải thích trong khi làm</li>
+        <li>Có thể đánh dấu cờ (🚩) để xem lại</li>
+        <li>Tự động nộp bài khi hết giờ</li>
+        <li>Có thể nộp bài trước nếu hoàn thành sớm</li>
+        <li>Sau khi nộp: xem chi tiết câu sai, breakdown theo section</li>
+      </ul>
+    </div>
+
+    <div style="text-align:center; margin: 20px 0;">
+      <button class="btn-primary" onclick="startMockExam()" style="padding:14px 36px; border:none; border-radius:10px; cursor:pointer; font-weight:700; font-size:16px; background:var(--danger);">▶️ Bắt đầu thi (${cfg.count} câu • ${cfg.duration} phút)</button>
+    </div>
+
+    ${history.length > 0 ? `
+      <div class="mock-config-card">
+        <h3>📜 Lịch sử thi thử (${history.length})</h3>
+        <div style="max-height:300px; overflow-y:auto;">
+          ${history.slice().reverse().slice(0, 10).map((h, i) => {
+            const pct = h.total > 0 ? Math.round(h.correct / h.total * 100) : 0;
+            const color = pct >= 70 ? 'var(--green)' : pct >= 50 ? 'var(--warning)' : 'var(--danger)';
+            return `
+              <div style="padding:10px 12px; border-bottom:1px solid #F3F4F6; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <div style="font-weight:600; font-size:13px;">${h.scopeName || 'Toàn bộ'} • ${h.total} câu • ${h.duration} phút</div>
+                  <div style="font-size:11px; color:var(--text-muted);">${formatDate(h.finishedAt)} • Thời gian dùng: ${Math.round(h.timeSpentMs/60000)} phút</div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-size:18px; font-weight:700; color:${color};">${pct}%</div>
+                  <div style="font-size:11px; color:var(--text-muted);">${h.correct}/${h.total}</div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    ` : ''}
+  `;
+}
+
+function setMockOpt(key, value) {
+  const cfg = loadMockConfig();
+  cfg[key] = value;
+  saveMockConfig(cfg);
+  renderMockHome();
+}
+
+function startMockExam() {
+  const cfg = loadMockConfig();
+  const scopes = getMockScopes();
+  const pool = scopes[cfg.scope].filter();
+  if (pool.length < cfg.count) {
+    if (!confirm('Phạm vi chỉ có ' + pool.length + ' câu — sẽ dùng toàn bộ. Tiếp tục?')) return;
+  }
+  const n = Math.min(cfg.count, pool.length);
+  // Shuffle and pick n
+  const shuffled = pool.slice();
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  const picked = shuffled.slice(0, n);
+
+  _mockState = {
+    qids: picked.map(q => q.id),
+    answers: {},
+    flags: {},
+    startTs: Date.now(),
+    durationMs: cfg.duration * 60 * 1000,
+    currentIdx: 0,
+    scopeName: scopes[cfg.scope].label,
+    finishedAt: null,
+    result: null
+  };
+  if (_mockTimerInterval) clearInterval(_mockTimerInterval);
+  _mockTimerInterval = setInterval(tickMockTimer, 1000);
+  renderMockExam();
+}
+
+function tickMockTimer() {
+  if (!_mockState || _mockState.finishedAt) return;
+  const remaining = _mockState.startTs + _mockState.durationMs - Date.now();
+  const timerEl = document.getElementById('mock-timer');
+  if (timerEl) {
+    if (remaining <= 0) {
+      timerEl.textContent = '00:00';
+      finishMockExam(true);
+      return;
+    }
+    const mins = Math.floor(remaining / 60000);
+    const secs = Math.floor((remaining % 60000) / 1000);
+    timerEl.textContent = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+    if (remaining < 60000) timerEl.classList.add('danger');
+    else if (remaining < 5 * 60000) { timerEl.classList.add('warn'); timerEl.classList.remove('danger'); }
+    else { timerEl.classList.remove('warn'); timerEl.classList.remove('danger'); }
+  }
+}
+
+function renderMockExam() {
+  const panel = document.getElementById('mock');
+  const s = _mockState;
+  if (!s) { renderMockHome(); return; }
+  const q = QUESTIONS.find(x => x.id === s.qids[s.currentIdx]);
+  if (!q) { renderMockHome(); return; }
+  const answered = Object.keys(s.answers).length;
+  const total = s.qids.length;
+  const progressPct = (answered / total) * 100;
+  const selected = s.answers[q.id];
+  const flagged = s.flags[q.id];
+  const remaining = s.startTs + s.durationMs - Date.now();
+  const mins = Math.max(0, Math.floor(remaining / 60000));
+  const secs = Math.max(0, Math.floor((remaining % 60000) / 1000));
+
+  panel.innerHTML = `
+    <div class="exam-header">
+      <div>
+        <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">⏱️ Thời gian còn lại</div>
+        <div class="exam-timer" id="mock-timer">${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}</div>
+      </div>
+      <div class="exam-progress">
+        <div class="label">Đã trả lời: <strong>${answered}/${total}</strong> • Đánh cờ: ${Object.keys(s.flags).length}</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${progressPct}%;"></div></div>
+      </div>
+      <button class="exam-submit-btn" onclick="confirmFinishMockExam()">📤 Nộp bài</button>
+    </div>
+
+    <div class="exam-question-grid">
+      ${s.qids.map((qid, i) => {
+        let cls = 'exam-q-dot';
+        if (s.answers[qid] !== undefined) cls += ' answered';
+        if (s.flags[qid]) cls += ' flagged';
+        if (i === s.currentIdx) cls += ' current';
+        return `<div class="${cls}" onclick="goMockQ(${i})" title="Câu ${i + 1}">${i + 1}</div>`;
+      }).join('')}
+    </div>
+
+    <div class="question-card">
+      <div class="question-section">${q.section}</div>
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div class="question-num">Câu ${s.currentIdx + 1} / ${total}</div>
+        <button class="bookmark-btn ${flagged ? 'active' : ''}" onclick="toggleMockFlag(${q.id})" title="Đánh cờ để xem lại sau">🚩</button>
+      </div>
+      <div class="question-text">${q.q}</div>
+      <div class="options">
+        ${q.options.map((opt, i) => {
+          const cls = 'option' + (selected === i ? ' selected' : '');
+          return `<div class="${cls}" onclick="answerMockQ(${q.id}, ${i})">
+            <div class="option-letter">${String.fromCharCode(65 + i)}</div>
+            <div class="option-text">${escapeHtml(opt)}</div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="nav-buttons">
+        <button class="btn-secondary" ${s.currentIdx === 0 ? 'disabled' : ''} onclick="navMock(-1)">← Trước</button>
+        <button class="btn-secondary" onclick="navMockNextUnanswered()">→ Câu chưa làm</button>
+        <button class="btn-primary" ${s.currentIdx >= total - 1 ? 'disabled' : ''} onclick="navMock(1)">Tiếp →</button>
+      </div>
+    </div>
+  `;
+}
+
+function answerMockQ(qid, idx) {
+  if (!_mockState || _mockState.finishedAt) return;
+  _mockState.answers[qid] = idx;
+  renderMockExam();
+}
+
+function toggleMockFlag(qid) {
+  if (!_mockState || _mockState.finishedAt) return;
+  if (_mockState.flags[qid]) delete _mockState.flags[qid];
+  else _mockState.flags[qid] = true;
+  renderMockExam();
+}
+
+function goMockQ(idx) {
+  if (!_mockState) return;
+  _mockState.currentIdx = idx;
+  renderMockExam();
+}
+
+function navMock(delta) {
+  if (!_mockState) return;
+  const next = _mockState.currentIdx + delta;
+  if (next < 0 || next >= _mockState.qids.length) return;
+  _mockState.currentIdx = next;
+  renderMockExam();
+}
+
+function navMockNextUnanswered() {
+  if (!_mockState) return;
+  const total = _mockState.qids.length;
+  for (let off = 1; off <= total; off++) {
+    const i = (_mockState.currentIdx + off) % total;
+    if (_mockState.answers[_mockState.qids[i]] === undefined) {
+      _mockState.currentIdx = i;
+      renderMockExam();
+      return;
+    }
+  }
+  // All answered
+  if (confirm('Tất cả câu đã có đáp án. Nộp bài luôn?')) confirmFinishMockExam();
+}
+
+function confirmFinishMockExam() {
+  if (!_mockState) return;
+  const unanswered = _mockState.qids.length - Object.keys(_mockState.answers).length;
+  let msg = 'Nộp bài thi thử?';
+  if (unanswered > 0) msg += '\n⚠️ Còn ' + unanswered + ' câu CHƯA TRẢ LỜI (sẽ tính là sai).';
+  if (!confirm(msg)) return;
+  finishMockExam(false);
+}
+
+function finishMockExam(timeOut) {
+  if (!_mockState || _mockState.finishedAt) return;
+  if (_mockTimerInterval) { clearInterval(_mockTimerInterval); _mockTimerInterval = null; }
+  const s = _mockState;
+  const now = Date.now();
+  s.finishedAt = now;
+  // Score
+  let correct = 0, wrong = 0, unanswered = 0;
+  const wrongList = [];
+  const bySection = {};
+  s.qids.forEach(qid => {
+    const q = QUESTIONS.find(x => x.id === qid);
+    if (!q) return;
+    if (!bySection[q.section]) bySection[q.section] = { total: 0, correct: 0, wrong: 0, unanswered: 0 };
+    bySection[q.section].total++;
+    const sel = s.answers[qid];
+    if (sel === undefined) {
+      unanswered++; bySection[q.section].unanswered++;
+      wrongList.push({ qid, q, sel: -1 });
+    } else if (sel === q.correct) {
+      correct++; bySection[q.section].correct++;
+    } else {
+      wrong++; bySection[q.section].wrong++;
+      wrongList.push({ qid, q, sel });
+    }
+  });
+  const timeSpentMs = now - s.startTs;
+  s.result = {
+    total: s.qids.length,
+    correct, wrong, unanswered,
+    timeSpentMs,
+    bySection,
+    wrongList,
+    timeOut
+  };
+  // Save to history
+  if (!state.mockExamHistory) state.mockExamHistory = [];
+  state.mockExamHistory.push({
+    finishedAt: now,
+    duration: Math.round(s.durationMs / 60000),
+    scopeName: s.scopeName,
+    total: s.qids.length,
+    correct, wrong, unanswered,
+    timeSpentMs,
+    timeOut
+  });
+  // Keep last 50
+  if (state.mockExamHistory.length > 50) {
+    state.mockExamHistory = state.mockExamHistory.slice(-50);
+  }
+  saveState();
+  renderMockResult();
+}
+
+function renderMockResult() {
+  const panel = document.getElementById('mock');
+  if (!_mockState || !_mockState.result) return;
+  const s = _mockState;
+  const r = s.result;
+  const pct = r.total > 0 ? Math.round(r.correct / r.total * 100) : 0;
+  const timeMin = Math.floor(r.timeSpentMs / 60000);
+  const timeSec = Math.floor((r.timeSpentMs % 60000) / 1000);
+  let grade, gradeColor, advice;
+  if (pct >= 85) { grade = 'XUẤT SẮC'; gradeColor = 'var(--green)'; advice = 'Sẵn sàng đi phỏng vấn / thi cert.'; }
+  else if (pct >= 70) { grade = 'ĐẠT'; gradeColor = '#2563EB'; advice = 'Có thể đi thi nhưng nên ôn thêm các phần yếu.'; }
+  else if (pct >= 55) { grade = 'CẦN ÔN'; gradeColor = 'var(--warning)'; advice = 'Cần ôn thêm 1-2 tuần, đặc biệt các phần dưới 60%.'; }
+  else { grade = 'CHƯA ĐẠT'; gradeColor = 'var(--danger)'; advice = 'Cần học lại từ đầu các nhóm yếu, đọc lại Cases và Gotchas.'; }
+
+  panel.innerHTML = `
+    <div class="exam-result-card" style="text-align:center; background:linear-gradient(135deg, white 0%, #F9FAFB 100%);">
+      <div style="font-size:13px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px;">${r.timeOut ? '⏰ Hết giờ' : '📤 Đã nộp bài'}</div>
+      <h2 style="color:${gradeColor}; margin:8px 0 4px 0;">${grade}</h2>
+      <div style="font-size:56px; font-weight:700; color:${gradeColor}; line-height:1;">${pct}%</div>
+      <div style="margin:10px 0; color:var(--text-muted);">${r.correct} đúng • ${r.wrong} sai${r.unanswered > 0 ? ' • ' + r.unanswered + ' bỏ trống' : ''}</div>
+      <div style="margin:6px 0; font-size:13px; color:var(--text-muted);">
+        ⏱️ Thời gian: <strong>${timeMin} phút ${timeSec}s</strong> / ${Math.round(s.durationMs / 60000)} phút •
+        🎯 Phạm vi: <strong>${escapeHtml(s.scopeName || '—')}</strong>
+      </div>
+      <div style="margin-top:14px; padding:12px 16px; background:var(--blue-bg); border-radius:8px; font-size:14px;">
+        💡 ${advice}
+      </div>
+      <div style="margin-top:16px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+        <button class="btn-primary" onclick="_mockState=null; renderMockHome();" style="padding:10px 18px; border:none; border-radius:8px; cursor:pointer; font-weight:600;">🔄 Thi lại</button>
+        <button class="btn-secondary" onclick="reviewMockWrong()" style="padding:10px 18px; border:none; border-radius:8px; cursor:pointer; font-weight:600;">📖 Xem câu sai (${r.wrong + r.unanswered})</button>
+      </div>
+    </div>
+
+    <div class="exam-result-card">
+      <h3 style="color:var(--primary); margin:0 0 14px 0;">📊 Breakdown theo section</h3>
+      ${Object.entries(r.bySection).sort((a,b) => a[0].localeCompare(b[0])).map(([sec, stats]) => {
+        const sPct = stats.total > 0 ? Math.round(stats.correct / stats.total * 100) : 0;
+        const sColor = sPct >= 70 ? 'var(--green)' : sPct >= 50 ? 'var(--warning)' : 'var(--danger)';
+        return `
+          <div style="padding:8px 0; border-bottom:1px solid #F3F4F6;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <span style="font-size:13px; font-weight:500;">${escapeHtml(sec)}</span>
+              <span style="font-size:13px; font-weight:700; color:${sColor};">${stats.correct}/${stats.total} (${sPct}%)</span>
+            </div>
+            <div class="progress-bar" style="height:6px;"><div class="progress-fill" style="width:${sPct}%; background:${sColor};"></div></div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+
+    <div id="mock-wrong-review" style="display:none;"></div>
+  `;
+}
+
+function reviewMockWrong() {
+  const target = document.getElementById('mock-wrong-review');
+  if (!_mockState || !_mockState.result) return;
+  const wrongList = _mockState.result.wrongList;
+  if (wrongList.length === 0) {
+    target.innerHTML = '<div class="exam-result-card" style="text-align:center; color:var(--green);">🎉 Bạn không có câu nào sai!</div>';
+    target.style.display = 'block';
+    target.scrollIntoView({ behavior: 'smooth' });
+    return;
+  }
+  target.innerHTML = `
+    <div class="exam-result-card">
+      <h3 style="color:var(--danger); margin:0 0 14px 0;">📖 ${wrongList.length} câu sai/bỏ trống</h3>
+      ${wrongList.map(w => {
+        const isUnanswered = w.sel === -1;
+        const correctLetter = String.fromCharCode(65 + w.q.correct);
+        return `
+          <div style="padding:14px; background:#FEF2F2; border-left:4px solid var(--danger); border-radius:6px; margin-bottom:10px;">
+            <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; margin-bottom:4px;">${escapeHtml(w.q.section)}</div>
+            <div style="font-weight:500; margin-bottom:8px;">Câu ${w.q.id}: ${w.q.q}</div>
+            <div style="font-size:13px; margin-bottom:6px;">
+              <span style="color:var(--danger);">Bạn ${isUnanswered ? 'không trả lời' : 'chọn: ' + String.fromCharCode(65 + w.sel)}</span> •
+              <span style="color:var(--green);">Đáp án đúng: ${correctLetter} — ${escapeHtml(w.q.options[w.q.correct])}</span>
+            </div>
+            <details style="margin-top:6px;">
+              <summary style="cursor:pointer; font-size:12px; color:var(--primary); font-weight:600;">Xem giải thích</summary>
+              <ul style="margin:8px 0 0 18px; padding:0; font-size:13px;">
+                ${w.q.exp.map(e => '<li>' + e + '</li>').join('')}
+              </ul>
+            </details>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+  target.style.display = 'block';
+  target.scrollIntoView({ behavior: 'smooth' });
+}
+
+// ============ SPACED REPETITION (SRS) ============
+// Simplified SM-2 algorithm. Quality scale 0-3 maps to Again/Hard/Good/Easy.
+const SRS_DAY = 86400000;
+
+function defaultSrsCard() {
+  return { interval: 0, due: Date.now(), ease: 2.5, lastReview: null, reps: 0, lapses: 0 };
+}
+
+function applySrsRating(card, quality) {
+  // quality: 0=Again, 1=Hard, 2=Good, 3=Easy
+  const c = { ...defaultSrsCard(), ...(card || {}) };
+  c.lastReview = Date.now();
+  if (quality === 0) {
+    c.lapses += 1;
+    c.reps = 0;
+    c.interval = 1; // back in 1 day
+    c.ease = Math.max(1.3, c.ease - 0.2);
+  } else if (quality === 1) {
+    c.reps = (c.reps || 0) + 1;
+    c.interval = Math.max(1, Math.round((c.interval || 1) * 1.2));
+    c.ease = Math.max(1.3, c.ease - 0.15);
+  } else if (quality === 2) {
+    c.reps = (c.reps || 0) + 1;
+    c.interval = c.interval > 0 ? Math.max(1, Math.round(c.interval * c.ease)) : 3;
+    // ease unchanged
+  } else if (quality === 3) {
+    c.reps = (c.reps || 0) + 1;
+    c.interval = c.interval > 0 ? Math.max(4, Math.round(c.interval * c.ease * 1.3)) : 5;
+    c.ease = Math.min(3.0, c.ease + 0.15);
+  }
+  c.due = Date.now() + c.interval * SRS_DAY;
+  return c;
+}
+
+function scheduleSRSAfterAnswer(qid, correct, confidence) {
+  if (!state.srs) state.srs = {};
+  const existing = state.srs[qid];
+  // Determine initial quality from correctness + confidence
+  let quality;
+  if (!correct) quality = 0; // Again — bring back tomorrow
+  else if (confidence === 'guess') quality = 1; // Hard — answered right but guessed
+  else if (confidence === 'doubt') quality = 2; // Good
+  else quality = 3; // Sure + correct = Easy
+  state.srs[qid] = applySrsRating(existing, quality);
+  updateSrsBadge();
+}
+
+function getDueSrsCards() {
+  const now = Date.now();
+  const srs = state.srs || {};
+  return Object.keys(srs)
+    .filter(qid => srs[qid] && srs[qid].due <= now)
+    .map(qid => ({ qid: parseInt(qid), card: srs[qid] }))
+    .filter(x => QUESTIONS.find(q => q.id === x.qid));
+}
+
+function updateSrsBadge() {
+  const badge = document.getElementById('srs-badge');
+  if (!badge) return;
+  const due = getDueSrsCards().length;
+  if (due > 0) {
+    badge.textContent = due;
+    badge.style.display = 'inline-block';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+let _srsReviewIdx = 0;
+let _srsReviewQueue = [];
+let _srsShowAnswer = false;
+
+function renderSRS() {
+  const panel = document.getElementById('srs');
+  if (!state.srs) state.srs = {};
+
+  const due = getDueSrsCards();
+  const srsTotal = Object.keys(state.srs).length;
+  const learned = Object.values(state.srs).filter(c => c.interval >= 7).length;
+  const newToday = due.filter(d => !d.card.lastReview).length;
+  const nextDueTs = (() => {
+    const futures = Object.values(state.srs).filter(c => c.due > Date.now()).map(c => c.due);
+    if (futures.length === 0) return null;
+    return Math.min(...futures);
+  })();
+
+  // Build hero + content
+  let body = '';
+  if (_srsReviewQueue.length === 0) {
+    body = `
+      <div class="srs-hero">
+        <h2>🔁 Ôn tập theo lịch (SRS)</h2>
+        <p>Hệ thống dùng thuật toán Spaced Repetition (giống Anki) — câu nào bạn yếu sẽ được lặp lại sớm, câu nào nhớ tốt sẽ giãn ra. Học 10–20 phút/ngày là đủ.</p>
+        <div class="srs-stats-grid">
+          <div class="srs-stat"><div class="n">${due.length}</div><div class="l">Đến hạn ôn</div></div>
+          <div class="srs-stat"><div class="n">${srsTotal}</div><div class="l">Câu đã thêm</div></div>
+          <div class="srs-stat"><div class="n">${learned}</div><div class="l">Đã thuộc (≥7d)</div></div>
+          <div class="srs-stat"><div class="n">${nextDueTs ? formatTimeRel(nextDueTs).replace(' trước', '') : '—'}</div><div class="l">Lần tới</div></div>
+        </div>
+      </div>
+    `;
+
+    if (due.length === 0 && srsTotal === 0) {
+      body += `
+        <div class="srs-empty">
+          <div class="icon">🌱</div>
+          <h3 style="margin:0 0 6px 0; color:var(--text);">Chưa có câu nào trong SRS</h3>
+          <p style="margin:0 0 14px 0;">Làm bài ở tab "Trắc nghiệm" — mỗi câu bạn trả lời sẽ tự động được thêm vào SRS theo độ tự tin và độ chính xác.</p>
+          <button class="btn-primary" onclick="document.querySelector('[data-tab=quiz]').click()" style="padding:10px 18px; border:none; border-radius:8px; cursor:pointer; font-weight:600; font-size:14px;">📝 Bắt đầu làm bài</button>
+        </div>
+      `;
+    } else if (due.length === 0) {
+      body += `
+        <div class="srs-empty">
+          <div class="icon">✅</div>
+          <h3 style="margin:0 0 6px 0; color:var(--green);">Hoàn thành ôn tập hôm nay!</h3>
+          <p style="margin:0 0 14px 0;">Lần ôn tiếp theo: ${nextDueTs ? new Date(nextDueTs).toLocaleString('vi-VN', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }) : '—'}</p>
+          <button class="btn-secondary" onclick="document.querySelector('[data-tab=quiz]').click()" style="padding:10px 18px; border:none; border-radius:8px; cursor:pointer; font-weight:600; font-size:14px;">📝 Học câu mới</button>
+        </div>
+      `;
+    } else {
+      body += `
+        <div style="background:var(--card); border:1px solid var(--border); border-radius:12px; padding:24px; text-align:center;">
+          <h3 style="color:var(--primary); margin:0 0 6px 0;">Sẵn sàng ôn ${due.length} câu</h3>
+          <p style="color:var(--text-muted); font-size:14px; margin:0 0 16px 0;">Mỗi câu khoảng 30 giây — tổng khoảng ${Math.ceil(due.length * 0.5)} phút.</p>
+          <button class="btn-primary" onclick="startSrsReview()" style="padding:12px 28px; border:none; border-radius:8px; cursor:pointer; font-weight:700; font-size:15px;">▶️ Bắt đầu ôn ${due.length} câu</button>
+        </div>
+      `;
+    }
+
+    // Upcoming forecast
+    if (srsTotal > 0) {
+      const upcoming = [1, 3, 7, 14, 30].map(d => {
+        const upper = Date.now() + d * SRS_DAY;
+        const lower = d === 1 ? Date.now() : Date.now() + (d - (d === 3 ? 2 : d === 7 ? 4 : d === 14 ? 7 : 16)) * SRS_DAY;
+        const count = Object.values(state.srs).filter(c => c.due > lower && c.due <= upper).length;
+        return { label: 'Trong ' + d + ' ngày', count };
+      });
+      body += `
+        <div style="background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; margin-top:14px;">
+          <h4 style="color:var(--primary); margin:0 0 10px 0; font-size:14px;">📅 Dự báo lịch ôn tới</h4>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(110px, 1fr)); gap:8px;">
+            ${upcoming.map(u => `
+              <div style="background:#F9FAFB; padding:10px; border-radius:8px; text-align:center;">
+                <div style="font-size:22px; font-weight:700; color:var(--primary);">${u.count}</div>
+                <div style="font-size:11px; color:var(--text-muted);">${u.label}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+  } else {
+    body = renderSrsReviewCard();
+  }
+
+  panel.innerHTML = body;
+}
+
+function startSrsReview() {
+  _srsReviewQueue = getDueSrsCards();
+  _srsReviewIdx = 0;
+  _srsShowAnswer = false;
+  // Shuffle
+  for (let i = _srsReviewQueue.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [_srsReviewQueue[i], _srsReviewQueue[j]] = [_srsReviewQueue[j], _srsReviewQueue[i]];
+  }
+  renderSRS();
+}
+
+function renderSrsReviewCard() {
+  if (_srsReviewIdx >= _srsReviewQueue.length) {
+    _srsReviewQueue = [];
+    _srsReviewIdx = 0;
+    return `
+      <div class="srs-empty">
+        <div class="icon">🎉</div>
+        <h3 style="margin:0 0 6px 0; color:var(--green);">Hoàn thành phiên ôn!</h3>
+        <p style="margin:0 0 14px 0;">Bạn đã ôn xong tất cả câu đến hạn.</p>
+        <button class="btn-primary" onclick="_srsReviewQueue=[]; renderSRS();" style="padding:10px 18px; border:none; border-radius:8px; cursor:pointer; font-weight:600; font-size:14px;">Quay lại</button>
+      </div>
+    `;
+  }
+  const item = _srsReviewQueue[_srsReviewIdx];
+  const q = QUESTIONS.find(x => x.id === item.qid);
+  if (!q) {
+    _srsReviewIdx++;
+    return renderSrsReviewCard();
+  }
+  const card = item.card;
+  const progressPct = (_srsReviewIdx / _srsReviewQueue.length) * 100;
+
+  // Preview new intervals for each rating
+  const previewAgain = applySrsRating(card, 0).interval;
+  const previewHard = applySrsRating(card, 1).interval;
+  const previewGood = applySrsRating(card, 2).interval;
+  const previewEasy = applySrsRating(card, 3).interval;
+  const fmtDays = d => d < 1 ? '<1d' : d === 1 ? '1d' : d < 30 ? d + 'd' : Math.round(d / 30) + 'tháng';
+
+  return `
+    <div style="background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <div style="font-size:13px; color:var(--text-muted);">Phiên ôn SRS • ${_srsReviewIdx + 1} / ${_srsReviewQueue.length}</div>
+        <button class="btn-secondary" onclick="if(confirm('Thoát phiên ôn? Tiến độ phiên này sẽ giữ lại các câu đã rate.')){ _srsReviewQueue=[]; renderSRS(); }" style="padding:5px 12px; border:none; border-radius:6px; cursor:pointer; font-size:12px;">Thoát</button>
+      </div>
+      <div class="progress-bar" style="margin-bottom:14px;"><div class="progress-fill" style="width:${progressPct}%; background:linear-gradient(90deg, #7C3AED, #5B21B6);"></div></div>
+
+      <div class="question-section">${q.section}</div>
+      <div style="font-size:11px; color:var(--text-muted); margin:4px 0;">
+        Đã ôn ${card.reps || 0} lần • Khoảng cách hiện tại: ${card.interval || 0}d • Quên: ${card.lapses || 0}
+      </div>
+      <div class="question-text" style="margin-top:8px;">${q.q}</div>
+      <div class="options" style="margin-top:12px;">
+        ${q.options.map((opt, i) => {
+          let cls = "option";
+          if (_srsShowAnswer && i === q.correct) cls += " correct";
+          return `<div class="${cls}">
+            <div class="option-letter">${String.fromCharCode(65 + i)}</div>
+            <div class="option-text">${escapeHtml(opt)}</div>
+          </div>`;
+        }).join('')}
+      </div>
+
+      ${_srsShowAnswer ? `
+        <div class="feedback show success">
+          <strong>Đáp án: ${String.fromCharCode(65 + q.correct)}</strong>
+        </div>
+        <div class="explanation show">
+          <h4>📖 Giải thích</h4>
+          <ul>${q.exp.map(e => `<li>${e}</li>`).join('')}</ul>
+        </div>
+        <div style="margin-top:14px; font-size:13px; color:var(--text-muted); text-align:center;">Bạn đã nhớ câu này tốt cỡ nào?</div>
+        <div class="srs-rate-bar">
+          <button class="srs-rate-btn again" onclick="rateSrsCard(0)">😵 Quên<span class="sub">${fmtDays(previewAgain)}</span></button>
+          <button class="srs-rate-btn hard" onclick="rateSrsCard(1)">😬 Khó<span class="sub">${fmtDays(previewHard)}</span></button>
+          <button class="srs-rate-btn good" onclick="rateSrsCard(2)">🙂 Tốt<span class="sub">${fmtDays(previewGood)}</span></button>
+          <button class="srs-rate-btn easy" onclick="rateSrsCard(3)">😎 Dễ<span class="sub">${fmtDays(previewEasy)}</span></button>
+        </div>
+      ` : `
+        <div style="text-align:center; margin-top:16px;">
+          <button class="btn-primary" onclick="_srsShowAnswer=true; renderSRS();" style="padding:11px 28px; border:none; border-radius:8px; cursor:pointer; font-weight:600; font-size:14px;">👁️ Xem đáp án</button>
+          <div style="margin-top:10px; font-size:12px; color:var(--text-muted);">Thử trả lời trong đầu trước — đừng nhìn đáp án ngay</div>
+        </div>
+      `}
+    </div>
+  `;
+}
+
+function rateSrsCard(quality) {
+  const item = _srsReviewQueue[_srsReviewIdx];
+  if (!item) return;
+  if (!state.srs) state.srs = {};
+  state.srs[item.qid] = applySrsRating(item.card, quality);
+  // If "Again", push to end of queue for re-review this session
+  if (quality === 0) {
+    _srsReviewQueue.push({ qid: item.qid, card: state.srs[item.qid] });
+  }
+  _srsReviewIdx++;
+  _srsShowAnswer = false;
+  saveState();
+  updateSrsBadge();
+  renderSRS();
+}
+
+// ============ GLOBAL SEARCH ============
+let _searchIndex = null;
+let _searchSelectedIdx = 0;
+let _searchResults = [];
+
+function normalizeVN(s) {
+  if (!s) return '';
+  return String(s).toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/đ/g, 'd');
+}
+
+function buildSearchIndex() {
+  if (_searchIndex) return _searchIndex;
+  const idx = [];
+  QUESTIONS.forEach(q => {
+    const haystack = [q.q, q.section, ...(q.options || []), ...(q.exp || [])].join(' ');
+    idx.push({
+      type: 'question',
+      typeLabel: 'CÂU HỎI',
+      typeClass: '',
+      id: q.id,
+      title: 'Câu ' + q.id + ' — ' + q.section,
+      snippet: q.q,
+      haystack: normalizeVN(haystack),
+      raw: q
+    });
+  });
+  CASES.forEach(c => {
+    const haystack = [c.title, c.context, ...(c.questions || []), c.answer || ''].join(' ');
+    idx.push({
+      type: 'case',
+      typeLabel: 'CASE',
+      typeClass: 'case',
+      id: c.id,
+      title: 'Case ' + c.id + ' — ' + c.title,
+      snippet: c.context,
+      haystack: normalizeVN(haystack),
+      raw: c
+    });
+  });
+  ADVANCED_CASES.forEach(c => {
+    const haystack = [c.title, c.context, ...(c.questions || []), c.answer || ''].join(' ');
+    idx.push({
+      type: 'advanced',
+      typeLabel: 'NÂNG CAO',
+      typeClass: 'advanced',
+      id: c.id,
+      title: 'Case ' + c.id + ' — ' + c.title,
+      snippet: c.context,
+      haystack: normalizeVN(haystack),
+      raw: c
+    });
+  });
+  GOTCHAS.forEach((g, i) => {
+    const haystack = [g.title, g.content].join(' ');
+    idx.push({
+      type: 'gotcha',
+      typeLabel: 'GOTCHA',
+      typeClass: 'gotcha',
+      id: i,
+      title: g.title,
+      snippet: g.content,
+      haystack: normalizeVN(haystack),
+      raw: g
+    });
+  });
+  // Workshop is a single static panel; index its rubric content
+  idx.push({
+    type: 'workshop',
+    typeLabel: 'WORKSHOP',
+    typeClass: 'workshop',
+    id: 0,
+    title: 'Tiêu chuẩn đánh giá Workshop ERP Consultant',
+    snippet: '6 nhóm tiêu chí: Chuẩn bị, Kiến thức, Facilitation, Demo, Outcomes, Documentation. Rubric L1–L4 + ngưỡng pass 2.7/4.',
+    haystack: normalizeVN('workshop tieu chuan danh gia chuan bi kien thuc facilitation demo outcomes documentation rubric L1 L2 L3 L4 pass 2.7 fresher senior consultant QC add-on'),
+    raw: null
+  });
+  _searchIndex = idx;
+  return idx;
+}
+
+function openSearch() {
+  buildSearchIndex();
+  const modal = document.getElementById('search-modal');
+  modal.classList.add('show');
+  const input = document.getElementById('search-input');
+  input.value = '';
+  _searchSelectedIdx = 0;
+  renderSearchResults('');
+  setTimeout(() => input.focus(), 50);
+}
+
+function closeSearch() {
+  document.getElementById('search-modal').classList.remove('show');
+}
+
+function highlightMatch(text, queryNorm) {
+  if (!queryNorm) return escapeHtml(text);
+  const safe = escapeHtml(text);
+  const normSafe = normalizeVN(safe);
+  let result = '';
+  let i = 0;
+  while (i < safe.length) {
+    const at = normSafe.indexOf(queryNorm, i);
+    if (at < 0) { result += safe.slice(i); break; }
+    result += safe.slice(i, at) + '<mark>' + safe.slice(at, at + queryNorm.length) + '</mark>';
+    i = at + queryNorm.length;
+  }
+  return result;
+}
+
+function renderSearchResults(query) {
+  const listEl = document.getElementById('search-results');
+  const q = normalizeVN(query.trim());
+  if (!q) {
+    listEl.innerHTML = '<div class="search-empty">Gõ từ khoá để tìm trong toàn bộ nội dung</div>';
+    _searchResults = [];
+    return;
+  }
+  const idx = _searchIndex || buildSearchIndex();
+  _searchResults = idx.filter(item => item.haystack.includes(q)).slice(0, 50);
+  if (_searchResults.length === 0) {
+    listEl.innerHTML = '<div class="search-empty">Không tìm thấy "' + escapeHtml(query) + '"</div>';
+    return;
+  }
+  if (_searchSelectedIdx >= _searchResults.length) _searchSelectedIdx = 0;
+  listEl.innerHTML = _searchResults.map((r, i) => {
+    const snippet = (r.snippet || '').slice(0, 200);
+    return '<div class="search-result' + (i === _searchSelectedIdx ? ' active' : '') + '" data-idx="' + i + '" onclick="openSearchResult(' + i + ')" onmouseover="_searchSelectedIdx=' + i + '">'
+      + '<div><span class="sr-type ' + r.typeClass + '">' + r.typeLabel + '</span></div>'
+      + '<div class="sr-title">' + highlightMatch(r.title, q) + '</div>'
+      + '<div class="sr-snippet">' + highlightMatch(snippet, q) + (r.snippet && r.snippet.length > 200 ? '…' : '') + '</div>'
+      + '</div>';
+  }).join('');
+  const active = listEl.querySelector('.search-result[data-idx="' + _searchSelectedIdx + '"]');
+  if (active) active.style.background = 'var(--blue-bg)';
+}
+
+function openSearchResult(i) {
+  const r = _searchResults[i];
+  if (!r) return;
+  closeSearch();
+  if (r.type === 'question') {
+    const idxInList = QUESTIONS.findIndex(q => q.id === r.id);
+    if (idxInList >= 0) {
+      state.filter = 'all';
+      state.currentIdx = idxInList;
+      saveState();
+      document.querySelector('[data-tab="quiz"]').click();
+      renderQuiz();
+    }
+  } else if (r.type === 'case') {
+    document.querySelector('[data-tab="cases"]').click();
+    setTimeout(() => {
+      const cards = document.querySelectorAll('#cases .case-card');
+      const i2 = CASES.findIndex(c => c.id === r.id);
+      if (cards[i2]) cards[i2].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  } else if (r.type === 'advanced') {
+    document.querySelector('[data-tab="advanced"]').click();
+    setTimeout(() => {
+      const cards = document.querySelectorAll('#advanced .case-card');
+      const i2 = ADVANCED_CASES.findIndex(c => c.id === r.id);
+      if (cards[i2]) cards[i2].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  } else if (r.type === 'gotcha') {
+    document.querySelector('[data-tab="gotchas"]').click();
+    setTimeout(() => {
+      const cards = document.querySelectorAll('#gotchas .gotcha-card');
+      if (cards[r.id]) cards[r.id].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  } else if (r.type === 'workshop') {
+    document.querySelector('[data-tab="workshop"]').click();
+  }
+}
+
+// Wire search input + keyboard
+document.addEventListener('input', (e) => {
+  if (e.target && e.target.id === 'search-input') {
+    _searchSelectedIdx = 0;
+    renderSearchResults(e.target.value);
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  const modal = document.getElementById('search-modal');
+  const isOpen = modal && modal.classList.contains('show');
+  // Open with "/"
+  if (!isOpen && e.key === '/' && !e.ctrlKey && !e.metaKey) {
+    const t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    if (document.getElementById('auth-overlay').style.display === 'flex') return;
+    e.preventDefault();
+    openSearch();
+    return;
+  }
+  if (!isOpen) return;
+  if (e.key === 'Escape') { e.preventDefault(); closeSearch(); }
+  else if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (_searchResults.length === 0) return;
+    _searchSelectedIdx = (_searchSelectedIdx + 1) % _searchResults.length;
+    renderSearchResults(document.getElementById('search-input').value);
+    const active = document.querySelector('.search-result[data-idx="' + _searchSelectedIdx + '"]');
+    if (active) active.scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (_searchResults.length === 0) return;
+    _searchSelectedIdx = (_searchSelectedIdx - 1 + _searchResults.length) % _searchResults.length;
+    renderSearchResults(document.getElementById('search-input').value);
+    const active = document.querySelector('.search-result[data-idx="' + _searchSelectedIdx + '"]');
+    if (active) active.scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (_searchResults[_searchSelectedIdx]) openSearchResult(_searchSelectedIdx);
+  }
+});
+
 // Setup auth listener after Firebase is ready
 function setupFirebaseAuth() {
   if (!window.fb) {
@@ -5016,7 +6344,24 @@ document.addEventListener("keydown", e => {
     else if (e.key >= "1" && e.key <= "4") {
       const filtered = getFilteredQuestions();
       const q = filtered[state.currentIdx];
-      if (q && !state.answered[q.id]) selectOption(q.id, parseInt(e.key) - 1);
+      if (q && !state.answered[q.id] && state.confidence && state.confidence[q.id]) {
+        selectOption(q.id, parseInt(e.key) - 1);
+      }
+    }
+    else if (e.key === "s" || e.key === "S") {
+      const filtered = getFilteredQuestions();
+      const q = filtered[state.currentIdx];
+      if (q && !state.answered[q.id]) setConfidence(q.id, 'sure');
+    }
+    else if (e.key === "d" || e.key === "D") {
+      const filtered = getFilteredQuestions();
+      const q = filtered[state.currentIdx];
+      if (q && !state.answered[q.id]) setConfidence(q.id, 'doubt');
+    }
+    else if (e.key === "g" || e.key === "G") {
+      const filtered = getFilteredQuestions();
+      const q = filtered[state.currentIdx];
+      if (q && !state.answered[q.id]) setConfidence(q.id, 'guess');
     }
   }
 });
