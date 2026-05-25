@@ -81,6 +81,216 @@
     background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%);
   }
   body[data-theme="dark"] .auth-card { background: var(--card); }
+
+  /* ============ DARK MODE: comprehensive overrides for hardcoded light bgs ============ */
+  /* Containers that hardcode background: white or near-white */
+  body[data-theme="dark"] .question-card,
+  body[data-theme="dark"] .case-card,
+  body[data-theme="dark"] .ws-section,
+  body[data-theme="dark"] .stat-card,
+  body[data-theme="dark"] .lb-item,
+  body[data-theme="dark"] .folder-card,
+  body[data-theme="dark"] .folder-add,
+  body[data-theme="dark"] .bookmark-question,
+  body[data-theme="dark"] .gotcha-card,
+  body[data-theme="dark"] .glossary-item,
+  body[data-theme="dark"] .modal-card,
+  body[data-theme="dark"] .qed-modal .qed-box,
+  body[data-theme="dark"] .qed-item,
+  body[data-theme="dark"] .exam-result-card,
+  body[data-theme="dark"] .exam-header,
+  body[data-theme="dark"] .heatmap-summary .card,
+  body[data-theme="dark"] .heatmap-table-wrap,
+  body[data-theme="dark"] .heatmap-controls,
+  body[data-theme="dark"] .qed-toolbar,
+  body[data-theme="dark"] .team-card,
+  body[data-theme="dark"] .admin-table-wrap,
+  body[data-theme="dark"] .retail-chapter,
+  body[data-theme="dark"] .retail-toc,
+  body[data-theme="dark"] .glossary-search-bar,
+  body[data-theme="dark"] .leaderboard-card,
+  body[data-theme="dark"] .srs-empty,
+  body[data-theme="dark"] .mock-config-card,
+  body[data-theme="dark"] .progress-wrap,
+  body[data-theme="dark"] .quiz-controls,
+  body[data-theme="dark"] .comment-form textarea,
+  body[data-theme="dark"] .notes-textarea {
+    background-color: var(--card);
+    color: var(--text);
+  }
+
+  /* Buttons / clickable items with white bg → dark surface */
+  body[data-theme="dark"] .quiz-controls select,
+  body[data-theme="dark"] .quiz-controls button,
+  body[data-theme="dark"] .option,
+  body[data-theme="dark"] .auth-form input,
+  body[data-theme="dark"] .admin-controls input,
+  body[data-theme="dark"] .admin-controls button,
+  body[data-theme="dark"] .action-btn,
+  body[data-theme="dark"] .qed-toolbar button,
+  body[data-theme="dark"] .qed-toolbar input,
+  body[data-theme="dark"] .qed-toolbar select,
+  body[data-theme="dark"] .heatmap-controls select,
+  body[data-theme="dark"] .heatmap-controls input,
+  body[data-theme="dark"] .team-filter-bar select,
+  body[data-theme="dark"] .glossary-filter-btn,
+  body[data-theme="dark"] .bookmark-question .b-actions button,
+  body[data-theme="dark"] .folder-actions button,
+  body[data-theme="dark"] .folder-menu,
+  body[data-theme="dark"] .glossary-popover,
+  body[data-theme="dark"] .glossary-search-bar input,
+  body[data-theme="dark"] .menu-dropdown,
+  body[data-theme="dark"] .seq-up-down button,
+  body[data-theme="dark"] .sequence-item,
+  body[data-theme="dark"] .match-item,
+  body[data-theme="dark"] .mock-opt,
+  body[data-theme="dark"] .confidence-btn,
+  body[data-theme="dark"] .srs-rate-btn,
+  body[data-theme="dark"] .matching-clear,
+  body[data-theme="dark"] .share-canvas-wrap,
+  body[data-theme="dark"] .share-buttons .btn-copy,
+  body[data-theme="dark"] .btn-secondary,
+  body[data-theme="dark"] .toggle-answer ~ * input,
+  body[data-theme="dark"] .auth-btn-google,
+  body[data-theme="dark"] .surrender-btn {
+    background-color: var(--card) !important;
+    color: var(--text);
+  }
+
+  /* Hover states / muted backgrounds: #F3F4F6, #FAFBFC, #F9FAFB → darker surface */
+  body[data-theme="dark"] .quiz-controls button:hover,
+  body[data-theme="dark"] .admin-controls button:hover,
+  body[data-theme="dark"] .action-btn:hover,
+  body[data-theme="dark"] .modal-close:hover,
+  body[data-theme="dark"] .user-menu-item:hover,
+  body[data-theme="dark"] .qed-toolbar button:hover,
+  body[data-theme="dark"] .bookmark-question .b-actions button:hover,
+  body[data-theme="dark"] .folder-menu-item:hover,
+  body[data-theme="dark"] .auth-btn-google:hover,
+  body[data-theme="dark"] .matching-clear:hover,
+  body[data-theme="dark"] .surrender-btn:hover,
+  body[data-theme="dark"] .option:hover {
+    background-color: var(--sidebar-hover) !important;
+  }
+
+  /* Subtle bg variants (cards inner, table rows, etc.) */
+  body[data-theme="dark"] .section-row,
+  body[data-theme="dark"] .admin-table th,
+  body[data-theme="dark"] .heatmap-table th {
+    background-color: #0F172A;
+    color: var(--text-muted);
+  }
+  body[data-theme="dark"] .admin-table tr:hover td,
+  body[data-theme="dark"] .heatmap-table tr:hover td,
+  body[data-theme="dark"] .rubric-table tr:hover td {
+    background-color: var(--sidebar-hover) !important;
+  }
+  body[data-theme="dark"] .rubric-table tr:nth-child(even) td { background-color: #0F172A; }
+
+  /* Retail TOC items — was the problem reported by user */
+  body[data-theme="dark"] .retail-toc-list a {
+    background: rgba(255,255,255,0.05); color: var(--text);
+  }
+  body[data-theme="dark"] .retail-toc-list a:hover { background: var(--blue-bg); }
+
+  /* Sequence/Matching items in light bg */
+  body[data-theme="dark"] .sequence-item .seq-num,
+  body[data-theme="dark"] .multi-submit-bar {
+    background-color: var(--sidebar-hover);
+    color: var(--text);
+  }
+
+  /* Attempt banners (light orange tint) */
+  body[data-theme="dark"] .attempt-banner {
+    background: rgba(180, 83, 9, 0.18);
+    color: var(--text);
+  }
+
+  /* Streak/mock/srs hero gradients dark-friendly */
+  body[data-theme="dark"] .auth-divider { color: var(--text-muted); }
+  body[data-theme="dark"] .auth-divider::before,
+  body[data-theme="dark"] .auth-divider::after { background: var(--border); }
+
+  /* Tab buttons in admin sub-tabs */
+  body[data-theme="dark"] .admin-subtabs { background-color: var(--card); }
+  body[data-theme="dark"] .admin-subtab:not(.active) { color: var(--text-muted); }
+
+  /* Glossary filter chips */
+  body[data-theme="dark"] .glossary-filter-btn:not(.active) {
+    background: var(--card); color: var(--text-muted);
+  }
+
+  /* CTA boxes (yellow tint) */
+  body[data-theme="dark"] .retail-cta {
+    background: linear-gradient(135deg, #78350F 0%, #92400E 100%);
+    color: var(--text);
+  }
+
+  /* Lb-rank gray default for ranks 4+ */
+  body[data-theme="dark"] .lb-rank { background: var(--sidebar-hover); color: var(--text); }
+
+  /* SRS upcoming forecast inner cards */
+  body[data-theme="dark"] [style*="background:#F9FAFB"],
+  body[data-theme="dark"] [style*="background: #F9FAFB"],
+  body[data-theme="dark"] [style*="background:#F3F4F6"],
+  body[data-theme="dark"] [style*="background: #F3F4F6"],
+  body[data-theme="dark"] [style*="background:#FAFBFC"],
+  body[data-theme="dark"] [style*="background: #FAFBFC"],
+  body[data-theme="dark"] [style*="background:white"],
+  body[data-theme="dark"] [style*="background: white"] {
+    background-color: var(--card) !important;
+    color: var(--text);
+  }
+
+  /* Tooltip-like text-muted inline */
+  body[data-theme="dark"] [style*="color:var(--text-muted)"],
+  body[data-theme="dark"] [style*="color: var(--text-muted)"] { color: var(--text-muted) !important; }
+
+  /* Confidence pills inline bg */
+  body[data-theme="dark"] .confidence-pill.sure { background: var(--green-bg); color: var(--green); }
+  body[data-theme="dark"] .confidence-pill.doubt { background: var(--yellow-bg); color: var(--warning); }
+  body[data-theme="dark"] .confidence-pill.guess { background: var(--red-bg); color: var(--danger); }
+
+  /* Glossary popover */
+  body[data-theme="dark"] .glossary-popover { background: var(--card); }
+  body[data-theme="dark"] .glossary-popover .gp-example { color: var(--text-muted); border-left-color: var(--border); }
+
+  /* Search modal */
+  body[data-theme="dark"] .search-box { background: var(--card); }
+  body[data-theme="dark"] .search-input-wrap { border-color: var(--border); }
+  body[data-theme="dark"] .search-input-wrap input { background: var(--card); color: var(--text); }
+  body[data-theme="dark"] .search-result:hover { background: var(--blue-bg); }
+  body[data-theme="dark"] .search-hint { background: #0F172A; }
+  body[data-theme="dark"] .search-hint .kbd { background: var(--card); color: var(--text); border-color: var(--border); }
+  body[data-theme="dark"] .search-result mark { background: #78350F; color: var(--text); }
+
+  /* User menu dropdown */
+  body[data-theme="dark"] .user-menu-dropdown { background: var(--card); }
+  body[data-theme="dark"] .user-menu-info { border-bottom-color: var(--border); }
+
+  /* Folder + bookmark cards */
+  body[data-theme="dark"] .folder-card { background: var(--card); }
+  body[data-theme="dark"] .folder-card.active { background: var(--blue-bg); border-color: var(--primary-light); }
+  body[data-theme="dark"] .folder-add { background: transparent; border-color: var(--border); }
+
+  /* Comment item border */
+  body[data-theme="dark"] .comment-item { border-bottom-color: var(--border); }
+  body[data-theme="dark"] .comments-section { border-top-color: var(--border); }
+
+  /* Notes section yellow tint */
+  body[data-theme="dark"] .notes-section { background: rgba(180, 83, 9, 0.12); }
+  body[data-theme="dark"] .notes-textarea { border-color: var(--warning); }
+
+  /* Explanation block (light blue tint) */
+  body[data-theme="dark"] .explanation { background: rgba(46, 92, 158, 0.18); color: var(--text); }
+
+  /* Workshop notes/tips/fresher tints */
+  body[data-theme="dark"] .ws-note { background: rgba(180, 83, 9, 0.18); color: var(--text); }
+  body[data-theme="dark"] .ws-tip { background: rgba(22, 163, 74, 0.18); color: var(--text); }
+  body[data-theme="dark"] .ws-fresher { background: rgba(220, 38, 38, 0.18); color: var(--text); }
+
+  /* Score badges */
+  body[data-theme="dark"] .score-badge.none { background: var(--sidebar-hover); }
   * { box-sizing: border-box; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
