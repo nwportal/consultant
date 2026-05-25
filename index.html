@@ -471,6 +471,174 @@
   .modal-card.wide { max-width: 600px; }
   .modal-card.wide .modal-body { max-height: 70vh; overflow-y: auto; }
 
+  /* Leaderboard */
+  .leaderboard-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; margin-bottom: 16px;
+  }
+  .leaderboard-card h2 { color: var(--primary); margin: 0 0 6px 0; }
+  .lb-subtitle { margin: 0 0 16px 0; color: var(--text-muted); font-size: 13px; }
+  .lb-item {
+    display: flex; align-items: center; gap: 12px; padding: 12px;
+    border-radius: 10px; margin-bottom: 8px; background: white;
+    border: 1px solid var(--border); transition: all 0.15s;
+  }
+  .lb-item.me { border-color: var(--primary); background: var(--blue-bg); }
+  .lb-rank {
+    width: 36px; height: 36px; border-radius: 50%; background: #F3F4F6;
+    color: var(--text); font-weight: 700; display: flex;
+    align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px;
+  }
+  .lb-rank.gold { background: linear-gradient(135deg, #FFD700, #FFA500); color: white; }
+  .lb-rank.silver { background: linear-gradient(135deg, #C0C0C0, #A0A0A0); color: white; }
+  .lb-rank.bronze { background: linear-gradient(135deg, #CD7F32, #8B5A2B); color: white; }
+  .lb-avatar {
+    width: 40px; height: 40px; border-radius: 50%; background: var(--primary);
+    color: white; font-weight: 700; display: flex; align-items: center;
+    justify-content: center; flex-shrink: 0; overflow: hidden;
+  }
+  .lb-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .lb-info { flex: 1; min-width: 0; }
+  .lb-name { font-weight: 600; color: var(--text); font-size: 14px; }
+  .lb-stat { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .lb-score { font-size: 18px; font-weight: 700; flex-shrink: 0; }
+
+  /* Bookmark folders */
+  .folder-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px; margin-bottom: 16px;
+  }
+  .folder-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px; cursor: pointer; transition: all 0.15s; position: relative;
+  }
+  .folder-card:hover { border-color: var(--primary); transform: translateY(-1px); }
+  .folder-card.active { border-color: var(--primary); background: var(--blue-bg); }
+  .folder-icon { font-size: 28px; margin-bottom: 6px; }
+  .folder-name { font-weight: 600; color: var(--text); font-size: 14px; }
+  .folder-count { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .folder-actions {
+    position: absolute; top: 8px; right: 8px; display: none;
+  }
+  .folder-card:hover .folder-actions { display: flex; gap: 4px; }
+  .folder-actions button {
+    background: white; border: 1px solid var(--border); padding: 4px 8px;
+    border-radius: 6px; cursor: pointer; font-size: 11px;
+  }
+  .folder-add {
+    background: white; border: 2px dashed var(--border); border-radius: 10px;
+    padding: 16px; cursor: pointer; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; color: var(--text-muted);
+    transition: all 0.15s; min-height: 90px;
+  }
+  .folder-add:hover { border-color: var(--primary); color: var(--primary); }
+  .bookmark-question {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 12px 14px; margin-bottom: 8px;
+  }
+  .bookmark-question .b-section { font-size: 11px; color: var(--primary-light); font-weight: 600; }
+  .bookmark-question .b-qtext { font-size: 13px; margin: 4px 0 8px 0; }
+  .bookmark-question .b-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+  .bookmark-question .b-actions button {
+    background: white; border: 1px solid var(--border); padding: 4px 10px;
+    border-radius: 6px; cursor: pointer; font-size: 12px;
+  }
+  .bookmark-question .b-actions button:hover { background: #F3F4F6; }
+
+  /* Folder dropdown menu (when clicking star) */
+  .folder-menu {
+    position: absolute; top: 36px; right: 0; background: white;
+    border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    min-width: 220px; padding: 6px; z-index: 100;
+  }
+  .folder-menu-item {
+    display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+    border-radius: 6px; cursor: pointer; font-size: 13px;
+  }
+  .folder-menu-item:hover { background: #F3F4F6; }
+  .folder-menu-item input[type="checkbox"] { cursor: pointer; }
+  .folder-menu-divider { border-top: 1px solid var(--border); margin: 4px 0; }
+  .folder-menu-add {
+    padding: 8px 10px; border-radius: 6px; cursor: pointer;
+    color: var(--primary); font-weight: 600; font-size: 13px;
+  }
+  .folder-menu-add:hover { background: var(--blue-bg); }
+
+  /* Comments */
+  .comments-section {
+    margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border);
+  }
+  .comments-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px;
+  }
+  .comments-title { font-size: 13px; font-weight: 700; color: var(--text); }
+  .comment-form {
+    display: flex; gap: 8px; margin-bottom: 14px;
+  }
+  .comment-form textarea {
+    flex: 1; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px;
+    font-size: 13px; font-family: inherit; resize: vertical;
+    min-height: 38px; max-height: 100px; outline: none;
+  }
+  .comment-form textarea:focus { border-color: var(--primary); }
+  .comment-form button {
+    padding: 8px 14px; background: var(--primary); color: white;
+    border: none; border-radius: 8px; cursor: pointer; font-size: 13px;
+    font-weight: 600; align-self: flex-end;
+  }
+  .comment-form button:hover { background: var(--primary-light); }
+  .comment-form button:disabled { background: #9CA3AF; cursor: not-allowed; }
+  .comment-item {
+    display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid #F3F4F6;
+  }
+  .comment-item:last-child { border-bottom: none; }
+  .comment-avatar {
+    width: 32px; height: 32px; border-radius: 50%; background: var(--primary);
+    color: white; font-weight: 700; display: flex; align-items: center;
+    justify-content: center; font-size: 12px; flex-shrink: 0;
+  }
+  .comment-body { flex: 1; min-width: 0; }
+  .comment-meta { display: flex; gap: 8px; align-items: baseline; margin-bottom: 2px; }
+  .comment-name { font-weight: 600; font-size: 13px; }
+  .comment-time { font-size: 11px; color: var(--text-muted); }
+  .comment-text { font-size: 13px; color: var(--text); white-space: pre-wrap; word-break: break-word; }
+  .comment-delete {
+    background: none; border: none; cursor: pointer; color: var(--text-muted);
+    font-size: 12px; padding: 2px 6px; border-radius: 4px;
+  }
+  .comment-delete:hover { color: var(--danger); background: var(--red-bg); }
+  .comments-empty {
+    text-align: center; color: var(--text-muted); font-size: 13px;
+    padding: 16px; font-style: italic;
+  }
+
+  /* Share modal */
+  .share-canvas-wrap {
+    background: #F3F4F6; padding: 16px; border-radius: 8px;
+    margin-bottom: 12px; display: flex; justify-content: center;
+  }
+  .share-canvas-wrap canvas {
+    max-width: 100%; height: auto; border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  .share-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+  .share-buttons button {
+    flex: 1; padding: 10px; border: none; border-radius: 8px;
+    cursor: pointer; font-size: 13px; font-weight: 600; min-width: 120px;
+  }
+  .share-buttons .btn-download { background: var(--primary); color: white; }
+  .share-buttons .btn-download:hover { background: var(--primary-light); }
+  .share-buttons .btn-copy { background: #F3F4F6; color: var(--text); }
+  .share-buttons .btn-copy:hover { background: #E5E7EB; }
+
+  /* Privacy toggle */
+  .privacy-toggle {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; font-size: 13px;
+  }
+  .privacy-toggle input[type="checkbox"] { cursor: pointer; }
+
   @media (max-width: 480px) {
     .auth-card { padding: 24px 20px; }
     .user-menu { top: 12px; right: 12px; }
@@ -595,6 +763,11 @@
         <div class="email" id="user-email">email@example.com</div>
         <div class="role" id="user-role" style="display:none;">Admin</div>
       </div>
+      <button class="user-menu-item" onclick="showShareModal()">🎨 Khoe thành tích</button>
+      <label class="privacy-toggle user-menu-item" onclick="event.stopPropagation()">
+        <span>🏆 Hiện trong bảng xếp hạng</span>
+        <input type="checkbox" id="public-profile-checkbox" onchange="togglePublicProfile()" />
+      </label>
       <button class="user-menu-item" onclick="showChangePwModal()">🔒 Đổi mật khẩu</button>
       <button class="user-menu-item" onclick="importLocalProgress()">📥 Import tiến độ từ máy cũ</button>
       <button class="user-menu-item danger" onclick="logout()">🚪 Đăng xuất</button>
@@ -608,6 +781,8 @@
   <button class="tab-btn" data-tab="advanced">🎯 Nâng cao</button>
   <button class="tab-btn" data-tab="gotchas">⚠️ Gotchas</button>
   <button class="tab-btn" data-tab="workshop">📋 Workshop</button>
+  <button class="tab-btn" data-tab="bookmarks">📌 Bookmarks</button>
+  <button class="tab-btn" data-tab="leaderboard">🏆 Top</button>
   <button class="tab-btn" data-tab="stats">📊 Tiến độ</button>
   <button class="tab-btn admin-only" data-tab="admin" id="tab-admin" style="display:none;">👥 Quản trị</button>
 </nav>
@@ -618,9 +793,39 @@
   <div id="advanced" class="panel"></div>
   <div id="gotchas" class="panel"></div>
   <div id="workshop" class="panel"></div>
+  <div id="bookmarks" class="panel"></div>
+  <div id="leaderboard" class="panel"></div>
   <div id="stats" class="panel"></div>
   <div id="admin" class="panel"></div>
 </main>
+
+<!-- Share progress modal -->
+<div id="share-modal" class="modal-overlay">
+  <div class="modal-card wide">
+    <button class="modal-close" onclick="hideShareModal()">×</button>
+    <h3>🎨 Khoe thành tích</h3>
+    <div class="share-canvas-wrap">
+      <canvas id="share-canvas" width="800" height="500"></canvas>
+    </div>
+    <div class="share-buttons">
+      <button class="btn-download" onclick="downloadShareImage()">⬇️ Tải ảnh PNG</button>
+      <button class="btn-copy" onclick="copyShareImage()">📋 Copy ảnh</button>
+    </div>
+  </div>
+</div>
+
+<!-- Create folder modal -->
+<div id="folder-modal" class="modal-overlay">
+  <div class="modal-card">
+    <button class="modal-close" onclick="hideFolderModal()">×</button>
+    <h3 id="folder-modal-title">📁 Tạo folder mới</h3>
+    <form class="auth-form" onsubmit="submitFolderModal(event); return false;">
+      <input type="text" id="folder-input" placeholder="Tên folder (vd: Ôn lại, Khó, Quan trọng)" required maxlength="40" />
+      <div id="folder-modal-error" class="auth-error"></div>
+      <button type="submit" class="auth-btn-primary">Lưu</button>
+    </form>
+  </div>
+</div>
 
 <!-- User detail modal (admin) -->
 <div id="user-detail-modal" class="modal-overlay">
@@ -662,7 +867,7 @@
   } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
   import {
     getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp,
-    collection, getDocs, query, orderBy
+    collection, getDocs, query, orderBy, where, addDoc, deleteDoc, limit
   } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -2918,13 +3123,16 @@ const GOTCHAS = [
 const STORAGE_KEY = "erp-bc-food-quiz-state-v1";
 let state = {
   answered: {},  // {questionId: {selected: 0|1|2|3, correct: bool, ts: timestamp}}
-  bookmarks: {}, // {questionId: true}
+  bookmarks: {}, // {questionId: true} - legacy, kept for backwards compat
+  bookmarkFolders: { "Đã đánh dấu": [] }, // { folderName: [qid, qid, ...] }
   currentIdx: 0,
   filter: "all",
   randomize: false,
   lastActivity: null,
-  firstStart: null
+  firstStart: null,
+  publicProfile: true // opt-in for leaderboard
 };
+let _activeFolder = null; // for bookmarks tab
 
 async function loadState() {
   const user = window.fb && window.fb.auth.currentUser;
@@ -2991,7 +3199,17 @@ function getFilteredQuestions() {
   let qs = QUESTIONS;
   if (state.filter !== "all") {
     if (state.filter === "bookmarks") {
-      qs = qs.filter(q => state.bookmarks[q.id]);
+      // Show questions in ANY folder
+      const allFolderQids = new Set();
+      const folders = state.bookmarkFolders || {};
+      Object.values(folders).forEach(arr => (arr || []).forEach(qid => allFolderQids.add(qid)));
+      // Also legacy bookmarks
+      Object.keys(state.bookmarks || {}).forEach(qid => allFolderQids.add(parseInt(qid)));
+      qs = qs.filter(q => allFolderQids.has(q.id));
+    } else if (state.filter.startsWith("folder:")) {
+      const folderName = state.filter.slice(7);
+      const folderQids = new Set((state.bookmarkFolders && state.bookmarkFolders[folderName]) || []);
+      qs = qs.filter(q => folderQids.has(q.id));
     } else if (state.filter === "unanswered") {
       qs = qs.filter(q => !state.answered[q.id]);
     } else if (state.filter === "wrong") {
@@ -3001,6 +3219,17 @@ function getFilteredQuestions() {
     }
   }
   return qs;
+}
+
+function isBookmarked(qid) {
+  if (state.bookmarks && state.bookmarks[qid]) return true;
+  const folders = state.bookmarkFolders || {};
+  return Object.values(folders).some(arr => (arr || []).includes(qid));
+}
+
+function getQuestionFolders(qid) {
+  const folders = state.bookmarkFolders || {};
+  return Object.keys(folders).filter(f => (folders[f] || []).includes(qid));
 }
 
 function renderQuiz() {
@@ -3039,7 +3268,12 @@ function renderQuiz() {
 
   const q = filteredQs[state.currentIdx];
   const answer = state.answered[q.id];
-  const isBookmarked = state.bookmarks[q.id];
+  const bookmarked = isBookmarked(q.id);
+  const totalBookmarks = new Set([
+    ...Object.keys(state.bookmarks || {}).map(Number),
+    ...Object.values(state.bookmarkFolders || {}).flat()
+  ]).size;
+  const folderList = Object.keys(state.bookmarkFolders || {});
 
   panel.innerHTML = `
     <div class="quiz-controls">
@@ -3048,7 +3282,8 @@ function renderQuiz() {
         <option value="all" ${state.filter === "all" ? "selected" : ""}>Tất cả (${QUESTIONS.length} câu)</option>
         <option value="unanswered" ${state.filter === "unanswered" ? "selected" : ""}>Chưa làm</option>
         <option value="wrong" ${state.filter === "wrong" ? "selected" : ""}>Đã làm sai</option>
-        <option value="bookmarks" ${state.filter === "bookmarks" ? "selected" : ""}>Đã đánh dấu (${Object.keys(state.bookmarks).length})</option>
+        <option value="bookmarks" ${state.filter === "bookmarks" ? "selected" : ""}>Tất cả bookmarks (${totalBookmarks})</option>
+        ${folderList.map(f => `<option value="folder:${f}" ${state.filter === ('folder:'+f) ? "selected" : ""}>📁 ${f} (${(state.bookmarkFolders[f] || []).length})</option>`).join("")}
         ${sections.map(s => `<option value="${s}" ${state.filter === s ? "selected" : ""}>${s}</option>`).join("")}
       </select>
       <button class="danger" onclick="resetProgress()">🔄 Reset</button>
@@ -3065,9 +3300,9 @@ function renderQuiz() {
 
     <div class="question-card">
       <div class="question-section">${q.section}</div>
-      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; position:relative;">
         <div class="question-num">Câu ${q.id}</div>
-        <button class="bookmark-btn ${isBookmarked ? 'active' : ''}" onclick="toggleBookmark(${q.id})" title="Đánh dấu">★</button>
+        <button class="bookmark-btn ${bookmarked ? 'active' : ''}" onclick="toggleBookmark(${q.id}, event)" title="Đánh dấu / chọn folder">★</button>
       </div>
       <div class="question-text">${q.q}</div>
       <div class="options">
@@ -3094,6 +3329,17 @@ function renderQuiz() {
           <h4>📖 Giải thích</h4>
           <ul>${q.exp.map(e => `<li>${e}</li>`).join("")}</ul>
         </div>
+        <div class="comments-section" id="comments-${q.id}">
+          <div class="comments-header">
+            <div class="comments-title">💬 Thảo luận <span id="comments-count-${q.id}"></span></div>
+            <button class="action-btn" onclick="loadComments(${q.id})">🔄 Refresh</button>
+          </div>
+          <div class="comment-form">
+            <textarea id="comment-input-${q.id}" placeholder="Chia sẻ ý kiến / câu hỏi của bạn..." maxlength="500"></textarea>
+            <button onclick="postComment(${q.id})">Gửi</button>
+          </div>
+          <div id="comments-list-${q.id}"><div class="comments-empty">Đang tải...</div></div>
+        </div>
       ` : ""}
 
       <div class="nav-buttons">
@@ -3105,6 +3351,7 @@ function renderQuiz() {
   `;
 
   bindFilter();
+  if (answer) loadComments(q.id);
 }
 
 function bindFilter() {
@@ -3207,11 +3454,92 @@ function skipQuestion() {
   }
 }
 
-function toggleBookmark(qid) {
-  if (state.bookmarks[qid]) delete state.bookmarks[qid];
-  else state.bookmarks[qid] = true;
+function toggleBookmark(qid, event) {
+  if (event) event.stopPropagation();
+  // Open folder menu instead of simple toggle
+  showFolderMenu(qid, event);
+}
+
+function quickToggleBookmark(qid) {
+  // Quick toggle: add/remove from default folder "Đã đánh dấu"
+  if (!state.bookmarkFolders) state.bookmarkFolders = { "Đã đánh dấu": [] };
+  if (!state.bookmarkFolders["Đã đánh dấu"]) state.bookmarkFolders["Đã đánh dấu"] = [];
+  const arr = state.bookmarkFolders["Đã đánh dấu"];
+  const idx = arr.indexOf(qid);
+  if (idx >= 0) arr.splice(idx, 1);
+  else arr.push(qid);
+  // Also remove from legacy bookmarks
+  delete (state.bookmarks || {})[qid];
   saveState();
   renderQuiz();
+}
+
+function showFolderMenu(qid, event) {
+  if (event) event.stopPropagation();
+  // Close existing menu
+  document.querySelectorAll('.folder-menu').forEach(m => m.remove());
+  if (!state.bookmarkFolders) state.bookmarkFolders = { "Đã đánh dấu": [] };
+  const folders = Object.keys(state.bookmarkFolders);
+  const inFolders = getQuestionFolders(qid);
+
+  const menu = document.createElement('div');
+  menu.className = 'folder-menu';
+  menu.innerHTML = folders.map(f => `
+    <label class="folder-menu-item">
+      <input type="checkbox" ${inFolders.includes(f) ? 'checked' : ''} onchange="toggleQuestionInFolder(${qid}, '${escapeHtml(f).replace(/'/g, '&#39;')}', this.checked)" />
+      <span>${escapeHtml(f)} <span style="color:var(--text-muted); font-size:11px;">(${(state.bookmarkFolders[f] || []).length})</span></span>
+    </label>
+  `).join('') + `
+    <div class="folder-menu-divider"></div>
+    <div class="folder-menu-add" onclick="newFolderFromMenu(${qid})">+ Tạo folder mới</div>
+  `;
+
+  const btn = event && event.currentTarget;
+  if (btn) {
+    btn.parentElement.style.position = 'relative';
+    btn.parentElement.appendChild(menu);
+  }
+
+  // Close on outside click
+  setTimeout(() => {
+    const handler = (e) => {
+      if (!menu.contains(e.target) && e.target !== btn) {
+        menu.remove();
+        document.removeEventListener('click', handler);
+      }
+    };
+    document.addEventListener('click', handler);
+  }, 0);
+}
+
+function toggleQuestionInFolder(qid, folder, checked) {
+  if (!state.bookmarkFolders) state.bookmarkFolders = {};
+  if (!state.bookmarkFolders[folder]) state.bookmarkFolders[folder] = [];
+  const arr = state.bookmarkFolders[folder];
+  const idx = arr.indexOf(qid);
+  if (checked && idx < 0) arr.push(qid);
+  else if (!checked && idx >= 0) arr.splice(idx, 1);
+  // Also clean up legacy bookmarks
+  delete (state.bookmarks || {})[qid];
+  saveState();
+  // Update bookmark star UI without re-rendering whole quiz
+  const bookmarkBtns = document.querySelectorAll('.bookmark-btn');
+  bookmarkBtns.forEach(b => {
+    if (isBookmarked(qid)) b.classList.add('active');
+    else b.classList.remove('active');
+  });
+}
+
+function newFolderFromMenu(qid) {
+  document.querySelectorAll('.folder-menu').forEach(m => m.remove());
+  showFolderModal('create', null, (name) => {
+    if (!state.bookmarkFolders) state.bookmarkFolders = {};
+    if (state.bookmarkFolders[name]) return 'Folder đã tồn tại';
+    state.bookmarkFolders[name] = [qid];
+    saveState();
+    renderQuiz();
+    return null;
+  });
 }
 
 function resetProgress() {
@@ -3620,6 +3948,8 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
     document.getElementById(tab).classList.add("active");
     if (tab === "stats") renderStats();
     if (tab === "admin") renderAdmin();
+    if (tab === "leaderboard") renderLeaderboard();
+    if (tab === "bookmarks") renderBookmarks();
   });
 });
 
@@ -3693,6 +4023,18 @@ async function handleAuthStateChange(user) {
   }
 
   await initApp();
+
+  // Set publicProfile checkbox
+  const pp = document.getElementById('public-profile-checkbox');
+  if (pp) pp.checked = state.publicProfile !== false;
+
+  // Sync publicProfile field at root for query (one-time on each login)
+  try {
+    await window.fb.updateDoc(window.fb.doc(window.fb.db, 'users', user.uid), {
+      publicProfile: state.publicProfile !== false,
+      photoURL: user.photoURL || null
+    });
+  } catch(e) {}
 }
 
 function showAuthView(view) {
@@ -4210,6 +4552,442 @@ function exportUsersCSV() {
   a.download = 'users-erp-portal-' + new Date().toISOString().slice(0, 10) + '.csv';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   URL.revokeObjectURL(url);
+}
+
+// ============ PHASE 3a: LEADERBOARD ============
+async function renderLeaderboard() {
+  const panel = document.getElementById('leaderboard');
+  panel.innerHTML = '<div style="padding:30px; text-align:center; color:var(--text-muted);">⏳ Đang tải bảng xếp hạng...</div>';
+
+  try {
+    const snap = await window.fb.getDocs(window.fb.collection(window.fb.db, 'users'));
+    const users = [];
+    snap.forEach(d => users.push({ uid: d.id, ...d.data() }));
+
+    const me = window.fb.auth.currentUser;
+    const MIN_ANSWERED = 20;
+
+    // Compute leaderboard
+    const ranked = users
+      .filter(u => u.publicProfile !== false) // include null/undefined as public
+      .map(u => {
+        const ans = (u.progress && u.progress.answered) || {};
+        const answered = Object.keys(ans).length;
+        const correct = Object.values(ans).filter(a => a.correct).length;
+        const pct = answered > 0 ? (correct / answered * 100) : 0;
+        return { uid: u.uid, displayName: u.displayName || u.email?.split('@')[0] || 'User', email: u.email, photoURL: u.photoURL, answered, correct, pct };
+      })
+      .filter(u => u.answered >= MIN_ANSWERED)
+      .sort((a, b) => b.pct - a.pct || b.answered - a.answered)
+      .slice(0, 20);
+
+    // My rank
+    let myRank = -1;
+    if (me) myRank = ranked.findIndex(u => u.uid === me.uid);
+
+    panel.innerHTML = `
+      <div class="leaderboard-card">
+        <h2>🏆 Top học viên ERP</h2>
+        <p class="lb-subtitle">Xếp hạng theo độ chính xác (tối thiểu ${MIN_ANSWERED} câu đã làm).</p>
+        ${ranked.length === 0
+          ? '<div style="text-align:center; padding:30px; color:var(--text-muted);">Chưa có ai đạt mốc ' + MIN_ANSWERED + ' câu. Hãy là người đầu tiên!</div>'
+          : ranked.map((u, i) => {
+              const rankCls = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
+              const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i+1);
+              const isMe = me && u.uid === me.uid;
+              return `
+                <div class="lb-item ${isMe ? 'me' : ''}">
+                  <div class="lb-rank ${rankCls}">${medal}</div>
+                  <div class="lb-avatar">${u.photoURL ? '<img src="'+u.photoURL+'" alt="" referrerpolicy="no-referrer"/>' : escapeHtml(u.displayName.charAt(0).toUpperCase())}</div>
+                  <div class="lb-info">
+                    <div class="lb-name">${escapeHtml(u.displayName)} ${isMe ? '<span style="color:var(--primary); font-size:12px;">(bạn)</span>' : ''}</div>
+                    <div class="lb-stat">${u.answered}/${QUESTIONS.length} câu • ${u.correct} đúng</div>
+                  </div>
+                  <div class="lb-score" style="color:${u.pct >= 80 ? 'var(--green)' : u.pct >= 60 ? 'var(--primary)' : 'var(--warning)'}">${u.pct.toFixed(1)}%</div>
+                </div>
+              `;
+            }).join('')
+        }
+      </div>
+      ${me && myRank < 0 ? `
+        <div class="ws-note" style="margin-top:14px;">
+          <strong>📌 Bạn chưa xuất hiện trong bảng xếp hạng.</strong><br>
+          ${state.publicProfile === false ? 'Hãy bật "Hiện trong bảng xếp hạng" trong menu avatar để tham gia.' : 'Hãy làm đủ ' + MIN_ANSWERED + ' câu để được xếp hạng.'}
+        </div>
+      ` : ''}
+    `;
+  } catch (e) {
+    panel.innerHTML = `<div class="auth-error show" style="margin:20px;">Lỗi tải bảng xếp hạng: ${e.message}<br><br>Cần update Firestore Security Rules cho phép user list collection 'users'.</div>`;
+  }
+}
+
+async function togglePublicProfile() {
+  const checkbox = document.getElementById('public-profile-checkbox');
+  state.publicProfile = checkbox.checked;
+  saveState();
+  // Also update root user doc field for query efficiency
+  const user = window.fb && window.fb.auth.currentUser;
+  if (user) {
+    try {
+      await window.fb.updateDoc(window.fb.doc(window.fb.db, 'users', user.uid), {
+        publicProfile: state.publicProfile
+      });
+    } catch(e) { console.error(e); }
+  }
+}
+
+// ============ PHASE 3b: BOOKMARK FOLDERS ============
+function renderBookmarks() {
+  const panel = document.getElementById('bookmarks');
+  const folders = state.bookmarkFolders || {};
+
+  // Auto-create default if not exist
+  if (Object.keys(folders).length === 0) {
+    state.bookmarkFolders = { "Đã đánh dấu": [] };
+  }
+
+  // Active folder
+  if (!_activeFolder || !state.bookmarkFolders[_activeFolder]) {
+    _activeFolder = Object.keys(state.bookmarkFolders)[0];
+  }
+
+  const folderEntries = Object.entries(state.bookmarkFolders);
+  const activeQids = state.bookmarkFolders[_activeFolder] || [];
+  const activeQs = QUESTIONS.filter(q => activeQids.includes(q.id));
+
+  panel.innerHTML = `
+    <div class="leaderboard-card">
+      <h2>📌 Bookmark Folders</h2>
+      <p class="lb-subtitle">Phân loại các câu hỏi quan trọng để ôn tập có hệ thống.</p>
+
+      <div class="folder-grid">
+        ${folderEntries.map(([name, qids]) => `
+          <div class="folder-card ${name === _activeFolder ? 'active' : ''}" onclick="selectFolder('${escapeHtml(name).replace(/'/g, '&#39;')}')">
+            <div class="folder-icon">${name === 'Đã đánh dấu' ? '⭐' : name.toLowerCase().includes('khó') ? '🔥' : name.toLowerCase().includes('quan trọng') ? '🎯' : '📁'}</div>
+            <div class="folder-name">${escapeHtml(name)}</div>
+            <div class="folder-count">${(qids || []).length} câu</div>
+            ${name !== 'Đã đánh dấu' ? `
+              <div class="folder-actions">
+                <button onclick="event.stopPropagation(); renameFolder('${escapeHtml(name).replace(/'/g, '&#39;')}')">✏️</button>
+                <button onclick="event.stopPropagation(); deleteFolder('${escapeHtml(name).replace(/'/g, '&#39;')}')">🗑️</button>
+              </div>
+            ` : ''}
+          </div>
+        `).join('')}
+        <div class="folder-add" onclick="newFolder()">
+          <div style="font-size:24px;">+</div>
+          <div style="font-size:13px;">Tạo folder</div>
+        </div>
+      </div>
+
+      <h3 style="color:var(--primary); margin:16px 0 12px 0;">📁 ${escapeHtml(_activeFolder)} (${activeQs.length} câu)</h3>
+      ${activeQs.length === 0
+        ? '<div style="text-align:center; padding:30px; color:var(--text-muted); font-style:italic;">Folder rỗng. Vào tab Trắc nghiệm, click ★ trên câu hỏi để đánh dấu.</div>'
+        : activeQs.map(q => `
+          <div class="bookmark-question">
+            <div class="b-section">${q.section}</div>
+            <div class="b-qtext"><strong>Câu ${q.id}:</strong> ${q.q}</div>
+            <div class="b-actions">
+              <button onclick="goToQuestion(${q.id})">▶️ Mở câu</button>
+              <button onclick="toggleQuestionInFolder(${q.id}, '${escapeHtml(_activeFolder).replace(/'/g, '&#39;')}', false); renderBookmarks();">❌ Xoá khỏi folder</button>
+            </div>
+          </div>
+        `).join('')
+      }
+    </div>
+  `;
+}
+
+function selectFolder(name) {
+  _activeFolder = name;
+  renderBookmarks();
+}
+
+function newFolder() {
+  showFolderModal('create', null, (name) => {
+    if (!state.bookmarkFolders) state.bookmarkFolders = {};
+    if (state.bookmarkFolders[name]) return 'Folder đã tồn tại';
+    state.bookmarkFolders[name] = [];
+    saveState();
+    _activeFolder = name;
+    renderBookmarks();
+    return null;
+  });
+}
+
+function renameFolder(oldName) {
+  showFolderModal('rename', oldName, (newName) => {
+    if (state.bookmarkFolders[newName] && newName !== oldName) return 'Tên này đã tồn tại';
+    state.bookmarkFolders[newName] = state.bookmarkFolders[oldName];
+    delete state.bookmarkFolders[oldName];
+    if (_activeFolder === oldName) _activeFolder = newName;
+    saveState();
+    renderBookmarks();
+    return null;
+  });
+}
+
+function deleteFolder(name) {
+  if (name === 'Đã đánh dấu') return alert('Không thể xóa folder mặc định');
+  const count = (state.bookmarkFolders[name] || []).length;
+  if (!confirm(`Xóa folder "${name}" (${count} câu)?\nCâu trong folder vẫn còn ở các folder khác (nếu có).`)) return;
+  delete state.bookmarkFolders[name];
+  if (_activeFolder === name) _activeFolder = Object.keys(state.bookmarkFolders)[0];
+  saveState();
+  renderBookmarks();
+}
+
+function goToQuestion(qid) {
+  const idx = QUESTIONS.findIndex(q => q.id === qid);
+  if (idx < 0) return;
+  state.filter = 'all';
+  state.currentIdx = idx;
+  saveState();
+  document.querySelector('[data-tab="quiz"]').click();
+}
+
+// Folder modal: create/rename
+let _folderModalCallback = null;
+function showFolderModal(mode, currentName, callback) {
+  document.getElementById('folder-modal-title').textContent = mode === 'rename' ? '✏️ Đổi tên folder' : '📁 Tạo folder mới';
+  const input = document.getElementById('folder-input');
+  input.value = currentName || '';
+  document.getElementById('folder-modal-error').classList.remove('show');
+  document.getElementById('folder-modal').classList.add('show');
+  _folderModalCallback = callback;
+  setTimeout(() => input.focus(), 100);
+}
+
+function hideFolderModal() {
+  document.getElementById('folder-modal').classList.remove('show');
+  _folderModalCallback = null;
+}
+
+function submitFolderModal(event) {
+  event.preventDefault();
+  const name = document.getElementById('folder-input').value.trim();
+  if (!name) return;
+  if (!_folderModalCallback) return;
+  const err = _folderModalCallback(name);
+  if (err) {
+    const errEl = document.getElementById('folder-modal-error');
+    errEl.textContent = err;
+    errEl.classList.add('show');
+  } else {
+    hideFolderModal();
+  }
+}
+
+// ============ PHASE 3c: COMMENTS ============
+async function loadComments(qid) {
+  const listEl = document.getElementById('comments-list-' + qid);
+  const countEl = document.getElementById('comments-count-' + qid);
+  if (!listEl) return;
+  listEl.innerHTML = '<div class="comments-empty">Đang tải...</div>';
+  try {
+    const ref = window.fb.collection(window.fb.db, 'comments');
+    const snap = await window.fb.getDocs(window.fb.query(ref, window.fb.where('qid', '==', qid)));
+    const comments = [];
+    snap.forEach(d => comments.push({ id: d.id, ...d.data() }));
+    comments.sort((a, b) => {
+      const aT = (a.createdAt && a.createdAt.toMillis && a.createdAt.toMillis()) || 0;
+      const bT = (b.createdAt && b.createdAt.toMillis && b.createdAt.toMillis()) || 0;
+      return bT - aT;
+    });
+    if (countEl) countEl.textContent = '(' + comments.length + ')';
+    if (comments.length === 0) {
+      listEl.innerHTML = '<div class="comments-empty">Chưa có thảo luận. Hãy là người đầu tiên!</div>';
+      return;
+    }
+    const me = window.fb.auth.currentUser;
+    const isAdmin = me && me.email === ADMIN_EMAIL;
+    listEl.innerHTML = comments.map(c => {
+      const t = (c.createdAt && c.createdAt.toMillis && c.createdAt.toMillis()) || 0;
+      const name = c.displayName || (c.email && c.email.split('@')[0]) || 'User';
+      const canDelete = me && (c.uid === me.uid || isAdmin);
+      return `
+        <div class="comment-item">
+          <div class="comment-avatar">${escapeHtml(name.charAt(0).toUpperCase())}</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-name">${escapeHtml(name)}</span>
+              <span class="comment-time">${formatTimeRel(t)}</span>
+              ${canDelete ? `<button class="comment-delete" onclick="deleteComment('${c.id}', ${qid})">Xóa</button>` : ''}
+            </div>
+            <div class="comment-text">${escapeHtml(c.text || '')}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch (e) {
+    listEl.innerHTML = `<div class="auth-error show">Không tải được comments: ${e.message}</div>`;
+  }
+}
+
+async function postComment(qid) {
+  const input = document.getElementById('comment-input-' + qid);
+  const text = input.value.trim();
+  if (!text) return;
+  const me = window.fb.auth.currentUser;
+  if (!me) return alert('Vui lòng đăng nhập');
+  try {
+    await window.fb.addDoc(window.fb.collection(window.fb.db, 'comments'), {
+      qid: qid,
+      uid: me.uid,
+      email: me.email,
+      displayName: me.displayName || (me.email && me.email.split('@')[0]) || 'User',
+      text: text.slice(0, 500),
+      createdAt: window.fb.serverTimestamp()
+    });
+    input.value = '';
+    loadComments(qid);
+  } catch (e) {
+    alert('Lỗi gửi comment: ' + e.message);
+  }
+}
+
+async function deleteComment(commentId, qid) {
+  if (!confirm('Xóa comment này?')) return;
+  try {
+    await window.fb.deleteDoc(window.fb.doc(window.fb.db, 'comments', commentId));
+    loadComments(qid);
+  } catch (e) {
+    alert('Lỗi xóa: ' + e.message);
+  }
+}
+
+// ============ PHASE 3d: SHARE PROGRESS IMAGE ============
+async function showShareModal() {
+  document.getElementById('user-menu-dropdown').classList.remove('show');
+  document.getElementById('share-modal').classList.add('show');
+  await drawShareCanvas();
+}
+
+function hideShareModal() {
+  document.getElementById('share-modal').classList.remove('show');
+}
+
+async function drawShareCanvas() {
+  const canvas = document.getElementById('share-canvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  // Background gradient
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, '#1F3864');
+  grad.addColorStop(1, '#2E5C9E');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Decorative corner shapes
+  ctx.fillStyle = 'rgba(255,255,255,0.05)';
+  ctx.beginPath();
+  ctx.arc(W - 50, 50, 200, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(50, H - 50, 150, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Header
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  ctx.font = '600 22px -apple-system, "Segoe UI", sans-serif';
+  ctx.fillText('📘 ERP Consultant Portal', 40, 60);
+
+  ctx.font = '14px -apple-system, "Segoe UI", sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.fillText('Phân phối Thực phẩm trên Business Central', 40, 84);
+
+  // User info
+  const me = window.fb && window.fb.auth.currentUser;
+  const displayName = me ? (me.displayName || me.email.split('@')[0]) : 'Học viên';
+
+  ctx.fillStyle = 'white';
+  ctx.font = 'bold 36px -apple-system, "Segoe UI", sans-serif';
+  ctx.fillText(displayName, 40, 160);
+
+  // Stats
+  const ans = state.answered || {};
+  const answered = Object.keys(ans).length;
+  const correct = Object.values(ans).filter(a => a.correct).length;
+  const pct = answered > 0 ? Math.round(correct / answered * 100) : 0;
+  const total = QUESTIONS.length;
+
+  // Big score
+  ctx.fillStyle = 'white';
+  ctx.font = 'bold 110px -apple-system, "Segoe UI", sans-serif';
+  ctx.fillText(pct + '%', 40, 290);
+
+  ctx.font = '600 20px -apple-system, "Segoe UI", sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.fillText('độ chính xác', 40, 320);
+
+  // Sub stats
+  ctx.font = '18px -apple-system, "Segoe UI", sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  ctx.fillText('✓ Đã làm: ' + answered + ' / ' + total + ' câu', 40, 370);
+  ctx.fillText('🎯 Đúng: ' + correct + ' câu', 40, 400);
+
+  // Try to get rank
+  let myRank = -1;
+  try {
+    if (me) {
+      const snap = await window.fb.getDocs(window.fb.collection(window.fb.db, 'users'));
+      const users = [];
+      snap.forEach(d => users.push({ uid: d.id, ...d.data() }));
+      const ranked = users
+        .filter(u => u.publicProfile !== false)
+        .map(u => {
+          const a = (u.progress && u.progress.answered) || {};
+          const an = Object.keys(a).length;
+          const co = Object.values(a).filter(x => x.correct).length;
+          return { uid: u.uid, answered: an, pct: an > 0 ? co/an * 100 : 0 };
+        })
+        .filter(u => u.answered >= 20)
+        .sort((a, b) => b.pct - a.pct || b.answered - a.answered);
+      myRank = ranked.findIndex(u => u.uid === me.uid);
+    }
+  } catch(e) {}
+
+  if (myRank >= 0) {
+    ctx.fillStyle = 'rgba(255, 215, 0, 0.95)';
+    ctx.font = 'bold 22px -apple-system, "Segoe UI", sans-serif';
+    ctx.fillText('🏆 Xếp hạng #' + (myRank + 1), 40, 440);
+  }
+
+  // Date
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = '13px -apple-system, "Segoe UI", sans-serif';
+  ctx.fillText(new Date().toLocaleDateString('vi-VN'), 40, H - 25);
+
+  // URL
+  ctx.textAlign = 'right';
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.fillText('nwportal.github.io/consultant', W - 40, H - 25);
+  ctx.textAlign = 'left';
+}
+
+function downloadShareImage() {
+  const canvas = document.getElementById('share-canvas');
+  const link = document.createElement('a');
+  link.download = 'erp-portal-thanh-tich-' + new Date().toISOString().slice(0, 10) + '.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+async function copyShareImage() {
+  const canvas = document.getElementById('share-canvas');
+  try {
+    canvas.toBlob(async (blob) => {
+      try {
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        alert('✓ Đã copy ảnh vào clipboard. Paste vào Facebook/Zalo/email...');
+      } catch (e) {
+        alert('Trình duyệt không hỗ trợ copy ảnh. Hãy dùng "Tải ảnh PNG".');
+      }
+    });
+  } catch (e) {
+    alert('Lỗi copy: ' + e.message);
+  }
 }
 
 // Setup auth listener after Firebase is ready
