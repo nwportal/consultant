@@ -278,6 +278,128 @@
   }
   .ws-fresher strong { color: #B91C1C; }
 
+  /* Auth overlay */
+  .auth-overlay {
+    position: fixed; inset: 0;
+    background: linear-gradient(135deg, #1F3864 0%, #2E5C9E 100%);
+    display: flex; align-items: center; justify-content: center; z-index: 1000;
+    padding: 20px;
+  }
+  .auth-card {
+    background: white; border-radius: 16px; padding: 32px;
+    max-width: 420px; width: 100%;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  }
+  .auth-card h2 { color: var(--primary); margin: 0 0 8px 0; text-align: center; font-size: 22px; }
+  .auth-card .subtitle { text-align: center; color: var(--text-muted); margin-bottom: 20px; font-size: 14px; }
+  .auth-form { display: flex; flex-direction: column; gap: 10px; }
+  .auth-form input {
+    padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 8px;
+    font-size: 14px; font-family: inherit; outline: none;
+    transition: border-color 0.15s;
+  }
+  .auth-form input:focus { border-color: var(--primary); }
+  .auth-form button {
+    padding: 12px; border: none; border-radius: 8px; cursor: pointer;
+    font-size: 14px; font-weight: 600; transition: all 0.15s;
+  }
+  .auth-btn-primary { background: var(--primary); color: white; }
+  .auth-btn-primary:hover { background: var(--primary-light); }
+  .auth-btn-primary:disabled { background: #9CA3AF; cursor: not-allowed; }
+  .auth-btn-google {
+    background: white !important; color: #1F2937 !important;
+    border: 1.5px solid var(--border) !important;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; padding: 12px; border-radius: 8px; cursor: pointer;
+    font-size: 14px; font-weight: 600;
+  }
+  .auth-btn-google:hover { background: #F3F4F6 !important; }
+  .auth-divider {
+    display: flex; align-items: center; gap: 10px; margin: 14px 0;
+    color: var(--text-muted); font-size: 12px;
+  }
+  .auth-divider::before, .auth-divider::after {
+    content: ""; flex: 1; height: 1px; background: var(--border);
+  }
+  .auth-links { text-align: center; margin-top: 14px; font-size: 13px; color: var(--text-muted); }
+  .auth-links a { color: var(--primary); cursor: pointer; text-decoration: none; font-weight: 600; }
+  .auth-links a:hover { text-decoration: underline; }
+  .auth-error {
+    background: var(--red-bg); color: var(--red); padding: 10px 12px;
+    border-radius: 6px; font-size: 13px; display: none; margin-top: 4px;
+  }
+  .auth-error.show { display: block; }
+  .auth-success {
+    background: var(--green-bg); color: var(--green); padding: 10px 12px;
+    border-radius: 6px; font-size: 13px; display: none; margin-top: 4px;
+  }
+  .auth-success.show { display: block; }
+
+  /* User menu in header */
+  .user-menu {
+    position: absolute; top: 16px; right: 16px;
+  }
+  .user-avatar {
+    width: 38px; height: 38px; border-radius: 50%; background: white;
+    color: var(--primary); font-weight: 700; display: flex;
+    align-items: center; justify-content: center; cursor: pointer;
+    border: 2px solid rgba(255,255,255,0.5); font-size: 15px;
+    overflow: hidden; user-select: none;
+  }
+  .user-avatar:hover { border-color: white; }
+  .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .user-menu-dropdown {
+    position: absolute; top: 50px; right: 0; background: white;
+    border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    min-width: 240px; display: none; overflow: hidden;
+  }
+  .user-menu-dropdown.show { display: block; }
+  .user-menu-info {
+    padding: 14px; border-bottom: 1px solid var(--border);
+  }
+  .user-menu-info .name { font-weight: 600; color: var(--text); font-size: 14px; }
+  .user-menu-info .email { color: var(--text-muted); font-size: 12px; margin-top: 2px; word-break: break-all; }
+  .user-menu-info .role {
+    display: inline-block; margin-top: 6px; padding: 2px 8px;
+    background: var(--primary); color: white; border-radius: 10px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+  }
+  .user-menu-item {
+    display: block; width: 100%; text-align: left; padding: 10px 14px;
+    border: none; background: none; cursor: pointer; font-size: 13px;
+    color: var(--text); transition: background 0.15s;
+  }
+  .user-menu-item:hover { background: #F3F4F6; }
+  .user-menu-item.danger { color: var(--danger); }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    display: none; align-items: center; justify-content: center; z-index: 999;
+    padding: 20px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal-card {
+    background: white; border-radius: 12px; padding: 24px;
+    max-width: 400px; width: 100%; position: relative;
+  }
+  .modal-card h3 { margin: 0 0 16px 0; color: var(--primary); padding-right: 30px; }
+  .modal-close {
+    position: absolute; top: 12px; right: 12px;
+    background: none; border: none; cursor: pointer;
+    font-size: 24px; color: var(--text-muted); padding: 0;
+    width: 30px; height: 30px; border-radius: 50%;
+  }
+  .modal-close:hover { background: #F3F4F6; }
+
+  .app-hidden { display: none !important; }
+
+  @media (max-width: 480px) {
+    .auth-card { padding: 24px 20px; }
+    .user-menu { top: 12px; right: 12px; }
+    .user-avatar { width: 32px; height: 32px; font-size: 13px; }
+  }
+
   /* Print styles */
   @media print {
     header, nav.tabs, .actions, .quiz-controls { display: none !important; }
@@ -292,9 +414,113 @@
 </head>
 <body>
 
-<header>
+<!-- Auth Overlay (shown when not logged in or email not verified) -->
+<div id="auth-overlay" class="auth-overlay" style="display:none;">
+  <div class="auth-card">
+    <!-- Login view -->
+    <div id="auth-view-login">
+      <h2>📘 Luyện thi ERP Consultant</h2>
+      <p class="subtitle">Đăng nhập để theo dõi tiến độ học của bạn</p>
+      <button class="auth-btn-google" onclick="loginGoogle()">
+        <svg width="18" height="18" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C12.955 4 4 12.955 4 24s8.955 20 20 20s20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571c.001-.001.002-.001.003-.002l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
+        Đăng nhập bằng Google
+      </button>
+      <div class="auth-divider">hoặc</div>
+      <form class="auth-form" onsubmit="loginEmail(event); return false;">
+        <input type="email" id="login-email" placeholder="Email" required autocomplete="email" />
+        <input type="password" id="login-password" placeholder="Mật khẩu" required autocomplete="current-password" />
+        <div id="login-error" class="auth-error"></div>
+        <button type="submit" class="auth-btn-primary">Đăng nhập</button>
+      </form>
+      <div class="auth-links">
+        <a onclick="showAuthView('register')">Tạo tài khoản</a> &nbsp;•&nbsp;
+        <a onclick="showAuthView('forgot')">Quên mật khẩu?</a>
+      </div>
+    </div>
+
+    <!-- Register view -->
+    <div id="auth-view-register" style="display:none;">
+      <h2>Tạo tài khoản mới</h2>
+      <p class="subtitle">Sau khi đăng ký, bạn sẽ nhận email xác nhận</p>
+      <form class="auth-form" onsubmit="registerEmail(event); return false;">
+        <input type="text" id="reg-name" placeholder="Họ tên" required />
+        <input type="email" id="reg-email" placeholder="Email" required autocomplete="email" />
+        <input type="password" id="reg-password" placeholder="Mật khẩu (≥8 ký tự)" minlength="8" required autocomplete="new-password" />
+        <input type="password" id="reg-confirm" placeholder="Nhập lại mật khẩu" minlength="8" required autocomplete="new-password" />
+        <div id="register-error" class="auth-error"></div>
+        <button type="submit" class="auth-btn-primary">Đăng ký</button>
+      </form>
+      <div class="auth-links">
+        <a onclick="showAuthView('login')">← Quay lại đăng nhập</a>
+      </div>
+    </div>
+
+    <!-- Forgot password view -->
+    <div id="auth-view-forgot" style="display:none;">
+      <h2>Quên mật khẩu?</h2>
+      <p class="subtitle">Nhập email — chúng tôi sẽ gửi link đặt lại mật khẩu</p>
+      <form class="auth-form" onsubmit="forgotPassword(event); return false;">
+        <input type="email" id="forgot-email" placeholder="Email" required autocomplete="email" />
+        <div id="forgot-error" class="auth-error"></div>
+        <div id="forgot-success" class="auth-success"></div>
+        <button type="submit" class="auth-btn-primary">Gửi email đặt lại</button>
+      </form>
+      <div class="auth-links">
+        <a onclick="showAuthView('login')">← Quay lại đăng nhập</a>
+      </div>
+    </div>
+
+    <!-- Email verification pending view -->
+    <div id="auth-view-verify" style="display:none;">
+      <h2>📧 Xác nhận email</h2>
+      <p class="subtitle">
+        Chúng tôi đã gửi link xác nhận đến email của bạn.<br>
+        Vui lòng check inbox (cả thư mục Spam/Promotions) và click link để kích hoạt tài khoản.
+      </p>
+      <div id="verify-email-display" style="text-align:center; font-weight:600; color:var(--primary); margin:12px 0; padding:10px; background:var(--blue-bg); border-radius:6px; word-break:break-all;"></div>
+      <button class="auth-btn-primary" onclick="checkVerification()" style="width:100%; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:600; font-size:14px;">Tôi đã xác nhận, vào ứng dụng</button>
+      <div id="verify-error" class="auth-error"></div>
+      <div id="verify-success" class="auth-success"></div>
+      <div class="auth-links">
+        <a onclick="resendVerification()">Gửi lại email</a> &nbsp;•&nbsp;
+        <a onclick="logout()">Đăng xuất</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Change password modal -->
+<div id="change-pw-modal" class="modal-overlay">
+  <div class="modal-card">
+    <button class="modal-close" onclick="hideChangePwModal()">×</button>
+    <h3>🔒 Đổi mật khẩu</h3>
+    <form class="auth-form" onsubmit="changePassword(event); return false;">
+      <input type="password" id="cpw-old" placeholder="Mật khẩu hiện tại" required autocomplete="current-password" />
+      <input type="password" id="cpw-new" placeholder="Mật khẩu mới (≥8 ký tự)" minlength="8" required autocomplete="new-password" />
+      <input type="password" id="cpw-confirm" placeholder="Nhập lại mật khẩu mới" minlength="8" required autocomplete="new-password" />
+      <div id="cpw-error" class="auth-error"></div>
+      <div id="cpw-success" class="auth-success"></div>
+      <button type="submit" class="auth-btn-primary">Đổi mật khẩu</button>
+    </form>
+  </div>
+</div>
+
+<header style="position:relative;">
   <h1>📘 Luyện thi ERP Consultant</h1>
   <p>Phân phối Thực phẩm trên Microsoft Dynamics 365 Business Central</p>
+  <div id="user-menu" class="user-menu" style="display:none;">
+    <div class="user-avatar" id="user-avatar" onclick="toggleUserMenu(event)">U</div>
+    <div class="user-menu-dropdown" id="user-menu-dropdown">
+      <div class="user-menu-info">
+        <div class="name" id="user-name">Tên</div>
+        <div class="email" id="user-email">email@example.com</div>
+        <div class="role" id="user-role" style="display:none;">Admin</div>
+      </div>
+      <button class="user-menu-item" onclick="showChangePwModal()">🔒 Đổi mật khẩu</button>
+      <button class="user-menu-item" onclick="importLocalProgress()">📥 Import tiến độ từ máy cũ</button>
+      <button class="user-menu-item danger" onclick="logout()">🚪 Đăng xuất</button>
+    </div>
+  </div>
 </header>
 
 <nav class="tabs">
@@ -314,6 +540,64 @@
   <div id="workshop" class="panel"></div>
   <div id="stats" class="panel"></div>
 </main>
+
+<!-- Firebase SDK + Auth/Firestore init -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    sendEmailVerification,
+    sendPasswordResetEmail,
+    GoogleAuthProvider,
+    signInWithPopup,
+    onAuthStateChanged,
+    updatePassword,
+    updateProfile,
+    EmailAuthProvider,
+    reauthenticateWithCredential
+  } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+  import {
+    getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAmN9wcuwkpKOu3wppSsRyvaUG_Hg2Ny-8",
+    authDomain: "erpcareer-4cf0a.firebaseapp.com",
+    projectId: "erpcareer-4cf0a",
+    storageBucket: "erpcareer-4cf0a.firebasestorage.app",
+    messagingSenderId: "743841764781",
+    appId: "1:743841764781:web:1264d39fb01a4177e6fd24",
+    measurementId: "G-7XKQTJG64W"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // Expose to global scope for the main script
+  window.fb = {
+    auth, db,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    sendEmailVerification,
+    sendPasswordResetEmail,
+    GoogleAuthProvider,
+    signInWithPopup,
+    onAuthStateChanged,
+    updatePassword,
+    updateProfile,
+    EmailAuthProvider,
+    reauthenticateWithCredential,
+    doc, getDoc, setDoc, updateDoc, serverTimestamp
+  };
+
+  // Notify main script Firebase is ready
+  window.dispatchEvent(new Event('firebase-ready'));
+</script>
 
 <script>
 // ============ DATA ============
@@ -2539,14 +2823,65 @@ let state = {
   firstStart: null
 };
 
-function loadState() {
+async function loadState() {
+  const user = window.fb && window.fb.auth.currentUser;
+  if (user && window.fb) {
+    try {
+      const userRef = window.fb.doc(window.fb.db, 'users', user.uid);
+      const snap = await window.fb.getDoc(userRef);
+      if (snap.exists()) {
+        const data = snap.data();
+        if (data.progress) {
+          state = { ...state, ...data.progress };
+        }
+        // Update last login
+        try {
+          await window.fb.updateDoc(userRef, {
+            lastLogin: window.fb.serverTimestamp(),
+            email: user.email,
+            displayName: user.displayName || ''
+          });
+        } catch(e) {}
+      } else {
+        // First time login - create user doc
+        await window.fb.setDoc(userRef, {
+          email: user.email,
+          displayName: user.displayName || '',
+          createdAt: window.fb.serverTimestamp(),
+          lastLogin: window.fb.serverTimestamp(),
+          progress: state
+        });
+      }
+      return;
+    } catch (e) {
+      console.error('Firestore load failed, fallback to localStorage:', e);
+    }
+  }
+  // Fallback or anonymous
   try {
     const s = localStorage.getItem(STORAGE_KEY);
     if (s) state = { ...state, ...JSON.parse(s) };
   } catch (e) {}
 }
+
+let _saveStateTimer = null;
 function saveState() {
+  // Always save to localStorage as backup
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+  // Save to Firestore (debounced 1s)
+  const user = window.fb && window.fb.auth.currentUser;
+  if (!user) return;
+  if (_saveStateTimer) clearTimeout(_saveStateTimer);
+  _saveStateTimer = setTimeout(async () => {
+    try {
+      await window.fb.updateDoc(window.fb.doc(window.fb.db, 'users', user.uid), {
+        progress: state,
+        lastActivity: window.fb.serverTimestamp()
+      });
+    } catch (e) {
+      console.error('Firestore save failed:', e);
+    }
+  }, 1000);
 }
 
 function getFilteredQuestions() {
@@ -3184,16 +3519,310 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
   });
 });
 
-// ============ INIT ============
-loadState();
-renderQuiz();
-renderCases("cases", CASES);
-renderCases("advanced", ADVANCED_CASES);
-renderGotchas();
-renderWorkshop();
+// ============ AUTH STATE & UI ============
+const ADMIN_EMAIL = "notabin@gmail.com";
 
-// Keyboard shortcuts
+async function initApp() {
+  await loadState();
+  renderQuiz();
+  renderCases("cases", CASES);
+  renderCases("advanced", ADVANCED_CASES);
+  renderGotchas();
+  renderWorkshop();
+}
+
+async function handleAuthStateChange(user) {
+  const overlay = document.getElementById('auth-overlay');
+  const header = document.querySelector('header');
+  const nav = document.querySelector('nav.tabs');
+  const main = document.querySelector('main');
+  const userMenu = document.getElementById('user-menu');
+
+  if (!user) {
+    overlay.style.display = 'flex';
+    header.classList.add('app-hidden');
+    nav.classList.add('app-hidden');
+    main.classList.add('app-hidden');
+    userMenu.style.display = 'none';
+    showAuthView('login');
+    return;
+  }
+
+  // Check email verification (Google login bypasses this)
+  const isGoogle = user.providerData.some(p => p.providerId === 'google.com');
+  if (!isGoogle && !user.emailVerified) {
+    overlay.style.display = 'flex';
+    header.classList.add('app-hidden');
+    nav.classList.add('app-hidden');
+    main.classList.add('app-hidden');
+    userMenu.style.display = 'none';
+    showAuthView('verify');
+    document.getElementById('verify-email-display').textContent = user.email;
+    return;
+  }
+
+  // Fully authenticated — show app
+  overlay.style.display = 'none';
+  header.classList.remove('app-hidden');
+  nav.classList.remove('app-hidden');
+  main.classList.remove('app-hidden');
+
+  userMenu.style.display = 'block';
+  const name = user.displayName || user.email.split('@')[0];
+  document.getElementById('user-name').textContent = name;
+  document.getElementById('user-email').textContent = user.email;
+  const avatar = document.getElementById('user-avatar');
+  if (user.photoURL) {
+    avatar.innerHTML = '<img src="' + user.photoURL + '" alt="" referrerpolicy="no-referrer"/>';
+  } else {
+    avatar.innerHTML = name.charAt(0).toUpperCase();
+  }
+  const roleEl = document.getElementById('user-role');
+  if (user.email === ADMIN_EMAIL) {
+    roleEl.textContent = 'Admin';
+    roleEl.style.display = 'inline-block';
+  } else {
+    roleEl.style.display = 'none';
+  }
+
+  await initApp();
+}
+
+function showAuthView(view) {
+  ['login', 'register', 'forgot', 'verify'].forEach(v => {
+    const el = document.getElementById('auth-view-' + v);
+    if (el) el.style.display = v === view ? 'block' : 'none';
+  });
+  // Clear errors
+  document.querySelectorAll('.auth-error, .auth-success').forEach(el => el.classList.remove('show'));
+}
+
+function friendlyAuthError(e) {
+  const code = e.code || '';
+  const map = {
+    'auth/email-already-in-use': 'Email này đã được đăng ký',
+    'auth/invalid-email': 'Email không hợp lệ',
+    'auth/weak-password': 'Mật khẩu quá yếu (cần ≥6 ký tự)',
+    'auth/user-not-found': 'Email không tồn tại',
+    'auth/wrong-password': 'Sai mật khẩu',
+    'auth/invalid-credential': 'Email hoặc mật khẩu không đúng',
+    'auth/too-many-requests': 'Quá nhiều lần thử. Vui lòng đợi vài phút.',
+    'auth/network-request-failed': 'Lỗi mạng. Kiểm tra kết nối.',
+    'auth/popup-closed-by-user': 'Đã hủy đăng nhập Google',
+    'auth/popup-blocked': 'Trình duyệt chặn popup. Vui lòng cho phép popup.',
+    'auth/requires-recent-login': 'Yêu cầu đăng nhập lại để thực hiện thao tác này',
+    'auth/operation-not-allowed': 'Phương thức đăng nhập này chưa được bật'
+  };
+  return map[code] || (e.message || 'Có lỗi xảy ra. Vui lòng thử lại.');
+}
+
+async function loginEmail(event) {
+  event.preventDefault();
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+  const errEl = document.getElementById('login-error');
+  errEl.classList.remove('show');
+  try {
+    await window.fb.signInWithEmailAndPassword(window.fb.auth, email, password);
+  } catch (e) {
+    errEl.textContent = friendlyAuthError(e);
+    errEl.classList.add('show');
+  }
+}
+
+async function registerEmail(event) {
+  event.preventDefault();
+  const name = document.getElementById('reg-name').value;
+  const email = document.getElementById('reg-email').value;
+  const password = document.getElementById('reg-password').value;
+  const confirm = document.getElementById('reg-confirm').value;
+  const errEl = document.getElementById('register-error');
+  errEl.classList.remove('show');
+  if (password !== confirm) {
+    errEl.textContent = 'Mật khẩu xác nhận không khớp';
+    errEl.classList.add('show');
+    return;
+  }
+  try {
+    const cred = await window.fb.createUserWithEmailAndPassword(window.fb.auth, email, password);
+    await window.fb.updateProfile(cred.user, { displayName: name });
+    await window.fb.sendEmailVerification(cred.user);
+    document.getElementById('verify-email-display').textContent = email;
+    showAuthView('verify');
+  } catch (e) {
+    errEl.textContent = friendlyAuthError(e);
+    errEl.classList.add('show');
+  }
+}
+
+async function loginGoogle() {
+  const errEl = document.getElementById('login-error');
+  errEl.classList.remove('show');
+  try {
+    const provider = new window.fb.GoogleAuthProvider();
+    await window.fb.signInWithPopup(window.fb.auth, provider);
+  } catch (e) {
+    errEl.textContent = friendlyAuthError(e);
+    errEl.classList.add('show');
+  }
+}
+
+async function forgotPassword(event) {
+  event.preventDefault();
+  const email = document.getElementById('forgot-email').value;
+  const errEl = document.getElementById('forgot-error');
+  const sucEl = document.getElementById('forgot-success');
+  errEl.classList.remove('show'); sucEl.classList.remove('show');
+  try {
+    await window.fb.sendPasswordResetEmail(window.fb.auth, email);
+    sucEl.textContent = 'Đã gửi email đặt lại mật khẩu. Vui lòng check inbox (cả Spam).';
+    sucEl.classList.add('show');
+  } catch (e) {
+    errEl.textContent = friendlyAuthError(e);
+    errEl.classList.add('show');
+  }
+}
+
+async function logout() {
+  if (_saveStateTimer) {
+    clearTimeout(_saveStateTimer);
+    _saveStateTimer = null;
+  }
+  try { await window.fb.signOut(window.fb.auth); } catch(e) {}
+  // Reset state
+  state = {
+    answered: {}, bookmarks: {}, currentIdx: 0, filter: "all",
+    randomize: false, lastActivity: null, firstStart: null
+  };
+}
+
+async function changePassword(event) {
+  event.preventDefault();
+  const oldPw = document.getElementById('cpw-old').value;
+  const newPw = document.getElementById('cpw-new').value;
+  const confirm = document.getElementById('cpw-confirm').value;
+  const errEl = document.getElementById('cpw-error');
+  const sucEl = document.getElementById('cpw-success');
+  errEl.classList.remove('show'); sucEl.classList.remove('show');
+  if (newPw !== confirm) {
+    errEl.textContent = 'Mật khẩu mới xác nhận không khớp';
+    errEl.classList.add('show');
+    return;
+  }
+  try {
+    const user = window.fb.auth.currentUser;
+    if (!user.email) throw new Error('Tài khoản Google không hỗ trợ đổi mật khẩu tại đây');
+    const cred = window.fb.EmailAuthProvider.credential(user.email, oldPw);
+    await window.fb.reauthenticateWithCredential(user, cred);
+    await window.fb.updatePassword(user, newPw);
+    sucEl.textContent = '✓ Đổi mật khẩu thành công';
+    sucEl.classList.add('show');
+    document.getElementById('cpw-old').value = '';
+    document.getElementById('cpw-new').value = '';
+    document.getElementById('cpw-confirm').value = '';
+    setTimeout(hideChangePwModal, 1500);
+  } catch (e) {
+    errEl.textContent = friendlyAuthError(e);
+    errEl.classList.add('show');
+  }
+}
+
+async function checkVerification() {
+  const user = window.fb.auth.currentUser;
+  if (!user) return;
+  const errEl = document.getElementById('verify-error');
+  errEl.classList.remove('show');
+  try {
+    await user.reload();
+    if (user.emailVerified) {
+      handleAuthStateChange(user);
+    } else {
+      errEl.textContent = 'Email chưa được xác nhận. Vui lòng check email và click link xác nhận.';
+      errEl.classList.add('show');
+    }
+  } catch (e) {
+    errEl.textContent = friendlyAuthError(e);
+    errEl.classList.add('show');
+  }
+}
+
+async function resendVerification() {
+  const user = window.fb.auth.currentUser;
+  if (!user) return;
+  const errEl = document.getElementById('verify-error');
+  const sucEl = document.getElementById('verify-success');
+  errEl.classList.remove('show'); sucEl.classList.remove('show');
+  try {
+    await window.fb.sendEmailVerification(user);
+    sucEl.textContent = '✓ Đã gửi lại email xác nhận';
+    sucEl.classList.add('show');
+  } catch (e) {
+    errEl.textContent = friendlyAuthError(e);
+    errEl.classList.add('show');
+  }
+}
+
+function showChangePwModal() {
+  document.getElementById('change-pw-modal').classList.add('show');
+  document.getElementById('user-menu-dropdown').classList.remove('show');
+}
+function hideChangePwModal() {
+  document.getElementById('change-pw-modal').classList.remove('show');
+  document.getElementById('cpw-error').classList.remove('show');
+  document.getElementById('cpw-success').classList.remove('show');
+}
+
+function toggleUserMenu(event) {
+  if (event) event.stopPropagation();
+  document.getElementById('user-menu-dropdown').classList.toggle('show');
+}
+
+async function importLocalProgress() {
+  document.getElementById('user-menu-dropdown').classList.remove('show');
+  try {
+    const s = localStorage.getItem(STORAGE_KEY);
+    if (!s) {
+      alert('Không tìm thấy tiến độ cũ trong trình duyệt này.');
+      return;
+    }
+    const oldState = JSON.parse(s);
+    const ansCount = Object.keys(oldState.answered || {}).length;
+    if (!confirm('Tìm thấy ' + ansCount + ' câu đã làm trong tiến độ cũ. Sẽ MERGE với tiến độ hiện tại (giữ tiến độ tốt hơn). Tiếp tục?')) return;
+    // Merge: keep existing + add missing from old
+    state.answered = { ...oldState.answered, ...state.answered };
+    state.bookmarks = { ...oldState.bookmarks, ...state.bookmarks };
+    if (!state.firstStart && oldState.firstStart) state.firstStart = oldState.firstStart;
+    saveState();
+    renderQuiz();
+    if (document.getElementById('stats').classList.contains('active')) renderStats();
+    alert('✓ Đã import tiến độ thành công!');
+  } catch (e) {
+    alert('Lỗi khi import: ' + e.message);
+  }
+}
+
+// Close user-menu dropdown when click outside
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.user-menu')) {
+    const dd = document.getElementById('user-menu-dropdown');
+    if (dd) dd.classList.remove('show');
+  }
+});
+
+// Setup auth listener after Firebase is ready
+function setupFirebaseAuth() {
+  if (!window.fb) {
+    window.addEventListener('firebase-ready', setupFirebaseAuth, { once: true });
+    return;
+  }
+  window.fb.onAuthStateChanged(window.fb.auth, handleAuthStateChange);
+}
+setupFirebaseAuth();
+
+// Keyboard shortcuts (only when app shown)
 document.addEventListener("keydown", e => {
+  if (document.getElementById('auth-overlay').style.display === 'flex') return;
+  if (document.getElementById("change-pw-modal").classList.contains('show')) return;
   if (document.getElementById("quiz").classList.contains("active")) {
     if (e.key === "ArrowRight") navigate(1);
     else if (e.key === "ArrowLeft") navigate(-1);
