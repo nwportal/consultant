@@ -92,77 +92,80 @@
   }
   header h1 { margin: 0 0 4px 0; font-size: 22px; }
   header p { margin: 0; opacity: 0.92; font-size: 14px; }
-  /* Sidebar navigation */
-  .layout {
-    display: flex; min-height: calc(100vh - 88px);
+  /* Top menu bar with dropdown groups */
+  nav.menu-bar {
+    display: flex; justify-content: center; gap: 2px;
+    background: var(--card); border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 30;
+    box-shadow: 0 2px 4px var(--shadow); padding: 0 8px;
+    overflow-x: auto; overflow-y: visible;
+    scrollbar-width: thin;
   }
-  aside.sidebar {
-    width: 240px; background: var(--sidebar-bg); border-right: 1px solid var(--border);
-    flex-shrink: 0; padding: 14px 8px; overflow-y: auto;
-    position: sticky; top: 0; max-height: 100vh; align-self: flex-start;
-    box-shadow: 1px 0 3px var(--shadow); transition: transform 0.3s;
+  nav.menu-bar::-webkit-scrollbar { height: 4px; }
+  nav.menu-bar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .menu-group { position: relative; flex-shrink: 0; }
+  .menu-trigger {
+    border: none; background: transparent; padding: 14px 18px;
+    font-size: 14px; cursor: pointer; color: var(--text-muted);
+    font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 6px;
+    border-bottom: 3px solid transparent; transition: all 0.15s;
+    font-family: inherit;
   }
-  .sidebar-group { margin-bottom: 16px; }
-  .sidebar-group h4 {
-    margin: 0 12px 6px; font-size: 11px; color: var(--text-muted);
-    text-transform: uppercase; letter-spacing: 0.8px; font-weight: 700;
+  .menu-trigger .chev { font-size: 9px; opacity: 0.6; transition: transform 0.2s; }
+  .menu-trigger:hover { color: var(--primary); background: var(--sidebar-hover); }
+  .menu-group:hover .menu-trigger,
+  .menu-group.open .menu-trigger {
+    color: var(--primary); background: var(--sidebar-hover);
   }
-  .sidebar-item {
+  .menu-group:hover .menu-trigger .chev,
+  .menu-group.open .menu-trigger .chev { transform: rotate(180deg); }
+  .menu-group.has-active .menu-trigger {
+    color: var(--primary); border-bottom-color: var(--primary);
+  }
+  .menu-dropdown {
+    position: absolute; top: 100%; left: 0;
+    background: var(--card); border: 1px solid var(--border);
+    border-top: none; border-radius: 0 0 10px 10px; min-width: 220px;
+    box-shadow: 0 10px 24px var(--shadow);
+    display: none; padding: 6px;
+    animation: dropdownIn 0.15s ease-out;
+  }
+  @keyframes dropdownIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+  .menu-group:hover .menu-dropdown,
+  .menu-group.open .menu-dropdown { display: block; }
+  .menu-dropdown::before {
+    content: ''; position: absolute; top: -10px; left: 0; right: 0; height: 10px;
+  }
+  .menu-item {
     display: flex; align-items: center; gap: 10px; width: 100%;
-    padding: 9px 14px; border: none; background: transparent;
-    border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500;
-    color: var(--text); text-align: left; transition: all 0.12s;
-    margin-bottom: 2px; position: relative;
+    padding: 10px 14px; border: none; background: transparent;
+    border-radius: 6px; cursor: pointer; font-size: 14px;
+    color: var(--text); text-align: left; transition: background 0.12s;
+    font-family: inherit; position: relative;
   }
-  .sidebar-item:hover { background: var(--sidebar-hover); }
-  .sidebar-item.active {
+  .menu-item:hover { background: var(--sidebar-hover); }
+  .menu-item.active {
     background: var(--sidebar-active-bg); color: var(--primary); font-weight: 700;
   }
-  .sidebar-item.active::before {
-    content: ''; position: absolute; left: 0; top: 6px; bottom: 6px;
-    width: 3px; background: var(--primary); border-radius: 2px;
+  .menu-item.active::before {
+    content: '✓'; position: absolute; right: 12px; color: var(--primary); font-weight: 700;
   }
-  .sidebar-item .icon { font-size: 16px; flex-shrink: 0; width: 20px; text-align: center; }
-  .sidebar-item .badge {
+  .menu-item .icon { font-size: 16px; flex-shrink: 0; width: 22px; text-align: center; }
+  .menu-item .badge {
     background: var(--danger); color: white; font-size: 10px; padding: 1px 6px;
     border-radius: 8px; margin-left: auto; font-weight: 700;
   }
-  .sidebar-divider {
-    height: 1px; background: var(--border); margin: 8px 12px;
-  }
-  .sidebar-footer {
-    padding: 10px 14px; font-size: 11px; color: var(--text-muted);
-    border-top: 1px solid var(--border); margin-top: 8px;
-  }
-  .sidebar-backdrop {
-    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-    z-index: 50;
-  }
-  .sidebar-backdrop.show { display: block; }
-  .hamburger-btn {
-    position: absolute; top: 18px; left: 16px; background: rgba(255,255,255,0.18);
-    border: 1px solid rgba(255,255,255,0.3); color: white;
-    width: 38px; height: 38px; border-radius: 8px; cursor: pointer;
-    display: none; align-items: center; justify-content: center;
-    font-size: 18px;
-  }
-  .hamburger-btn:hover { background: rgba(255,255,255,0.28); }
   main {
-    flex: 1; max-width: 1100px; margin: 0 auto; padding: 24px 20px 80px;
-    min-width: 0;
+    max-width: 1100px; margin: 0 auto; padding: 24px 20px 80px;
   }
 
-  @media (max-width: 900px) {
-    .layout { display: block; }
-    aside.sidebar {
-      position: fixed; top: 0; left: 0; bottom: 0; max-height: 100vh;
-      transform: translateX(-100%); z-index: 60; width: 270px;
-      box-shadow: 4px 0 14px rgba(0,0,0,0.2);
-    }
-    aside.sidebar.open { transform: translateX(0); }
-    .hamburger-btn { display: flex; }
-    main { padding: 20px 14px 80px; max-width: 100%; }
-    .search-trigger { left: 64px; }
+  @media (max-width: 768px) {
+    .menu-trigger { padding: 12px 12px; font-size: 13px; }
+    .menu-trigger .label-text { display: none; }
+    .menu-trigger .label-icon { font-size: 18px; }
+    .menu-dropdown { min-width: 200px; max-width: 90vw; }
+    main { padding: 18px 12px 80px; }
   }
   .panel { display: none; }
   .panel.active { display: block; }
@@ -1650,7 +1653,6 @@
 </div>
 
 <header style="position:relative;">
-  <button class="hamburger-btn" onclick="toggleSidebar()" id="hamburger-btn" style="display:none;" title="Menu">☰</button>
   <button class="search-trigger" onclick="openSearch()" id="search-trigger-btn" style="display:none;" title="Tìm kiếm (phím tắt: /)">
     🔍 <span class="search-label">Tìm kiếm</span> <span class="kbd">/</span>
   </button>
@@ -1687,65 +1689,66 @@
   </div>
 </header>
 
-<div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
-
-<div class="layout">
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-group">
-      <h4>📚 Học tập</h4>
-      <button class="sidebar-item tab-btn active" data-tab="quiz"><span class="icon">📝</span><span>Trắc nghiệm</span></button>
-      <button class="sidebar-item tab-btn" data-tab="srs"><span class="icon">🔁</span><span>Ôn tập SRS</span><span id="srs-badge" class="badge" style="display:none;"></span></button>
-      <button class="sidebar-item tab-btn" data-tab="mock"><span class="icon">🎯</span><span>Thi thử</span></button>
+<nav class="menu-bar" id="menu-bar">
+  <div class="menu-group">
+    <button class="menu-trigger" data-group="learning"><span class="label-icon">📚</span><span class="label-text">Học tập</span> <span class="chev">▼</span></button>
+    <div class="menu-dropdown">
+      <button class="menu-item tab-btn active" data-tab="quiz"><span class="icon">📝</span><span>Trắc nghiệm</span></button>
+      <button class="menu-item tab-btn" data-tab="srs"><span class="icon">🔁</span><span>Ôn tập SRS</span><span id="srs-badge" class="badge" style="display:none;"></span></button>
+      <button class="menu-item tab-btn" data-tab="mock"><span class="icon">🎯</span><span>Thi thử</span></button>
     </div>
+  </div>
 
-    <div class="sidebar-group">
-      <h4>📖 Tài liệu</h4>
-      <button class="sidebar-item tab-btn" data-tab="cases"><span class="icon">💼</span><span>Tình huống</span></button>
-      <button class="sidebar-item tab-btn" data-tab="advanced"><span class="icon">🎯</span><span>Nâng cao</span></button>
-      <button class="sidebar-item tab-btn" data-tab="gotchas"><span class="icon">⚠️</span><span>Gotchas</span></button>
-      <button class="sidebar-item tab-btn" data-tab="workshop"><span class="icon">📋</span><span>Workshop</span></button>
-      <button class="sidebar-item tab-btn" data-tab="retail"><span class="icon">🏪</span><span>Retail</span></button>
-      <button class="sidebar-item tab-btn" data-tab="glossary"><span class="icon">📖</span><span>Thuật ngữ</span></button>
+  <div class="menu-group">
+    <button class="menu-trigger" data-group="library"><span class="label-icon">📖</span><span class="label-text">Tài liệu</span> <span class="chev">▼</span></button>
+    <div class="menu-dropdown">
+      <button class="menu-item tab-btn" data-tab="cases"><span class="icon">💼</span><span>Tình huống</span></button>
+      <button class="menu-item tab-btn" data-tab="advanced"><span class="icon">🎯</span><span>Nâng cao</span></button>
+      <button class="menu-item tab-btn" data-tab="gotchas"><span class="icon">⚠️</span><span>Gotchas</span></button>
+      <button class="menu-item tab-btn" data-tab="workshop"><span class="icon">📋</span><span>Workshop</span></button>
+      <button class="menu-item tab-btn" data-tab="retail"><span class="icon">🏪</span><span>Retail</span></button>
+      <button class="menu-item tab-btn" data-tab="glossary"><span class="icon">📖</span><span>Thuật ngữ</span></button>
     </div>
+  </div>
 
-    <div class="sidebar-group">
-      <h4>👤 Cá nhân</h4>
-      <button class="sidebar-item tab-btn" data-tab="bookmarks"><span class="icon">📌</span><span>Bookmarks</span></button>
-      <button class="sidebar-item tab-btn" data-tab="stats"><span class="icon">📊</span><span>Tiến độ</span></button>
+  <div class="menu-group">
+    <button class="menu-trigger" data-group="personal"><span class="label-icon">👤</span><span class="label-text">Cá nhân</span> <span class="chev">▼</span></button>
+    <div class="menu-dropdown">
+      <button class="menu-item tab-btn" data-tab="bookmarks"><span class="icon">📌</span><span>Bookmarks</span></button>
+      <button class="menu-item tab-btn" data-tab="stats"><span class="icon">📊</span><span>Tiến độ</span></button>
     </div>
+  </div>
 
-    <div class="sidebar-group">
-      <h4>🌐 Cộng đồng</h4>
-      <button class="sidebar-item tab-btn" data-tab="leaderboard"><span class="icon">🏆</span><span>Top học viên</span></button>
+  <div class="menu-group">
+    <button class="menu-trigger" data-group="community"><span class="label-icon">🌐</span><span class="label-text">Cộng đồng</span> <span class="chev">▼</span></button>
+    <div class="menu-dropdown">
+      <button class="menu-item tab-btn" data-tab="leaderboard"><span class="icon">🏆</span><span>Top học viên</span></button>
     </div>
+  </div>
 
-    <div class="sidebar-group admin-only" id="sidebar-admin-group" style="display:none;">
-      <h4>⚙️ Quản trị</h4>
-      <button class="sidebar-item tab-btn" data-tab="admin" id="tab-admin"><span class="icon">👥</span><span>Quản trị</span></button>
+  <div class="menu-group admin-only" id="sidebar-admin-group" style="display:none;">
+    <button class="menu-trigger" data-group="admin"><span class="label-icon">⚙️</span><span class="label-text">Quản trị</span> <span class="chev">▼</span></button>
+    <div class="menu-dropdown">
+      <button class="menu-item tab-btn" data-tab="admin" id="tab-admin"><span class="icon">👥</span><span>Quản trị user</span></button>
     </div>
+  </div>
+</nav>
 
-    <div class="sidebar-footer">
-      HỌC VIỆN ERP CONSULTING<br>
-      <span style="opacity:0.7;">© Naviworld VN</span>
-    </div>
-  </aside>
-
-  <main>
-    <div id="quiz" class="panel active"></div>
-    <div id="srs" class="panel"></div>
-    <div id="mock" class="panel"></div>
-    <div id="cases" class="panel"></div>
-    <div id="advanced" class="panel"></div>
-    <div id="gotchas" class="panel"></div>
-    <div id="workshop" class="panel"></div>
-    <div id="retail" class="panel"></div>
-    <div id="glossary" class="panel"></div>
-    <div id="bookmarks" class="panel"></div>
-    <div id="leaderboard" class="panel"></div>
-    <div id="stats" class="panel"></div>
-    <div id="admin" class="panel"></div>
-  </main>
-</div>
+<main>
+  <div id="quiz" class="panel active"></div>
+  <div id="srs" class="panel"></div>
+  <div id="mock" class="panel"></div>
+  <div id="cases" class="panel"></div>
+  <div id="advanced" class="panel"></div>
+  <div id="gotchas" class="panel"></div>
+  <div id="workshop" class="panel"></div>
+  <div id="retail" class="panel"></div>
+  <div id="glossary" class="panel"></div>
+  <div id="bookmarks" class="panel"></div>
+  <div id="leaderboard" class="panel"></div>
+  <div id="stats" class="panel"></div>
+  <div id="admin" class="panel"></div>
+</main>
 
 <!-- Share progress modal -->
 <div id="share-modal" class="modal-overlay">
@@ -4019,30 +4022,54 @@ function renderStats() {
   `;
 }
 
-// ============ SIDEBAR TOGGLE (mobile) ============
-function toggleSidebar() {
-  const sb = document.getElementById('sidebar');
-  const bd = document.getElementById('sidebar-backdrop');
-  if (sb.classList.contains('open')) { closeSidebar(); }
-  else { sb.classList.add('open'); bd.classList.add('show'); }
+// ============ MENU DROPDOWN (mobile tap + desktop hover) ============
+function setupMenuDropdowns() {
+  document.querySelectorAll('.menu-group').forEach(group => {
+    const trigger = group.querySelector('.menu-trigger');
+    if (!trigger) return;
+    // On touch / click: toggle open class (so it works on mobile where hover doesn't)
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const wasOpen = group.classList.contains('open');
+      document.querySelectorAll('.menu-group.open').forEach(g => g.classList.remove('open'));
+      if (!wasOpen) group.classList.add('open');
+    });
+  });
+  // Click outside to close all dropdowns
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.menu-group')) {
+      document.querySelectorAll('.menu-group.open').forEach(g => g.classList.remove('open'));
+    }
+  });
 }
-function closeSidebar() {
-  const sb = document.getElementById('sidebar');
-  const bd = document.getElementById('sidebar-backdrop');
-  sb.classList.remove('open');
-  bd.classList.remove('show');
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupMenuDropdowns);
+} else {
+  setupMenuDropdowns();
+}
+
+function updateMenuActiveStates(activeTab) {
+  // Mark menu-group containing the active tab
+  document.querySelectorAll('.menu-group').forEach(g => g.classList.remove('has-active'));
+  const activeBtn = document.querySelector('.menu-item[data-tab="' + activeTab + '"]');
+  if (activeBtn) {
+    const grp = activeBtn.closest('.menu-group');
+    if (grp) grp.classList.add('has-active');
+  }
 }
 
 // ============ TAB SWITCHING ============
 document.querySelectorAll(".tab-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
     document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
     document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
     btn.classList.add("active");
     const tab = btn.dataset.tab;
     document.getElementById(tab).classList.add("active");
-    // Close sidebar on mobile after selecting a tab
-    if (window.innerWidth <= 900) closeSidebar();
+    updateMenuActiveStates(tab);
+    // Close any open dropdown
+    document.querySelectorAll('.menu-group.open').forEach(g => g.classList.remove('open'));
     // Scroll main to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
     if (tab === "stats") renderStats();
@@ -4077,6 +4104,9 @@ async function initApp() {
   updateSrsBadge();
   // Silent achievement check on load (no toasts for previously-earned ones)
   checkAchievements(true);
+  // Mark current active tab in menu groups
+  const activeBtn = document.querySelector('.tab-btn.active');
+  if (activeBtn) updateMenuActiveStates(activeBtn.dataset.tab);
 }
 
 async function handleAuthStateChange(user) {
@@ -4118,8 +4148,6 @@ async function handleAuthStateChange(user) {
   userMenu.style.display = 'block';
   const searchBtn = document.getElementById('search-trigger-btn');
   if (searchBtn) searchBtn.style.display = 'flex';
-  const hamBtn = document.getElementById('hamburger-btn');
-  if (hamBtn && window.innerWidth <= 900) hamBtn.style.display = 'flex';
   const name = user.displayName || user.email.split('@')[0];
   document.getElementById('user-name').textContent = name;
   document.getElementById('user-email').textContent = user.email;
