@@ -291,6 +291,35 @@
 
   /* Score badges */
   body[data-theme="dark"] .score-badge.none { background: var(--sidebar-hover); }
+
+  /* Option letter circles (A B C D) */
+  body[data-theme="dark"] .option-letter {
+    background: var(--sidebar-hover); color: var(--text);
+  }
+  body[data-theme="dark"] .option.correct .option-letter { background: var(--green); color: white; }
+  body[data-theme="dark"] .option.wrong .option-letter { background: var(--red); color: white; }
+
+  /* Mock Exam question number dots */
+  body[data-theme="dark"] .exam-q-dot {
+    background: var(--card); color: var(--text); border-color: var(--border);
+  }
+  body[data-theme="dark"] .exam-q-dot:hover { border-color: var(--primary); }
+  body[data-theme="dark"] .exam-q-dot.answered {
+    background: var(--primary); color: white; border-color: var(--primary);
+  }
+  body[data-theme="dark"] .exam-q-dot.current {
+    box-shadow: 0 0 0 3px var(--blue-bg);
+  }
+
+  /* SRS seq-num and other gray circles */
+  body[data-theme="dark"] .seq-num {
+    background: var(--sidebar-hover); color: var(--text);
+  }
+  body[data-theme="dark"] .sequence-item.correct .seq-num { background: var(--green); color: white; }
+  body[data-theme="dark"] .sequence-item.wrong .seq-num { background: var(--red); color: white; }
+
+  /* Folder grid background */
+  body[data-theme="dark"] .folder-icon { filter: brightness(1.2); }
   * { box-sizing: border-box; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
