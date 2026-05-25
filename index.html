@@ -5002,6 +5002,12 @@ setupFirebaseAuth();
 
 // Keyboard shortcuts (only when app shown)
 document.addEventListener("keydown", e => {
+  // Skip if user is typing in input/textarea (fixes Vietnamese IME conflict with number keys 1-5)
+  const target = e.target;
+  if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) return;
+  // Skip during IME composition
+  if (e.isComposing || e.keyCode === 229) return;
+
   if (document.getElementById('auth-overlay').style.display === 'flex') return;
   if (document.getElementById("change-pw-modal").classList.contains('show')) return;
   if (document.getElementById("quiz").classList.contains("active")) {
