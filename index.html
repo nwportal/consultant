@@ -2298,7 +2298,12 @@
   <div class="menu-group admin-only" id="sidebar-admin-group" style="display:none;">
     <button class="menu-trigger" data-group="admin"><span class="label-icon">⚙️</span><span class="label-text">Quản trị</span> <span class="chev">▼</span></button>
     <div class="menu-dropdown">
-      <button class="menu-item tab-btn" data-tab="admin" id="tab-admin"><span class="icon">👥</span><span>Quản trị user</span></button>
+      <button class="menu-item tab-btn" data-tab="admin" data-admin-subtab="users" id="tab-admin"><span class="icon">👥</span><span>Quản trị Users</span></button>
+      <button class="menu-item tab-btn" data-tab="admin" data-admin-subtab="teams"><span class="icon">👨‍👩‍👧</span><span>Phân tích Teams</span></button>
+      <button class="menu-item tab-btn" data-tab="admin" data-admin-subtab="heatmap"><span class="icon">📊</span><span>Phân tích câu hỏi</span></button>
+      <button class="menu-item tab-btn" data-tab="admin" data-admin-subtab="editor"><span class="icon">📝</span><span>Editor + Import/Export câu hỏi</span></button>
+      <button class="menu-item tab-btn" data-tab="admin" data-admin-subtab="playbook"><span class="icon">💎</span><span>Editor Cẩm nang</span></button>
+      <button class="menu-item tab-btn" data-tab="admin" data-admin-subtab="certsessions"><span class="icon">📜</span><span>Cert Exam Sessions</span></button>
     </div>
   </div>
 </nav>
@@ -4943,8 +4948,18 @@ if (document.readyState === 'loading') {
 function updateMenuActiveStates(activeTab) {
   // Mark menu-group containing the active tab
   document.querySelectorAll('.menu-group').forEach(g => g.classList.remove('has-active'));
-  const activeBtn = document.querySelector('.menu-item[data-tab="' + activeTab + '"]');
+  // Clear all .active on menu-item buttons (only sidebar items, not subtab buttons)
+  document.querySelectorAll('.menu-item.tab-btn').forEach(b => b.classList.remove('active'));
+
+  // For admin tab, prefer button matching current sub-tab
+  let activeBtn = null;
+  if (activeTab === 'admin') {
+    const sub = window._adminSubtab || 'users';
+    activeBtn = document.querySelector('.menu-item[data-tab="admin"][data-admin-subtab="' + sub + '"]');
+  }
+  if (!activeBtn) activeBtn = document.querySelector('.menu-item[data-tab="' + activeTab + '"]');
   if (activeBtn) {
+    activeBtn.classList.add('active');
     const grp = activeBtn.closest('.menu-group');
     if (grp) grp.classList.add('has-active');
   }
@@ -4965,7 +4980,12 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
     // Scroll main to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
     if (tab === "stats") renderStats();
-    if (tab === "admin") renderAdmin();
+    if (tab === "admin") {
+      // Support deep-link to admin sub-tab via data-admin-subtab attribute on menu button
+      const subtab = btn.dataset.adminSubtab;
+      if (subtab) window._adminSubtab = subtab;
+      renderAdmin();
+    }
     if (tab === "leaderboard") renderLeaderboard();
     if (tab === "bookmarks") renderBookmarks();
     if (tab === "srs") renderSRS();
@@ -5422,8 +5442,8 @@ async function renderAdmin() {
 
     panel.innerHTML = `
       <div class="admin-header">
-        <h2>👥 Admin Dashboard</h2>
-        <p style="color:var(--text-muted); margin:0 0 16px 0; font-size:14px;">Quản lý người dùng, theo dõi tiến độ và phân tích chất lượng câu hỏi</p>
+        <h2>⚙️ Trang Quản trị Hệ thống</h2>
+        <p style="color:var(--text-muted); margin:0 0 16px 0; font-size:14px;">Bao gồm: Quản lý Users · Phân tích Teams · Phân tích câu hỏi · Editor + Import/Export câu hỏi · Editor Cẩm nang · Cert Exam Sessions. Click tab bên dưới để chuyển chức năng.</p>
       </div>
 
       <div class="admin-stats">
@@ -5846,6 +5866,8 @@ function exportUsersCSV() {
 function setAdminSubtab(name) {
   window._adminSubtab = name;
   renderAdmin();
+  // Re-sync sidebar menu highlighting so the new sub-tab's menu item appears active
+  updateMenuActiveStates('admin');
 }
 
 let _heatmapState = {
