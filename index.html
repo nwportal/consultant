@@ -1030,6 +1030,95 @@
     .admin-table th, .admin-table td { padding: 8px 6px; }
   }
 
+  /* Level Assessment */
+  .level-hero {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white; border-radius: 14px; padding: 24px; margin-bottom: 16px;
+    position: relative; overflow: hidden;
+  }
+  .level-hero.lvl-1 { background: linear-gradient(135deg, #94A3B8 0%, #64748B 100%); }
+  .level-hero.lvl-2 { background: linear-gradient(135deg, #2E5C9E 0%, #1E40AF 100%); }
+  .level-hero.lvl-3 { background: linear-gradient(135deg, #16A34A 0%, #15803D 100%); }
+  .level-hero.lvl-4 { background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%); }
+  .level-hero .level-badge {
+    display: inline-block; background: rgba(255,255,255,0.22);
+    padding: 4px 14px; border-radius: 14px; font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;
+  }
+  .level-hero h2 { font-size: 28px; margin: 0 0 8px 0; }
+  .level-hero .level-subtitle { opacity: 0.92; font-size: 14px; }
+  .level-hero .level-specialty {
+    margin-top: 14px; padding: 10px 14px; background: rgba(255,255,255,0.18);
+    border-radius: 8px; display: inline-block; font-size: 13px;
+  }
+
+  .level-radar-wrap {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px; display: grid; grid-template-columns: 320px 1fr; gap: 20px;
+    margin-bottom: 16px; align-items: center;
+  }
+  @media (max-width: 768px) {
+    .level-radar-wrap { grid-template-columns: 1fr; }
+    .level-radar-wrap canvas { margin: 0 auto; }
+  }
+  .level-radar-wrap canvas { max-width: 100%; }
+  .competency-list { display: flex; flex-direction: column; gap: 10px; }
+  .competency-bar {
+    display: grid; grid-template-columns: 140px 1fr 50px 50px;
+    gap: 10px; align-items: center; font-size: 13px;
+  }
+  .competency-bar .cb-label { font-weight: 600; color: var(--text); }
+  .competency-bar .cb-track {
+    height: 10px; background: var(--border); border-radius: 5px; overflow: hidden;
+  }
+  .competency-bar .cb-fill {
+    height: 100%; transition: width 0.5s; border-radius: 5px;
+  }
+  .competency-bar .cb-pct { font-weight: 700; text-align: right; }
+  .competency-bar .cb-count { font-size: 11px; color: var(--text-muted); text-align: right; }
+
+  .level-requirements {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px; margin-bottom: 16px;
+  }
+  .level-requirements h3 { color: var(--primary); margin: 0 0 12px 0; font-size: 16px; }
+  .req-item {
+    display: flex; align-items: flex-start; gap: 10px; padding: 8px 0;
+    border-bottom: 1px solid #F3F4F6; font-size: 14px;
+  }
+  body[data-theme="dark"] .req-item { border-bottom-color: var(--border); }
+  .req-item:last-child { border-bottom: none; }
+  .req-icon {
+    width: 24px; height: 24px; flex-shrink: 0; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-weight: 700;
+    font-size: 13px;
+  }
+  .req-icon.done { background: var(--green-bg); color: var(--green); }
+  .req-icon.pending { background: var(--red-bg); color: var(--danger); }
+  .req-text { flex: 1; }
+  .req-text .req-status { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  .level-cards-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px; margin-bottom: 16px;
+  }
+  .level-card {
+    background: var(--card); border: 1.5px solid var(--border);
+    border-radius: 10px; padding: 14px; text-align: center;
+    transition: all 0.2s;
+  }
+  .level-card.current { border-color: var(--primary); box-shadow: 0 4px 14px var(--shadow); transform: translateY(-2px); }
+  .level-card.achieved { border-color: var(--green); background: rgba(22, 163, 74, 0.06); }
+  .level-card .lc-icon { font-size: 28px; margin-bottom: 4px; }
+  .level-card .lc-name { font-weight: 700; font-size: 14px; }
+  .level-card .lc-range { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .level-card.current .lc-name { color: var(--primary); }
+  .level-card.achieved::after {
+    content: ''; display: block; width: 22px; height: 22px;
+    background: var(--green); color: white; border-radius: 50%;
+    position: absolute;
+  }
+
   /* Playbook / Cẩm nang */
   .playbook-intro {
     background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
@@ -1662,6 +1751,60 @@
   }
   .srs-empty .icon { font-size: 48px; margin-bottom: 8px; }
 
+  /* Difficulty badges */
+  .difficulty-badge {
+    display: inline-flex; align-items: center; gap: 2px; padding: 2px 8px;
+    border-radius: 10px; font-size: 11px; font-weight: 700; margin-left: 8px;
+    vertical-align: middle;
+  }
+  .difficulty-badge.d1 { background: #DCFCE7; color: #16A34A; }
+  .difficulty-badge.d2 { background: #DBEAFE; color: #2563EB; }
+  .difficulty-badge.d3 { background: #FEF3C7; color: #B45309; }
+  .difficulty-badge.d4 { background: #FED7AA; color: #C2410C; }
+  .difficulty-badge.d5 { background: #FEE2E2; color: #C00000; }
+  body[data-theme="dark"] .difficulty-badge.d1 { background: #14532D; color: #4ADE80; }
+  body[data-theme="dark"] .difficulty-badge.d2 { background: #1E3A8A; color: #93C5FD; }
+  body[data-theme="dark"] .difficulty-badge.d3 { background: #78350F; color: #FCD34D; }
+  body[data-theme="dark"] .difficulty-badge.d4 { background: #7C2D12; color: #FDBA74; }
+  body[data-theme="dark"] .difficulty-badge.d5 { background: #7F1D1D; color: #FCA5A5; }
+  .difficulty-stars { letter-spacing: 1px; }
+
+  /* Case Study Self-Assessment */
+  .case-assessment {
+    margin-top: 16px; padding: 14px 16px; background: rgba(124, 58, 237, 0.06);
+    border-left: 4px solid #7C3AED; border-radius: 8px;
+  }
+  .case-assessment h4 { color: #7C3AED; margin: 0 0 8px 0; font-size: 14px; }
+  .case-self-input {
+    width: 100%; min-height: 100px; padding: 10px 12px; margin: 6px 0;
+    border: 1px solid var(--border); border-radius: 6px; font-family: inherit;
+    font-size: 13px; resize: vertical;
+  }
+  .case-keypoints { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+  .case-keypoint-row {
+    display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: start;
+    padding: 8px 10px; background: var(--card); border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  .case-keypoint-row .kp-text { font-size: 13px; line-height: 1.5; }
+  .case-keypoint-rating { display: flex; gap: 4px; flex-shrink: 0; }
+  .case-keypoint-rating button {
+    padding: 4px 10px; border: 1px solid var(--border); background: white;
+    border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600;
+  }
+  .case-keypoint-rating button.r-full.active { background: var(--green); color: white; border-color: var(--green); }
+  .case-keypoint-rating button.r-partial.active { background: var(--warning); color: white; border-color: var(--warning); }
+  .case-keypoint-rating button.r-miss.active { background: var(--danger); color: white; border-color: var(--danger); }
+  .case-score-result {
+    margin-top: 12px; padding: 12px; background: var(--card); border-radius: 6px;
+    text-align: center;
+  }
+  .case-score-result .score {
+    font-size: 32px; font-weight: 700; line-height: 1;
+  }
+  body[data-theme="dark"] .case-assessment { background: rgba(124, 58, 237, 0.15); }
+  body[data-theme="dark"] .case-keypoint-rating button { background: var(--card); color: var(--text); }
+
   /* Confidence rating */
   .confidence-bar {
     display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
@@ -2004,6 +2147,7 @@
     <div class="menu-dropdown">
       <button class="menu-item tab-btn" data-tab="bookmarks"><span class="icon">📌</span><span>Bookmarks</span></button>
       <button class="menu-item tab-btn" data-tab="stats"><span class="icon">📊</span><span>Tiến độ</span></button>
+      <button class="menu-item tab-btn" data-tab="level"><span class="icon">🎓</span><span>Cấp độ Consultant</span></button>
     </div>
   </div>
 
@@ -2033,6 +2177,7 @@
   <div id="retail" class="panel"></div>
   <div id="manufacturing" class="panel"></div>
   <div id="playbook" class="panel"></div>
+  <div id="level" class="panel"></div>
   <div id="glossary" class="panel"></div>
   <div id="bookmarks" class="panel"></div>
   <div id="leaderboard" class="panel"></div>
@@ -2698,6 +2843,7 @@ let state = {
   srs: {},       // {questionId: { interval, due, ease, lastReview, reps, lapses }}
   mockExamHistory: [], // array of mock exam summaries
   attempts: {},  // {questionId: { wrongIndices: [...], gaveUp: bool, count: N }} — try-again state
+  caseAssessments: {}, // {caseId: { ratings: {0: 'full'|'partial'|'miss'}, score: 0-1, ts }}
   dailyActivity: {}, // {'YYYY-MM-DD': numAnswered}
   achievements: {},  // {achId: { unlockedAt: ts }}
   consecutiveCorrect: 0, // current streak of correct answers (resets on wrong)
@@ -2817,6 +2963,39 @@ function setTheme(theme) {
   }
 })();
 
+// ============ DIFFICULTY TAGGING ============
+function getQuestionDifficulty(q) {
+  // Manual override takes priority
+  if (typeof q.difficulty === 'number') return q.difficulty;
+  const sec = q.section || '';
+  let base = 3;
+  if (/^O2|^P2|^Q2|^R2|^S2/.test(sec)) base = 4;       // Advanced business
+  else if (/^T\./.test(sec)) base = 4;                  // Workshop
+  else if (/^U\./.test(sec)) base = 4;                  // Multi/seq/match
+  else if (/^[VWXYZ]\.|^AA\./.test(sec)) base = 3;      // Modern BC
+  else if (/^Z\d/.test(sec)) base = 3;                  // Retail
+  else if (/^M\d/.test(sec)) base = 3;                  // Manufacturing
+  else if (/^[OPQRS]\./.test(sec)) base = 2;            // Basic business
+  else if (/^[G-N]\./.test(sec)) base = 3;              // Mapping
+  else if (/^[A-F]\./.test(sec)) base = 3;              // BC core
+
+  const text = (q.q || '').toLowerCase();
+  // Easier keywords
+  if (/khái niệm|là gì\?|cơ bản|định nghĩa|đúng \/ sai|gồm/.test(text)) base = Math.max(1, base - 1);
+  // Harder keywords
+  if (/edge case|chiến lược|strategic|đặc thù|tình huống|deal-breaker|workflow phức tạp|đa cấp|cross-/.test(text)) base = Math.min(5, base + 1);
+  // Multi-step types are harder
+  if (q.type === 'sequence' || q.type === 'matching') base = Math.min(5, base + 1);
+  if (q.type === 'multi') base = Math.min(5, base + 1);
+  return Math.max(1, Math.min(5, base));
+}
+
+function difficultyBadge(d) {
+  return '<span class="difficulty-badge d' + d + '" title="Độ khó ' + d + '/5">' +
+    '<span class="difficulty-stars">' + '★'.repeat(d) + '☆'.repeat(5 - d) + '</span>' +
+    '</span>';
+}
+
 function getFilteredQuestions() {
   let qs = QUESTIONS;
   if (state.filter !== "all") {
@@ -2838,6 +3017,11 @@ function getFilteredQuestions() {
       qs = qs.filter(q => state.answered[q.id] && !state.answered[q.id].correct);
     } else if (state.filter === "noted") {
       qs = qs.filter(q => state.notes && state.notes[q.id]);
+    } else if (state.filter.startsWith("difficulty:")) {
+      const target = parseInt(state.filter.slice(11));
+      qs = qs.filter(q => getQuestionDifficulty(q) === target);
+    } else if (state.filter === "hard") {
+      qs = qs.filter(q => getQuestionDifficulty(q) >= 4);
     } else {
       qs = qs.filter(q => q.section === state.filter);
     }
@@ -2880,6 +3064,12 @@ function renderQuiz() {
           <option value="wrong">Đã làm sai</option>
           <option value="bookmarks">Đã đánh dấu</option>
           <option value="noted">📝 Có ghi chú</option>
+          <option value="hard">🔥 Câu khó (★★★★+)</option>
+          <option value="difficulty:1">⭐ Dễ (★)</option>
+          <option value="difficulty:2">⭐⭐ Khá dễ</option>
+          <option value="difficulty:3">⭐⭐⭐ Trung bình</option>
+          <option value="difficulty:4">⭐⭐⭐⭐ Khó</option>
+          <option value="difficulty:5">⭐⭐⭐⭐⭐ Rất khó</option>
           ${sections.map(s => `<option value="${s}">${s}</option>`).join("")}
         </select>
         <button class="danger" onclick="resetProgress()">🔄 Reset tiến độ</button>
@@ -2909,6 +3099,12 @@ function renderQuiz() {
         <option value="wrong" ${state.filter === "wrong" ? "selected" : ""}>Đã làm sai</option>
         <option value="bookmarks" ${state.filter === "bookmarks" ? "selected" : ""}>Tất cả bookmarks (${totalBookmarks})</option>
         <option value="noted" ${state.filter === "noted" ? "selected" : ""}>📝 Có ghi chú (${Object.keys(state.notes || {}).length})</option>
+        <option value="hard" ${state.filter === "hard" ? "selected" : ""}>🔥 Câu khó (★★★★+)</option>
+        <option value="difficulty:1" ${state.filter === "difficulty:1" ? "selected" : ""}>⭐ Dễ (★)</option>
+        <option value="difficulty:2" ${state.filter === "difficulty:2" ? "selected" : ""}>⭐⭐ Khá dễ</option>
+        <option value="difficulty:3" ${state.filter === "difficulty:3" ? "selected" : ""}>⭐⭐⭐ Trung bình</option>
+        <option value="difficulty:4" ${state.filter === "difficulty:4" ? "selected" : ""}>⭐⭐⭐⭐ Khó</option>
+        <option value="difficulty:5" ${state.filter === "difficulty:5" ? "selected" : ""}>⭐⭐⭐⭐⭐ Rất khó</option>
         ${folderList.map(f => `<option value="folder:${f}" ${state.filter === ('folder:'+f) ? "selected" : ""}>📁 ${f} (${(state.bookmarkFolders[f] || []).length})</option>`).join("")}
         ${sections.map(s => `<option value="${s}" ${state.filter === s ? "selected" : ""}>${s}</option>`).join("")}
       </select>
@@ -2927,7 +3123,7 @@ function renderQuiz() {
     <div class="question-card">
       <div class="question-section">${q.section}</div>
       <div style="display:flex; justify-content:space-between; align-items:flex-start; position:relative;">
-        <div class="question-num">Câu ${q.id}</div>
+        <div class="question-num">Câu ${q.id} ${difficultyBadge(getQuestionDifficulty(q))}</div>
         <button class="bookmark-btn ${bookmarked ? 'active' : ''}" onclick="toggleBookmark(${q.id}, event)" title="Đánh dấu / chọn folder">★</button>
       </div>
       <div class="question-text">${q.q}</div>
@@ -3878,31 +4074,146 @@ function saveNote(qid) {
 // ============ CASES ============
 function renderCases(panelId, cases) {
   const panel = document.getElementById(panelId);
-  panel.innerHTML = cases.map(c => `
+  // Unique key per case: panelId-caseId to distinguish CASES vs ADVANCED_CASES (both may have same numeric id)
+  const caseKey = (c) => panelId + '-' + c.id;
+  panel.innerHTML = cases.map(c => {
+    const key = caseKey(c);
+    const assessment = (state.caseAssessments || {})[key];
+    const keyPoints = extractCaseKeyPoints(c.answer);
+    return `
     <div class="case-card">
-      <h3 class="case-title">Case ${c.id} — ${c.title}</h3>
+      <h3 class="case-title">Case ${c.id} — ${escapeHtml(c.title)}</h3>
       <div class="case-section">
         <h4>Bối cảnh</h4>
-        <p>${c.context}</p>
+        <p>${escapeHtml(c.context)}</p>
       </div>
       <div class="case-section">
         <h4>Câu hỏi tự ôn</h4>
-        <ol>${c.questions.map(q => `<li>${q}</li>`).join("")}</ol>
+        <ol>${c.questions.map(q => `<li>${escapeHtml(q)}</li>`).join("")}</ol>
       </div>
-      <button class="toggle-answer" onclick="toggleAnswer(this)">📖 Hiện hướng dẫn trả lời</button>
-      <div class="case-answer">${highlightGlossaryTerms(c.answer)}</div>
+
+      <div class="case-section">
+        <h4>📝 Bước 1: Tự viết câu trả lời (khuyến nghị)</h4>
+        <p style="font-size:12px; color:var(--text-muted); margin:4px 0;">Hãy gõ câu trả lời của bạn vào ô dưới TRƯỚC khi xem key points. Mục đích: phát hiện gap kiến thức thật, không phải đọc qua rồi tưởng đã biết.</p>
+        <textarea class="case-self-input" id="case-input-${key}"
+          placeholder="Gõ câu trả lời tự luận của bạn (không lưu — chỉ là vùng nháp để suy nghĩ trước khi xem đáp án)">${assessment && assessment.userAnswer ? escapeHtml(assessment.userAnswer) : ''}</textarea>
+      </div>
+
+      <button class="toggle-answer" onclick="toggleAnswer(this, '${key}')">📖 Hiện key points + Tự chấm</button>
+      <div class="case-answer">
+        ${highlightGlossaryTerms(c.answer)}
+
+        <div class="case-assessment">
+          <h4>🎯 Bước 2: Tự chấm — bạn đã đề cập được những điểm nào?</h4>
+          <p style="font-size:12px; color:var(--text-muted); margin:4px 0 10px 0;">So câu trả lời của bạn với từng key point dưới đây. Đánh giá trung thực — nói "đầy đủ" tất cả là tự lừa mình.</p>
+          <div class="case-keypoints" id="case-points-${key}">
+            ${keyPoints.map((kp, i) => {
+              const r = assessment && assessment.ratings ? assessment.ratings[i] : null;
+              return `
+                <div class="case-keypoint-row">
+                  <div class="kp-text">${i+1}. ${escapeHtml(kp)}</div>
+                  <div class="case-keypoint-rating">
+                    <button class="r-full ${r === 'full' ? 'active' : ''}" onclick="rateCasePoint('${key}', ${i}, 'full')" title="Đã đề cập đầy đủ">✓ Đầy đủ</button>
+                    <button class="r-partial ${r === 'partial' ? 'active' : ''}" onclick="rateCasePoint('${key}', ${i}, 'partial')" title="Đề cập một phần / sai góc nhìn">⚠️ Một phần</button>
+                    <button class="r-miss ${r === 'miss' ? 'active' : ''}" onclick="rateCasePoint('${key}', ${i}, 'miss')" title="Không nghĩ ra / sai hoàn toàn">✗ Bỏ sót</button>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+          <div id="case-score-${key}">
+            ${assessment && typeof assessment.score === 'number' ? renderCaseScore(assessment.score, keyPoints.length, assessment.ratings) : ''}
+          </div>
+        </div>
+      </div>
     </div>
-  `).join("");
+  `;
+  }).join("");
 }
 
-function toggleAnswer(btn) {
+// Extract key points from case answer HTML (split by <li> elements + <h4> headers as natural points)
+function extractCaseKeyPoints(answerHtml) {
+  if (!answerHtml) return [];
+  const points = [];
+  // Find all <li>...</li> content
+  const liMatches = answerHtml.match(/<li>([\s\S]*?)<\/li>/g) || [];
+  liMatches.forEach(li => {
+    // Strip nested tags
+    const text = li.replace(/<li>|<\/li>/g, '').replace(/<[^>]+>/g, '').trim();
+    if (text && text.length >= 10 && text.length <= 250) points.push(text);
+  });
+  // Cap at 12 to keep UI reasonable
+  return points.slice(0, 12);
+}
+
+function renderCaseScore(score, total, ratings) {
+  const pct = Math.round(score * 100);
+  const color = pct >= 80 ? 'var(--green)' : pct >= 60 ? 'var(--primary)' : pct >= 40 ? 'var(--warning)' : 'var(--danger)';
+  const full = Object.values(ratings || {}).filter(r => r === 'full').length;
+  const partial = Object.values(ratings || {}).filter(r => r === 'partial').length;
+  const miss = Object.values(ratings || {}).filter(r => r === 'miss').length;
+  return `
+    <div class="case-score-result">
+      <div class="score" style="color:${color};">${pct}%</div>
+      <div style="font-size:13px; color:var(--text-muted); margin-top:4px;">
+        ✓ ${full} đầy đủ • ⚠️ ${partial} một phần • ✗ ${miss} bỏ sót / ${total} key points
+      </div>
+      ${pct >= 80 ? '<div style="margin-top:6px; color:var(--green); font-weight:600; font-size:13px;">🎉 Xuất sắc — bạn nắm vững case này.</div>'
+        : pct >= 60 ? '<div style="margin-top:6px; color:var(--primary); font-weight:600; font-size:13px;">👍 Khá tốt — đọc kỹ điểm còn thiếu để ôn lại.</div>'
+        : '<div style="margin-top:6px; color:var(--warning); font-weight:600; font-size:13px;">📚 Cần nghiên cứu kỹ hơn — đọc lại key points + so với context.</div>'}
+    </div>
+  `;
+}
+
+function rateCasePoint(caseKey, pointIdx, rating) {
+  if (!state.caseAssessments) state.caseAssessments = {};
+  if (!state.caseAssessments[caseKey]) state.caseAssessments[caseKey] = { ratings: {}, userAnswer: '', ts: Date.now() };
+  state.caseAssessments[caseKey].ratings[pointIdx] = rating;
+  // Capture user answer if any
+  const ta = document.getElementById('case-input-' + caseKey);
+  if (ta) state.caseAssessments[caseKey].userAnswer = ta.value;
+  // Compute score: full=1, partial=0.5, miss=0
+  const ratings = state.caseAssessments[caseKey].ratings;
+  // Find total key points from current UI
+  const pointsDiv = document.getElementById('case-points-' + caseKey);
+  const total = pointsDiv ? pointsDiv.querySelectorAll('.case-keypoint-row').length : 0;
+  if (total > 0) {
+    let sum = 0;
+    Object.values(ratings).forEach(r => sum += (r === 'full' ? 1 : r === 'partial' ? 0.5 : 0));
+    state.caseAssessments[caseKey].score = sum / total;
+  }
+  state.caseAssessments[caseKey].ts = Date.now();
+  saveState();
+  // Update UI without full re-render
+  const scoreEl = document.getElementById('case-score-' + caseKey);
+  if (scoreEl) scoreEl.innerHTML = renderCaseScore(state.caseAssessments[caseKey].score || 0, total, ratings);
+  // Update active button states for this row
+  const row = pointsDiv && pointsDiv.querySelectorAll('.case-keypoint-row')[pointIdx];
+  if (row) {
+    row.querySelectorAll('.case-keypoint-rating button').forEach(b => b.classList.remove('active'));
+    const targetBtn = row.querySelector('.r-' + rating);
+    if (targetBtn) targetBtn.classList.add('active');
+  }
+}
+
+function toggleAnswer(btn, caseKey) {
   const ans = btn.nextElementSibling;
+  // Save user input before showing answer
+  if (caseKey) {
+    const ta = document.getElementById('case-input-' + caseKey);
+    if (ta && ta.value.trim()) {
+      if (!state.caseAssessments) state.caseAssessments = {};
+      if (!state.caseAssessments[caseKey]) state.caseAssessments[caseKey] = { ratings: {}, userAnswer: '' };
+      state.caseAssessments[caseKey].userAnswer = ta.value;
+      saveState();
+    }
+  }
   if (ans.classList.contains("show")) {
     ans.classList.remove("show");
-    btn.textContent = "📖 Hiện hướng dẫn trả lời";
+    btn.textContent = "📖 Hiện key points + Tự chấm";
   } else {
     ans.classList.add("show");
-    btn.textContent = "🙈 Ẩn hướng dẫn";
+    btn.textContent = "🙈 Ẩn key points";
   }
 }
 
@@ -4208,6 +4519,9 @@ function renderStats() {
     "Nhóm 5 — Kỹ năng Workshop ERP Consultant": ["T. Kỹ năng Workshop ERP Consultant"],
     "Nhóm 6 — Dạng câu hỏi nâng cao": ["U. Nâng cao — Dạng câu hỏi mới"],
     "Nhóm 7 — BC 2026 / Copilot / Fabric / Power Platform": ["V. Copilot & AI trong BC", "W. Microsoft Fabric & Analytics", "X. BC 2026 Release Updates", "Y. E-invoice VN 2026 & Localization", "Z. Power Platform & Integration", "AA. AL Extension & Modern Dev"],
+    "Nhóm 7B — Anti-vẹt Multi Choice (★★★★+)": (() => {
+      return [...new Set(QUESTIONS.filter(q => q.section && q.section.startsWith('AB.')).map(q => q.section))].sort();
+    })(),
     "Nhóm 8 — Retail Industry Practice": (() => {
       return [...new Set(QUESTIONS.filter(q => q.section && q.section.match(/^Z\d/) && q.section.includes('Retail')).map(q => q.section))].sort();
     })(),
@@ -4376,6 +4690,7 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
     if (tab === "retail") renderRetail();
     if (tab === "manufacturing") renderManufacturing();
     if (tab === "playbook") renderPlaybook();
+    if (tab === "level") renderLevelAssessment();
   });
 });
 
@@ -4587,7 +4902,7 @@ async function logout() {
   // Reset state
   state = {
     answered: {}, bookmarks: {}, bookmarkFolders: { "Đã đánh dấu": [] },
-    notes: {}, confidence: {}, srs: {}, mockExamHistory: [], attempts: {},
+    notes: {}, confidence: {}, srs: {}, mockExamHistory: [], attempts: {}, caseAssessments: {},
     dailyActivity: {}, achievements: {}, consecutiveCorrect: 0, maxConsecutiveCorrect: 0,
     team: '',
     currentIdx: 0, filter: "all",
@@ -7104,6 +7419,328 @@ function shadeColor(hex, percent) {
   g = Math.max(0, Math.min(255, g + Math.round(g * percent / 100)));
   b = Math.max(0, Math.min(255, b + Math.round(b * percent / 100)));
   return '#' + [r,g,b].map(c => c.toString(16).padStart(2, '0')).join('');
+}
+
+// ============ CONSULTANT LEVEL ASSESSMENT ============
+const COMPETENCY_AXES = [
+  { key: 'product', label: 'Product Knowledge', icon: '🔧',
+    desc: 'BC core features + Modern stack (Copilot, Fabric, AL) + Multi-choice depth (★★★★+)',
+    sectionMatch: (s) => /^[A-F]\./.test(s) || /^[VWXYZ]\. /.test(s) || /^AA\./.test(s) || /^U\./.test(s) || /^AB\./.test(s) },
+  { key: 'business', label: 'Business Acumen', icon: '💼',
+    desc: 'Nghiệp vụ thuần (Procurement, Warehouse, Quality, Sales, Accounting)',
+    sectionMatch: (s) => /^[OPQRS]\. /.test(s) || /^[OPQRS]2\./.test(s) },
+  { key: 'mapping', label: 'Mapping Skills', icon: '🌉',
+    desc: 'Cầu nối nghiệp vụ ↔ ERP (Master Data, Warehouse, Planning, Pricing, Localization)',
+    sectionMatch: (s) => /^[G-N]\./.test(s) },
+  { key: 'retail', label: 'Retail Industry', icon: '🏪',
+    desc: 'Định dạng bán lẻ, POS, MMS, WMS, Data Warehouse, CRM',
+    sectionMatch: (s) => /^Z\d/.test(s) },
+  { key: 'manufacturing', label: 'Manufacturing', icon: '🏭',
+    desc: 'MPS/MRP, BOM/Routing, MES, Lean/TPS, Industry 4.0',
+    sectionMatch: (s) => /^M\d+\./.test(s) && s.includes('Mfg') },
+  { key: 'workshop', label: 'Workshop & Consulting', icon: '🎓',
+    desc: 'Facilitation, Demo, Outcomes, Stakeholder management',
+    sectionMatch: (s) => /^T\./.test(s) }
+];
+
+const CONSULTANT_LEVELS = [
+  { level: 1, key: 'junior', name: 'Junior Consultant', range: '0-2 năm', icon: '🌱',
+    blurb: 'Bạn đang ở giai đoạn học hỏi. Trợ giúp senior, làm config cơ bản, demo module đơn giản.',
+    requires: { minAnswered: 80, minAccuracy: 0.5, anyAxisMin: 0.5 } },
+  { level: 2, key: 'mid', name: 'Mid-Level Consultant', range: '2-4 năm', icon: '🚀',
+    blurb: 'Bạn có thể tự lead module-level project, design fit-gap, troubleshoot bug, mentor junior.',
+    requires: { minAnswered: 160, minAccuracy: 0.65, axes: { product: 0.65, business: 0.6 },
+      firstTryAccuracyMin: 0.6 } },
+  { level: 3, key: 'senior', name: 'Senior Consultant', range: '4-8 năm', icon: '⭐',
+    blurb: 'Bạn lead multi-module project, cross-industry, mentor team, design solution architecture cho mid-size client.',
+    requires: { minAnswered: 240, minAccuracy: 0.75, axes: { product: 0.75, business: 0.75, mapping: 0.75 },
+      anyIndustryMin: 0.7, workshopMin: 0.7, mockExamMin: 1, mockBestScoreMin: 0.7,
+      hardAccuracyMin: 0.5, firstTryAccuracyMin: 0.65, deepRetentionMin: 40, caseMasteryMin: 0.5 } },
+  { level: 4, key: 'principal', name: 'Principal / Lead Consultant', range: '8+ năm', icon: '👑',
+    blurb: 'Strategic — define methodology, pre-sales support, lead complex multi-industry projects, mentor senior team.',
+    requires: { minAnswered: 280, minAccuracy: 0.85, allAxesMin: 0.75, workshopMin: 0.85,
+      mockExamMin: 3, mockAvgScoreMin: 0.8, streakMin: 30,
+      hardAccuracyMin: 0.7, firstTryAccuracyMin: 0.75, deepRetentionMin: 100, caseMasteryMin: 0.75 } }
+];
+
+function computeCompetencies() {
+  const ans = state.answered || {};
+  const out = {};
+  COMPETENCY_AXES.forEach(axis => {
+    const qs = QUESTIONS.filter(q => q.section && axis.sectionMatch(q.section));
+    const answered = qs.filter(q => ans[q.id]);
+    const correct = answered.filter(q => ans[q.id].correct).length;
+    const total = qs.length;
+    out[axis.key] = {
+      axis, total, answered: answered.length, correct,
+      accuracy: answered.length > 0 ? correct / answered.length : 0,
+      coverage: total > 0 ? answered.length / total : 0,
+      score: total > 0 ? correct / total : 0
+    };
+  });
+  return out;
+}
+
+function evaluateRequirement(req, ctx) {
+  if (req.type === 'count') return { satisfied: ctx.totalAnswered >= req.target, detail: 'Đã trả lời ' + ctx.totalAnswered + ' / cần ' + req.target + ' câu', progress: Math.min(1, ctx.totalAnswered / req.target) };
+  if (req.type === 'accuracy') return { satisfied: ctx.overallAccuracy >= req.target, detail: 'Accuracy ' + Math.round(ctx.overallAccuracy * 100) + '% / cần ≥' + Math.round(req.target * 100) + '%', progress: Math.min(1, ctx.overallAccuracy / req.target) };
+  if (req.type === 'axis') { const c = ctx.competencies[req.axisKey]; const sc = c ? c.score : 0; return { satisfied: sc >= req.target, detail: req.label + ': ' + Math.round(sc * 100) + '% / cần ≥' + Math.round(req.target * 100) + '%', progress: Math.min(1, sc / req.target) }; }
+  if (req.type === 'anyAxis') { const best = Math.max(...Object.values(ctx.competencies).map(c => c.score)); return { satisfied: best >= req.target, detail: 'Axis cao nhất ' + Math.round(best * 100) + '% / cần ≥' + Math.round(req.target * 100) + '%', progress: Math.min(1, best / req.target) }; }
+  if (req.type === 'allAxes') { const min = Math.min(...Object.values(ctx.competencies).map(c => c.score)); return { satisfied: min >= req.target, detail: 'Axis thấp nhất ' + Math.round(min * 100) + '% / cần TẤT CẢ ≥' + Math.round(req.target * 100) + '%', progress: Math.min(1, min / req.target) }; }
+  if (req.type === 'anyIndustry') { const r = ctx.competencies.retail ? ctx.competencies.retail.score : 0; const m = ctx.competencies.manufacturing ? ctx.competencies.manufacturing.score : 0; const best = Math.max(r, m); return { satisfied: best >= req.target, detail: 'Retail ' + Math.round(r * 100) + '%, Mfg ' + Math.round(m * 100) + '% — cần ít nhất 1 ≥' + Math.round(req.target * 100) + '%', progress: Math.min(1, best / req.target) }; }
+  if (req.type === 'mockCount') return { satisfied: ctx.mockCount >= req.target, detail: 'Đã thi thử ' + ctx.mockCount + ' lần / cần ≥' + req.target, progress: Math.min(1, ctx.mockCount / req.target) };
+  if (req.type === 'mockBestScore') return { satisfied: ctx.mockBestScore >= req.target, detail: 'Điểm cao nhất ' + Math.round(ctx.mockBestScore * 100) + '% / cần ≥' + Math.round(req.target * 100) + '%', progress: Math.min(1, ctx.mockBestScore / req.target) };
+  if (req.type === 'mockAvgScore') return { satisfied: ctx.mockAvgScore >= req.target, detail: 'Điểm TB ' + Math.round(ctx.mockAvgScore * 100) + '% / cần ≥' + Math.round(req.target * 100) + '%', progress: Math.min(1, ctx.mockAvgScore / req.target) };
+  if (req.type === 'streak') { const maxS = Math.max(getCurrentStreak(), getMaxStreak()); return { satisfied: maxS >= req.target, detail: 'Streak hiện tại ' + getCurrentStreak() + ' / max ' + getMaxStreak() + ' / cần ≥' + req.target, progress: Math.min(1, maxS / req.target) }; }
+  if (req.type === 'hardAccuracy') return { satisfied: ctx.hardAccuracy >= req.target, detail: 'Câu khó (★★★★+): đúng ' + Math.round(ctx.hardAccuracy * 100) + '% / cần ≥' + Math.round(req.target * 100) + '%', progress: Math.min(1, ctx.hardAccuracy / req.target) };
+  if (req.type === 'firstTryAccuracy') return { satisfied: ctx.firstTryAccuracy >= req.target, detail: 'First-try accuracy ' + Math.round(ctx.firstTryAccuracy * 100) + '% / cần ≥' + Math.round(req.target * 100) + '% (chống học vẹt qua retry)', progress: Math.min(1, ctx.firstTryAccuracy / req.target) };
+  if (req.type === 'deepRetention') return { satisfied: ctx.deepRetentionCount >= req.target, detail: 'Câu thuộc lâu dài (SRS ≥30d): ' + ctx.deepRetentionCount + ' / cần ≥' + req.target + ' (chứng minh hiểu sâu, không vẹt ngắn hạn)', progress: Math.min(1, ctx.deepRetentionCount / req.target) };
+  if (req.type === 'caseMastery') return { satisfied: ctx.caseMastery >= req.target, detail: 'Case Study mastery ' + Math.round(ctx.caseMastery * 100) + '% / cần ≥' + Math.round(req.target * 100) + '% (tự chấm trên ' + ctx.casesAssessed + '/' + ctx.totalCases + ' cases)', progress: Math.min(1, ctx.caseMastery / req.target) };
+  return { satisfied: false, detail: '?', progress: 0 };
+}
+
+function buildLevelRequirements(level) {
+  const reqs = [];
+  const r = level.requires;
+  if (r.minAnswered) reqs.push({ type: 'count', target: r.minAnswered, label: 'Số câu đã trả lời' });
+  if (r.minAccuracy) reqs.push({ type: 'accuracy', target: r.minAccuracy, label: 'Accuracy tổng thể' });
+  if (r.anyAxisMin) reqs.push({ type: 'anyAxis', target: r.anyAxisMin, label: 'Ít nhất 1 axis mạnh' });
+  if (r.axes) Object.entries(r.axes).forEach(([key, target]) => { const axis = COMPETENCY_AXES.find(a => a.key === key); reqs.push({ type: 'axis', axisKey: key, target, label: axis ? axis.label : key }); });
+  if (r.allAxesMin) reqs.push({ type: 'allAxes', target: r.allAxesMin, label: 'TẤT CẢ 6 axes' });
+  if (r.anyIndustryMin) reqs.push({ type: 'anyIndustry', target: r.anyIndustryMin, label: 'Ít nhất 1 ngành (Retail hoặc Manufacturing)' });
+  if (r.workshopMin) reqs.push({ type: 'axis', axisKey: 'workshop', target: r.workshopMin, label: 'Workshop & Consulting' });
+  if (r.mockExamMin) reqs.push({ type: 'mockCount', target: r.mockExamMin, label: 'Số lần Mock Exam' });
+  if (r.mockBestScoreMin) reqs.push({ type: 'mockBestScore', target: r.mockBestScoreMin, label: 'Mock Exam điểm cao nhất' });
+  if (r.mockAvgScoreMin) reqs.push({ type: 'mockAvgScore', target: r.mockAvgScoreMin, label: 'Mock Exam điểm TB' });
+  if (r.streakMin) reqs.push({ type: 'streak', target: r.streakMin, label: 'Streak ngày học' });
+  if (r.hardAccuracyMin) reqs.push({ type: 'hardAccuracy', target: r.hardAccuracyMin, label: '🔥 Accuracy câu KHÓ (★★★★+)' });
+  if (r.firstTryAccuracyMin) reqs.push({ type: 'firstTryAccuracy', target: r.firstTryAccuracyMin, label: '🎯 First-try Accuracy (chống vẹt qua retry)' });
+  if (r.deepRetentionMin) reqs.push({ type: 'deepRetention', target: r.deepRetentionMin, label: '🧠 Deep Retention (SRS ≥30 ngày)' });
+  if (r.caseMasteryMin) reqs.push({ type: 'caseMastery', target: r.caseMasteryMin, label: '💼 Case Study Mastery' });
+  return reqs;
+}
+
+function assessLevel() {
+  const ans = state.answered || {};
+  const totalAnswered = Object.keys(ans).length;
+  const totalCorrect = Object.values(ans).filter(a => a.correct).length;
+  const overallAccuracy = totalAnswered > 0 ? totalCorrect / totalAnswered : 0;
+  const competencies = computeCompetencies();
+  const mocks = state.mockExamHistory || [];
+  const mockCount = mocks.length;
+  const mockScores = mocks.map(m => m.total > 0 ? m.correct / m.total : 0);
+  const mockBestScore = mockScores.length > 0 ? Math.max(...mockScores) : 0;
+  const mockAvgScore = mockScores.length > 0 ? mockScores.reduce((a, b) => a + b, 0) / mockScores.length : 0;
+
+  // First-try accuracy (anti-gaming retry): câu chỉ tính first-try nếu attempts === 1 (or undefined)
+  const firstTryAnswers = Object.values(ans).filter(a => (a.attempts || 1) === 1 && !a.gaveUp);
+  const firstTryCorrect = firstTryAnswers.filter(a => a.correct).length;
+  const firstTryAccuracy = firstTryAnswers.length > 0 ? firstTryCorrect / firstTryAnswers.length : 0;
+
+  // Hard accuracy: câu khó độ khó ≥4
+  let hardTotal = 0, hardCorrect = 0;
+  QUESTIONS.forEach(q => {
+    if (getQuestionDifficulty(q) >= 4 && ans[q.id]) {
+      hardTotal++;
+      if (ans[q.id].correct) hardCorrect++;
+    }
+  });
+  const hardAccuracy = hardTotal > 0 ? hardCorrect / hardTotal : 0;
+
+  // Deep retention: SRS interval ≥30 days = thuộc lâu dài
+  const srs = state.srs || {};
+  const deepRetentionCount = Object.values(srs).filter(c => c.interval >= 30).length;
+
+  // Case Study mastery: average score across assessed cases
+  const caseAss = state.caseAssessments || {};
+  const assessedCases = Object.values(caseAss).filter(a => typeof a.score === 'number');
+  const totalCases = (window.CASES ? CASES.length : 0) + (window.ADVANCED_CASES ? ADVANCED_CASES.length : 0);
+  const caseMastery = assessedCases.length > 0 ? assessedCases.reduce((s, a) => s + a.score, 0) / assessedCases.length : 0;
+
+  const ctx = {
+    totalAnswered, totalCorrect, overallAccuracy, competencies,
+    mockCount, mockBestScore, mockAvgScore,
+    firstTryAccuracy, hardAccuracy, hardTotal,
+    deepRetentionCount,
+    caseMastery, casesAssessed: assessedCases.length, totalCases
+  };
+  const levelResults = CONSULTANT_LEVELS.map(lvl => {
+    const reqs = buildLevelRequirements(lvl);
+    const evals = reqs.map(req => evaluateRequirement(req, ctx));
+    const satisfied = evals.every(e => e.satisfied);
+    const progress = evals.length > 0 ? evals.reduce((s, e) => s + e.progress, 0) / evals.length : 0;
+    return { level: lvl, reqs, evals, satisfied, progress };
+  });
+  let currentLevel = 0;
+  for (const r of levelResults) { if (r.satisfied) currentLevel = r.level.level; }
+  const nextLevelResult = levelResults.find(r => !r.satisfied);
+  const retailScore = competencies.retail ? competencies.retail.score : 0;
+  const mfgScore = competencies.manufacturing ? competencies.manufacturing.score : 0;
+  let specialty = 'Đang định hướng';
+  if (retailScore >= 0.7 && mfgScore >= 0.7) specialty = 'Cross-industry Generalist (Retail + Manufacturing)';
+  else if (retailScore >= 0.6 && retailScore > mfgScore) specialty = 'Retail Specialist';
+  else if (mfgScore >= 0.6 && mfgScore > retailScore) specialty = 'Manufacturing Specialist';
+  else if (Math.max(retailScore, mfgScore) < 0.4) specialty = 'Cần tập trung vào 1 ngành';
+  return { currentLevel, levelResults, nextLevelResult, ctx, specialty };
+}
+
+function drawRadarChart(canvas, competencies) {
+  const ctx2 = canvas.getContext('2d');
+  const W = canvas.width = 320, H = canvas.height = 320;
+  const cx = W / 2, cy = H / 2, R = Math.min(W, H) / 2 - 50;
+  const N = COMPETENCY_AXES.length;
+  const isDark = document.body.getAttribute('data-theme') === 'dark';
+  const textColor = isDark ? '#E2E8F0' : '#1F2937';
+  const gridColor = isDark ? '#475569' : '#D1D5DB';
+  const fillColor = 'rgba(31, 56, 100, 0.25)';
+  const strokeColor = isDark ? '#5B8DEF' : '#1F3864';
+  ctx2.clearRect(0, 0, W, H);
+  for (let ring = 1; ring <= 5; ring++) {
+    ctx2.beginPath();
+    for (let i = 0; i <= N; i++) {
+      const angle = (Math.PI * 2 * i / N) - Math.PI / 2;
+      const r = R * ring / 5;
+      const x = cx + r * Math.cos(angle), y = cy + r * Math.sin(angle);
+      if (i === 0) ctx2.moveTo(x, y); else ctx2.lineTo(x, y);
+    }
+    ctx2.strokeStyle = gridColor; ctx2.lineWidth = ring === 5 ? 1.5 : 0.5;
+    ctx2.globalAlpha = 0.5; ctx2.stroke(); ctx2.globalAlpha = 1;
+  }
+  for (let i = 0; i < N; i++) {
+    const angle = (Math.PI * 2 * i / N) - Math.PI / 2;
+    ctx2.beginPath(); ctx2.moveTo(cx, cy);
+    ctx2.lineTo(cx + R * Math.cos(angle), cy + R * Math.sin(angle));
+    ctx2.strokeStyle = gridColor; ctx2.lineWidth = 0.5;
+    ctx2.globalAlpha = 0.5; ctx2.stroke(); ctx2.globalAlpha = 1;
+  }
+  ctx2.beginPath();
+  for (let i = 0; i <= N; i++) {
+    const idx = i % N;
+    const axis = COMPETENCY_AXES[idx];
+    const score = competencies[axis.key] ? competencies[axis.key].score : 0;
+    const angle = (Math.PI * 2 * idx / N) - Math.PI / 2;
+    const r = R * Math.min(1, score);
+    const x = cx + r * Math.cos(angle), y = cy + r * Math.sin(angle);
+    if (i === 0) ctx2.moveTo(x, y); else ctx2.lineTo(x, y);
+  }
+  ctx2.fillStyle = fillColor; ctx2.fill();
+  ctx2.strokeStyle = strokeColor; ctx2.lineWidth = 2; ctx2.stroke();
+  for (let i = 0; i < N; i++) {
+    const axis = COMPETENCY_AXES[i];
+    const score = competencies[axis.key] ? competencies[axis.key].score : 0;
+    const angle = (Math.PI * 2 * i / N) - Math.PI / 2;
+    const r = R * Math.min(1, score);
+    const x = cx + r * Math.cos(angle), y = cy + r * Math.sin(angle);
+    ctx2.beginPath(); ctx2.arc(x, y, 4, 0, Math.PI * 2);
+    ctx2.fillStyle = strokeColor; ctx2.fill();
+  }
+  ctx2.font = '600 11px -apple-system, "Segoe UI", sans-serif';
+  ctx2.fillStyle = textColor; ctx2.textAlign = 'center'; ctx2.textBaseline = 'middle';
+  for (let i = 0; i < N; i++) {
+    const axis = COMPETENCY_AXES[i];
+    const angle = (Math.PI * 2 * i / N) - Math.PI / 2;
+    const labelR = R + 28;
+    const x = cx + labelR * Math.cos(angle), y = cy + labelR * Math.sin(angle);
+    ctx2.fillText(axis.icon, x, y - 7);
+    const lbl = axis.label.length > 14 ? axis.label.split(' ').join('\n') : axis.label;
+    const lines = lbl.split('\n');
+    lines.forEach((line, li) => { ctx2.fillText(line, x, y + 6 + li * 12); });
+  }
+}
+
+function renderLevelAssessment() {
+  const panel = document.getElementById('level');
+  const result = assessLevel();
+  const { currentLevel, levelResults, nextLevelResult, ctx, specialty } = result;
+  const currentLvlInfo = currentLevel > 0 ? CONSULTANT_LEVELS[currentLevel - 1] : null;
+  panel.innerHTML = '' +
+    '<div class="level-hero lvl-' + currentLevel + '">' +
+      (currentLvlInfo
+        ? '<div class="level-badge">' + currentLvlInfo.icon + ' CẤP ĐỘ HIỆN TẠI</div>' +
+          '<h2>' + currentLvlInfo.icon + ' ' + currentLvlInfo.name + '</h2>' +
+          '<div class="level-subtitle">' + currentLvlInfo.range + ' • ' + currentLvlInfo.blurb + '</div>'
+        : '<div class="level-badge">CHƯA ĐẠT LEVEL TỐI THIỂU</div>' +
+          '<h2>🌱 Pre-Junior (Đang học)</h2>' +
+          '<div class="level-subtitle">Tiếp tục làm bài để đạt Level 1 — Junior Consultant.</div>') +
+      '<div class="level-specialty">🎯 <strong>Specialty</strong>: ' + escapeHtml(specialty) + '</div>' +
+    '</div>' +
+
+    '<div class="level-cards-grid">' +
+      CONSULTANT_LEVELS.map(lvl => {
+        const cls = currentLevel === lvl.level ? 'current' : (currentLevel > lvl.level ? 'achieved' : '');
+        return '<div class="level-card ' + cls + '">' +
+          '<div class="lc-icon">' + lvl.icon + '</div>' +
+          '<div class="lc-name">L' + lvl.level + ' — ' + escapeHtml(lvl.name.replace(' Consultant', '')) + '</div>' +
+          '<div class="lc-range">' + lvl.range + '</div>' +
+        '</div>';
+      }).join('') +
+    '</div>' +
+
+    '<div class="level-radar-wrap">' +
+      '<canvas id="competency-radar" width="320" height="320"></canvas>' +
+      '<div class="competency-list">' +
+        '<h3 style="color:var(--primary); margin:0 0 6px 0; font-size:15px;">📊 6 Competency Axes</h3>' +
+        COMPETENCY_AXES.map(axis => {
+          const c = ctx.competencies[axis.key];
+          const pct = Math.round(c.score * 100);
+          const color = pct >= 80 ? 'var(--green)' : pct >= 60 ? 'var(--primary)' : pct >= 40 ? 'var(--warning)' : 'var(--danger)';
+          return '<div class="competency-bar">' +
+            '<div class="cb-label">' + axis.icon + ' ' + escapeHtml(axis.label) + '</div>' +
+            '<div class="cb-track"><div class="cb-fill" style="width:' + pct + '%; background:' + color + ';"></div></div>' +
+            '<div class="cb-pct" style="color:' + color + ';">' + pct + '%</div>' +
+            '<div class="cb-count">' + c.answered + '/' + c.total + '</div>' +
+          '</div>';
+        }).join('') +
+      '</div>' +
+    '</div>' +
+
+    (nextLevelResult
+      ? '<div class="level-requirements">' +
+          '<h3>🎯 Yêu cầu lên ' + nextLevelResult.level.icon + ' ' + escapeHtml(nextLevelResult.level.name) + '</h3>' +
+          '<p style="font-size:13px; color:var(--text-muted); margin:0 0 14px 0;">Đã đạt <strong>' + nextLevelResult.evals.filter(e => e.satisfied).length + '/' + nextLevelResult.evals.length + '</strong> yêu cầu.</p>' +
+          nextLevelResult.reqs.map((req, i) => {
+            const e = nextLevelResult.evals[i];
+            return '<div class="req-item">' +
+              '<div class="req-icon ' + (e.satisfied ? 'done' : 'pending') + '">' + (e.satisfied ? '✓' : '×') + '</div>' +
+              '<div class="req-text"><strong>' + escapeHtml(req.label) + '</strong><div class="req-status">' + escapeHtml(e.detail) + '</div></div>' +
+            '</div>';
+          }).join('') +
+          (nextLevelResult.level.level === 4 ? '<div style="margin-top:14px; padding:12px; background:var(--blue-bg); border-radius:6px; font-size:13px;">💡 <strong>Level Principal</strong> là mức cao nhất — yêu cầu mọi axis ≥75%, 3+ Mock Exam điểm TB ≥80%, và 30 ngày học liên tiếp (chứng tỏ kỷ luật + retention dài hạn).</div>' : '') +
+        '</div>'
+      : '<div class="level-requirements"><h3>👑 Bạn đã đạt mức cao nhất — Principal Consultant!</h3><p style="font-size:14px;">Vai trò: <strong>Strategic guidance, methodology owner, pre-sales support, mentor senior team</strong>. Tiếp tục đóng góp lại community: viết blog, speak at meetup, mentor junior.</p></div>') +
+
+    '<div class="level-requirements">' +
+      '<h3>🔍 Chi tiết từng competency</h3>' +
+      COMPETENCY_AXES.map(axis => {
+        const c = ctx.competencies[axis.key];
+        const pct = Math.round(c.score * 100);
+        const accPct = Math.round(c.accuracy * 100);
+        const covPct = Math.round(c.coverage * 100);
+        return '<div style="padding:10px 0; border-bottom:1px solid #F3F4F6;">' +
+          '<div style="display:flex; align-items:baseline; justify-content:space-between; gap:10px; flex-wrap:wrap;">' +
+            '<div><strong>' + axis.icon + ' ' + escapeHtml(axis.label) + '</strong> <span style="font-size:12px; color:var(--text-muted);">— ' + escapeHtml(axis.desc) + '</span></div>' +
+            '<div style="font-size:13px; color:var(--text-muted);">Score <strong style="color:var(--primary);">' + pct + '%</strong> = Accuracy ' + accPct + '% × Coverage ' + covPct + '%</div>' +
+          '</div>' +
+        '</div>';
+      }).join('') +
+    '</div>' +
+
+    '<div style="background:var(--yellow-bg); border-left:4px solid var(--warning); padding:14px 16px; border-radius:8px; font-size:13px; line-height:1.7;">' +
+      '<strong>💡 Cách chấm Level + cơ chế chống học vẹt:</strong><br>' +
+      '• <strong>Score</strong> mỗi axis = (số câu đúng) / (TỔNG câu trong axis) — phạt việc bỏ trống.<br>' +
+      '• <strong>🎯 First-try Accuracy</strong> (L2+): câu phải đúng NGAY LẦN ĐẦU — chống học vẹt qua retry. Sai rồi đúng lại không tính.<br>' +
+      '• <strong>🔥 Hard Accuracy</strong> (L3+): câu độ khó ★★★★+ (Workshop, Advanced business, edge cases) — không thể đoán may.<br>' +
+      '• <strong>🧠 Deep Retention</strong> (L3+): số câu đã thuộc đến mức SRS interval ≥30 ngày — chứng minh hiểu sâu, không vẹt ngắn hạn.<br>' +
+      '• <strong>💼 Case Study Mastery</strong> (L3+): tự chấm tự luận trên cases (★ axis thứ 7) — không thể vẹt vì là open-ended.<br>' +
+      '• <strong>Mock Exam</strong> dưới thời gian giới hạn không cho phép xem giải thích — phản ánh true skill.<br>' +
+      '• <strong>Streak 30 ngày</strong> (L4) chứng tỏ kỷ luật + retention dài hạn.<br>' +
+      '• <em>Đánh giá này không thay thế kinh nghiệm thực chiến — chỉ là 1 dimension để self-check.</em>' +
+    '</div>';
+
+  setTimeout(() => {
+    const canvas = document.getElementById('competency-radar');
+    if (canvas) drawRadarChart(canvas, ctx.competencies);
+  }, 50);
 }
 
 // ============ STREAK & ACHIEVEMENTS ============
