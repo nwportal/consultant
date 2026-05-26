@@ -2398,7 +2398,7 @@
   } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
   import {
     getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp,
-    collection, getDocs, query, orderBy, where, addDoc, deleteDoc, limit
+    collection, getDocs, query, orderBy, where, addDoc, deleteDoc, deleteField, limit
   } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -2431,7 +2431,7 @@
     EmailAuthProvider,
     reauthenticateWithCredential,
     doc, getDoc, setDoc, updateDoc, serverTimestamp,
-    collection, getDocs, query, orderBy, where, addDoc, deleteDoc, limit
+    collection, getDocs, query, orderBy, where, addDoc, deleteDoc, deleteField, limit
   };
 
   // Notify main script Firebase is ready
@@ -5469,7 +5469,7 @@ async function renderAdmin() {
         <button class="admin-subtab ${activeSubtab === 'users' ? 'active' : ''}" onclick="setAdminSubtab('users')">👥 Users</button>
         <button class="admin-subtab ${activeSubtab === 'teams' ? 'active' : ''}" onclick="setAdminSubtab('teams')">👨‍👩‍👧 Teams</button>
         <button class="admin-subtab ${activeSubtab === 'heatmap' ? 'active' : ''}" onclick="setAdminSubtab('heatmap')">📊 Phân tích câu hỏi</button>
-        <button class="admin-subtab ${activeSubtab === 'editor' ? 'active' : ''}" onclick="setAdminSubtab('editor')">📝 Editor câu hỏi</button>
+        <button class="admin-subtab ${activeSubtab === 'editor' ? 'active' : ''}" onclick="setAdminSubtab('editor')">📝 Editor + Import/Export câu hỏi</button>
         <button class="admin-subtab ${activeSubtab === 'playbook' ? 'active' : ''}" onclick="setAdminSubtab('playbook')">💎 Editor Cẩm nang</button>
         <button class="admin-subtab ${activeSubtab === 'certsessions' ? 'active' : ''}" onclick="setAdminSubtab('certsessions')">📜 Cert Exam Sessions</button>
       </div>
@@ -5483,6 +5483,7 @@ async function renderAdmin() {
           <input type="search" id="admin-search" placeholder="🔍 Tìm theo email hoặc tên..." />
           <button onclick="exportUsersCSV()">📊 Export CSV</button>
           <button onclick="renderAdmin()">🔄 Reload</button>
+          <button onclick="openResetProgressModal()" style="background:#DC2626; color:#FFF; margin-left:auto;">🗑️ Reset tiến độ user (sau khi rebuild câu hỏi)</button>
         </div>
 
         <div class="admin-table-wrap">
@@ -5868,6 +5869,191 @@ function setAdminSubtab(name) {
   renderAdmin();
   // Re-sync sidebar menu highlighting so the new sub-tab's menu item appears active
   updateMenuActiveStates('admin');
+}
+
+// ============ ADMIN: Reset user answer history ============
+// Used after rebuilding question bank — wipes saved answers so users re-attempt
+// against new option lengths/multi-choice format.
+
+function openResetProgressModal() {
+  // Inject modal HTML into body
+  let modal = document.getElementById('reset-progress-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'reset-progress-modal';
+    modal.className = 'qed-modal';
+    modal.innerHTML = `
+      <div class="qed-box" style="max-width:640px;">
+        <button class="qed-close" onclick="closeResetProgressModal()">×</button>
+        <h3 style="color:#DC2626;">⚠️ Reset tiến độ trả lời câu hỏi của user</h3>
+        <div id="reset-modal-body"></div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+  modal.classList.add('show');
+  renderResetProgressBody();
+}
+
+function closeResetProgressModal() {
+  const modal = document.getElementById('reset-progress-modal');
+  if (modal) modal.classList.remove('show');
+}
+
+function renderResetProgressBody() {
+  const body = document.getElementById('reset-modal-body');
+  if (!body) return;
+  body.innerHTML = `
+    <div style="background:#FEF3C7; border-left:4px solid #F59E0B; padding:12px 14px; border-radius:6px; margin-bottom:14px; font-size:13px;">
+      <strong>⚠️ Hành động không thể hoàn tác!</strong><br>
+      Sẽ xoá <code>answered</code> + <code>confidence</code> + <code>srs</code> của TẤT CẢ user trên Firestore.
+      Áp dụng sau khi bạn đã rebuild bộ câu hỏi (đổi options, length, format) để user không có dữ liệu cũ làm lệch metrics.
+    </div>
+
+    <div style="margin-bottom:14px;">
+      <strong>Phạm vi reset:</strong>
+      <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">
+        <label style="display:flex; align-items:flex-start; gap:8px; padding:8px; border:1px solid var(--border); border-radius:6px; cursor:pointer;">
+          <input type="radio" name="reset-scope" value="answered" checked style="margin-top:3px;">
+          <div>
+            <strong>Chỉ Answered + Confidence (KHUYẾN NGHỊ)</strong>
+            <div style="font-size:12px; color:var(--text-muted);">Xoá lịch sử trả lời + confidence rating. Giữ nguyên SRS interval, achievements, daily activity, mocks, case assessments.</div>
+          </div>
+        </label>
+        <label style="display:flex; align-items:flex-start; gap:8px; padding:8px; border:1px solid var(--border); border-radius:6px; cursor:pointer;">
+          <input type="radio" name="reset-scope" value="answered_srs" style="margin-top:3px;">
+          <div>
+            <strong>Answered + SRS</strong>
+            <div style="font-size:12px; color:var(--text-muted);">Cũng xoá lịch học SRS để user bắt đầu lại lịch ôn tập từ đầu.</div>
+          </div>
+        </label>
+        <label style="display:flex; align-items:flex-start; gap:8px; padding:8px; border:1px solid var(--border); border-radius:6px; cursor:pointer;">
+          <input type="radio" name="reset-scope" value="full_quiz" style="margin-top:3px;">
+          <div>
+            <strong>FULL Quiz Progress</strong>
+            <div style="font-size:12px; color:var(--text-muted);">Xoá tất cả: answered + confidence + srs + mockExamHistory + caseAssessments + caseQuickCheckAnswers. Giữ achievements + dailyActivity + team.</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div style="margin-bottom:14px;">
+      <strong>Chọn user áp dụng:</strong>
+      <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">
+        <label style="display:flex; align-items:center; gap:8px; padding:8px; border:1px solid var(--border); border-radius:6px; cursor:pointer;">
+          <input type="radio" name="reset-target" value="all" checked>
+          <span>Tất cả ${(window._adminUsers || []).length} users</span>
+        </label>
+        <label style="display:flex; align-items:center; gap:8px; padding:8px; border:1px solid var(--border); border-radius:6px; cursor:pointer;">
+          <input type="radio" name="reset-target" value="self">
+          <span>Chỉ tôi (test thử trước khi áp dụng toàn bộ)</span>
+        </label>
+      </div>
+    </div>
+
+    <div style="margin-bottom:14px;">
+      <label style="display:block; font-weight:600; margin-bottom:6px;">Gõ <code style="background:#FEE2E2; padding:2px 6px; border-radius:4px; color:#DC2626;">RESET TIẾN ĐỘ</code> để confirm:</label>
+      <input type="text" id="reset-confirm-input" placeholder="Gõ chính xác RESET TIẾN ĐỘ" style="width:100%; padding:8px; font-size:14px; border:2px solid var(--border); border-radius:6px;">
+    </div>
+
+    <div style="display:flex; gap:8px; justify-content:flex-end;">
+      <button onclick="closeResetProgressModal()" style="padding:10px 18px; background:#F3F4F6; color:var(--text); border:none; border-radius:6px; cursor:pointer;">Huỷ</button>
+      <button onclick="executeResetProgress()" style="padding:10px 18px; background:#DC2626; color:#FFF; border:none; border-radius:6px; cursor:pointer; font-weight:600;">🗑️ Reset ngay</button>
+    </div>
+  `;
+}
+
+async function executeResetProgress() {
+  const confirmInput = document.getElementById('reset-confirm-input');
+  if (!confirmInput || confirmInput.value.trim() !== 'RESET TIẾN ĐỘ') {
+    alert('Bạn cần gõ chính xác "RESET TIẾN ĐỘ" để confirm.');
+    return;
+  }
+  const scope = document.querySelector('input[name="reset-scope"]:checked').value;
+  const target = document.querySelector('input[name="reset-target"]:checked').value;
+
+  if (!window.fb || !window.fb.db) {
+    alert('Firebase chưa sẵn sàng.');
+    return;
+  }
+
+  // Determine fields to remove
+  let fieldsToDelete = [];
+  if (scope === 'answered') {
+    fieldsToDelete = ['progress.answered', 'progress.confidence'];
+  } else if (scope === 'answered_srs') {
+    fieldsToDelete = ['progress.answered', 'progress.confidence', 'progress.srs'];
+  } else if (scope === 'full_quiz') {
+    fieldsToDelete = ['progress.answered', 'progress.confidence', 'progress.srs', 'progress.mockExamHistory', 'progress.caseAssessments', 'progress.caseQuickCheckAnswers'];
+  }
+
+  // Determine target users
+  let targetUids = [];
+  if (target === 'self') {
+    targetUids = [window.fb.auth.currentUser ? window.fb.auth.currentUser.uid : null].filter(Boolean);
+  } else {
+    targetUids = (window._adminUsers || []).map(u => u.uid);
+  }
+
+  if (targetUids.length === 0) {
+    alert('Không có user nào để reset.');
+    return;
+  }
+
+  // Show progress
+  const body = document.getElementById('reset-modal-body');
+  body.innerHTML = '<div style="padding:30px; text-align:center;"><div style="font-size:24px;">⏳</div><div style="margin-top:10px; font-weight:600;">Đang reset...</div><div id="reset-progress" style="margin-top:10px; color:var(--text-muted);">0 / ' + targetUids.length + '</div></div>';
+
+  let success = 0, failed = 0;
+  for (let i = 0; i < targetUids.length; i++) {
+    const uid = targetUids[i];
+    try {
+      const userRef = window.fb.doc(window.fb.db, 'users', uid);
+      // Build update object: dot-notation with deleteField()
+      const updateObj = {};
+      fieldsToDelete.forEach(path => {
+        updateObj[path] = window.fb.deleteField();
+      });
+      await window.fb.updateDoc(userRef, updateObj);
+      success++;
+    } catch (e) {
+      console.error('Reset failed for uid ' + uid, e);
+      failed++;
+    }
+    const prog = document.getElementById('reset-progress');
+    if (prog) prog.textContent = (i + 1) + ' / ' + targetUids.length;
+  }
+
+  // Also reset local state if self was included
+  if (targetUids.includes(window.fb.auth && window.fb.auth.currentUser ? window.fb.auth.currentUser.uid : null)) {
+    if (scope === 'answered' || scope === 'answered_srs' || scope === 'full_quiz') {
+      state.answered = {};
+      state.confidence = {};
+    }
+    if (scope === 'answered_srs' || scope === 'full_quiz') {
+      state.srs = {};
+    }
+    if (scope === 'full_quiz') {
+      state.mockExamHistory = [];
+      state.caseAssessments = {};
+      state.caseQuickCheckAnswers = {};
+    }
+    saveState();
+  }
+
+  body.innerHTML = `
+    <div style="text-align:center; padding:20px;">
+      <div style="font-size:48px;">${failed === 0 ? '✅' : '⚠️'}</div>
+      <h3 style="color:${failed === 0 ? 'var(--green)' : 'var(--warning)'};">Reset hoàn tất</h3>
+      <div style="margin:14px 0; font-size:14px;">
+        <div>✅ Reset thành công: <strong>${success}</strong> users</div>
+        ${failed > 0 ? '<div style="color:var(--danger);">❌ Lỗi: <strong>' + failed + '</strong> users (xem console)</div>' : ''}
+      </div>
+      <div style="display:flex; gap:8px; justify-content:center;">
+        <button onclick="closeResetProgressModal(); renderAdmin();" style="padding:10px 24px; background:var(--primary); color:#FFF; border:none; border-radius:6px; cursor:pointer; font-weight:600;">✓ Hoàn tất</button>
+      </div>
+    </div>
+  `;
 }
 
 let _heatmapState = {
