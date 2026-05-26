@@ -6244,6 +6244,7 @@ function renderQuestionEditor() {
       </label>
       <button class="primary" onclick="openQuestionEditor(null)">+ Thêm câu mới</button>
       <button onclick="renderQuestionEditor()">🔄 Reload</button>
+      <button onclick="openExportImportModal()" style="background:#0E7490; color:#FFF;">📦 Import / Export theo module</button>
     </div>
 
     <div class="qed-list">
@@ -6280,6 +6281,15 @@ function renderQuestionEditor() {
         <button class="qed-close" onclick="closeQuestionEditor()">×</button>
         <h3 id="qed-modal-title">Chỉnh sửa câu hỏi</h3>
         <div class="qed-form" id="qed-form-body"></div>
+      </div>
+    </div>
+
+    <!-- Import / Export Modal -->
+    <div id="qed-ie-modal" class="qed-modal">
+      <div class="qed-box" style="max-width:760px;">
+        <button class="qed-close" onclick="closeExportImportModal()">×</button>
+        <h3>📦 Import / Export câu hỏi theo module</h3>
+        <div id="qed-ie-body"></div>
       </div>
     </div>
   `;
@@ -6570,6 +6580,410 @@ async function revertQuestionOverride(qid) {
   } catch (e) {
     alert('Lỗi: ' + e.message);
   }
+}
+
+// ============ IMPORT / EXPORT MODULE QUESTIONS ============
+// Catalog of modules — each has a name, icon, and a section-prefix matcher.
+const QUESTION_MODULES = [
+  { key: 'all', name: 'Toàn bộ (Tất cả module)', icon: '📚', match: () => true },
+  { key: 'bc-core', name: 'BC Core (A-F)', icon: '🔧', match: s => /^[A-F]\./.test(s) },
+  { key: 'mapping', name: 'Mapping nghiệp vụ ↔ BC (G-N)', icon: '🌉', match: s => /^[G-N]\./.test(s) },
+  { key: 'biz-basic', name: 'Nghiệp vụ thuần (O-S)', icon: '💼', match: s => /^[OPQRS]\. /.test(s) },
+  { key: 'biz-adv', name: 'Nghiệp vụ nâng cao (O2-S2)', icon: '📈', match: s => /^[OPQRS]2\./.test(s) },
+  { key: 'workshop', name: 'Workshop ERP Consultant (T)', icon: '🎓', match: s => /^T\./.test(s) },
+  { key: 'mixed', name: 'Câu hỏi tổng hợp (U)', icon: '🧩', match: s => /^U\./.test(s) },
+  { key: 'modern', name: 'BC 2026 / Copilot / Fabric (V-AA)', icon: '🤖', match: s => /^[VWXY]\. /.test(s) || /^Z\. /.test(s) || /^AA\./.test(s) },
+  { key: 'master', name: 'Master Level Tích hợp (AB)', icon: '🧠', match: s => /^AB\./.test(s) },
+  { key: 'retail', name: 'Retail Industry (Z1-Z13)', icon: '🏪', match: s => /^Z\d/.test(s) },
+  { key: 'mfg', name: 'Manufacturing (M1-M12)', icon: '🏭', match: s => /^M\d+\./.test(s) && s.includes('Mfg') },
+  { key: 'acc-basic', name: 'Kế toán Căn bản (AC1)', icon: '📊', match: s => /^AC1\./.test(s) },
+  { key: 'acc-adv', name: 'Kế toán Nâng cao (AC2)', icon: '📈', match: s => /^AC2\./.test(s) }
+];
+
+let _qedIeState = { mode: 'export', moduleKey: 'all', format: 'json', importData: null, importMode: 'merge' };
+
+function openExportImportModal() {
+  _qedIeState = { mode: 'export', moduleKey: 'all', format: 'json', importData: null, importMode: 'merge' };
+  document.getElementById('qed-ie-modal').classList.add('show');
+  renderExportImportBody();
+}
+
+function closeExportImportModal() {
+  document.getElementById('qed-ie-modal').classList.remove('show');
+}
+
+function renderExportImportBody() {
+  const body = document.getElementById('qed-ie-body');
+  if (!body) return;
+
+  // Count questions per module
+  const counts = {};
+  QUESTION_MODULES.forEach(m => {
+    counts[m.key] = QUESTIONS.filter(q => !q._deleted && m.match(q.section || '')).length;
+  });
+
+  body.innerHTML = `
+    <div style="display:flex; gap:8px; margin-bottom:14px; border-bottom:1px solid var(--border);">
+      <button onclick="switchIeMode('export')" class="ie-tab ${_qedIeState.mode === 'export' ? 'active' : ''}"
+        style="padding:8px 18px; background:${_qedIeState.mode === 'export' ? 'var(--primary)' : 'transparent'}; color:${_qedIeState.mode === 'export' ? '#FFF' : 'var(--text)'}; border:none; border-bottom:3px solid ${_qedIeState.mode === 'export' ? 'var(--primary)' : 'transparent'}; cursor:pointer; font-weight:600;">
+        📤 Export câu hỏi
+      </button>
+      <button onclick="switchIeMode('import')" class="ie-tab ${_qedIeState.mode === 'import' ? 'active' : ''}"
+        style="padding:8px 18px; background:${_qedIeState.mode === 'import' ? 'var(--primary)' : 'transparent'}; color:${_qedIeState.mode === 'import' ? '#FFF' : 'var(--text)'}; border:none; border-bottom:3px solid ${_qedIeState.mode === 'import' ? 'var(--primary)' : 'transparent'}; cursor:pointer; font-weight:600;">
+        📥 Import câu hỏi
+      </button>
+    </div>
+
+    ${_qedIeState.mode === 'export' ? `
+      <div>
+        <label style="font-weight:600; display:block; margin-bottom:6px;">Chọn module để export:</label>
+        <select id="ie-module" onchange="_qedIeState.moduleKey = this.value; renderExportImportBody()" style="width:100%; padding:8px; font-size:14px; margin-bottom:14px;">
+          ${QUESTION_MODULES.map(m => '<option value="' + m.key + '"' + (_qedIeState.moduleKey === m.key ? ' selected' : '') + '>' + m.icon + ' ' + m.name + ' (' + counts[m.key] + ' câu)</option>').join('')}
+        </select>
+
+        <label style="font-weight:600; display:block; margin-bottom:6px;">Định dạng:</label>
+        <div style="display:flex; gap:14px; margin-bottom:14px;">
+          <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+            <input type="radio" name="ie-format" value="json" ${_qedIeState.format === 'json' ? 'checked' : ''} onchange="_qedIeState.format='json'">
+            <span><strong>JSON</strong> — round-trip, import được lại 100%</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+            <input type="radio" name="ie-format" value="csv" ${_qedIeState.format === 'csv' ? 'checked' : ''} onchange="_qedIeState.format='csv'">
+            <span><strong>CSV</strong> — mở Excel để xem/sửa</span>
+          </label>
+        </div>
+
+        <div style="background:var(--card); padding:12px; border-radius:8px; font-size:13px; margin-bottom:14px; border:1px solid var(--border);">
+          <div><strong>📊 Sẽ export:</strong> ${counts[_qedIeState.moduleKey]} câu hỏi từ module "${(QUESTION_MODULES.find(m => m.key === _qedIeState.moduleKey) || {}).name || ''}"</div>
+          <div style="margin-top:4px; color:var(--text-muted); font-size:12px;">💡 File JSON có thể import lại để khôi phục. File CSV thuận tiện để chia sẻ/review, nhưng options/correct/exp được encode dạng JSON-trong-cell.</div>
+        </div>
+
+        <div style="display:flex; gap:8px; justify-content:flex-end;">
+          <button onclick="closeExportImportModal()" style="padding:8px 18px; background:#F3F4F6; color:var(--text); border:none; border-radius:6px; cursor:pointer;">Đóng</button>
+          <button onclick="doExportQuestions()" style="padding:8px 18px; background:#0E7490; color:#FFF; border:none; border-radius:6px; cursor:pointer; font-weight:600;">📤 Tải xuống file</button>
+        </div>
+      </div>
+    ` : `
+      <div>
+        <label style="font-weight:600; display:block; margin-bottom:6px;">1️⃣ Chọn file (.json hoặc .csv):</label>
+        <input type="file" id="ie-import-file" accept=".json,.csv" onchange="handleImportFile(event)" style="margin-bottom:14px;">
+
+        ${_qedIeState.importData ? `
+          <div style="background:var(--blue-bg); padding:12px; border-radius:8px; font-size:13px; margin-bottom:14px;">
+            <div><strong>✅ File đã đọc:</strong> ${_qedIeState.importData.length} câu hỏi hợp lệ</div>
+            ${_qedIeState.importErrors && _qedIeState.importErrors.length ? '<div style="margin-top:6px; color:var(--danger);">⚠️ ' + _qedIeState.importErrors.length + ' câu bị lỗi (xem console).</div>' : ''}
+          </div>
+
+          <label style="font-weight:600; display:block; margin-bottom:6px;">2️⃣ Chế độ import:</label>
+          <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:14px;">
+            <label style="display:flex; align-items:flex-start; gap:6px; cursor:pointer; padding:8px; border:1px solid var(--border); border-radius:6px; background:${_qedIeState.importMode === 'merge' ? 'var(--blue-bg)' : 'transparent'};">
+              <input type="radio" name="ie-import-mode" value="merge" ${_qedIeState.importMode === 'merge' ? 'checked' : ''} onchange="_qedIeState.importMode='merge'; renderExportImportBody()" style="margin-top:3px;">
+              <div>
+                <strong>Merge (Bổ sung) — Khuyên dùng</strong>
+                <div style="font-size:12px; color:var(--text-muted);">Thêm câu mới + cập nhật câu trùng ID. Không ảnh hưởng câu hiện có ngoài file.</div>
+              </div>
+            </label>
+            <label style="display:flex; align-items:flex-start; gap:6px; cursor:pointer; padding:8px; border:1px solid var(--border); border-radius:6px; background:${_qedIeState.importMode === 'addOnly' ? 'var(--blue-bg)' : 'transparent'};">
+              <input type="radio" name="ie-import-mode" value="addOnly" ${_qedIeState.importMode === 'addOnly' ? 'checked' : ''} onchange="_qedIeState.importMode='addOnly'; renderExportImportBody()" style="margin-top:3px;">
+              <div>
+                <strong>Add Only (Chỉ thêm mới)</strong>
+                <div style="font-size:12px; color:var(--text-muted);">Bỏ qua câu trùng ID, chỉ thêm câu chưa có. An toàn nhất.</div>
+              </div>
+            </label>
+          </div>
+
+          <div style="background:var(--yellow-bg); border-left:4px solid var(--warning); padding:10px 14px; border-radius:6px; font-size:13px; margin-bottom:14px;">
+            <strong>⚠️ Lưu ý:</strong> Import sẽ lưu vào collection <code>question_overrides</code> trên Firestore. Câu mới (chưa có trong bộ gốc) lưu action='add', câu trùng ID lưu action='edit'. Có thể revert bất kỳ lúc nào qua nút "↩️ Khôi phục bản gốc".
+          </div>
+
+          <details style="margin-bottom:14px; background:var(--card); border:1px solid var(--border); border-radius:6px;">
+            <summary style="padding:8px 14px; cursor:pointer; font-weight:600;">👁️ Preview 3 câu đầu tiên</summary>
+            <div style="padding:12px; font-size:12px; max-height:240px; overflow:auto;">
+              <pre style="white-space:pre-wrap; word-wrap:break-word; margin:0;">${escapeHtml(JSON.stringify(_qedIeState.importData.slice(0, 3), null, 2))}</pre>
+            </div>
+          </details>
+
+          <div style="display:flex; gap:8px; justify-content:flex-end;">
+            <button onclick="closeExportImportModal()" style="padding:8px 18px; background:#F3F4F6; color:var(--text); border:none; border-radius:6px; cursor:pointer;">Huỷ</button>
+            <button onclick="doImportQuestions()" style="padding:8px 18px; background:#16A34A; color:#FFF; border:none; border-radius:6px; cursor:pointer; font-weight:600;">📥 Import ${_qedIeState.importData.length} câu hỏi</button>
+          </div>
+        ` : `
+          <div style="background:var(--card); padding:12px; border-radius:8px; font-size:13px; margin-bottom:14px; border:1px solid var(--border);">
+            <strong>📋 Yêu cầu file:</strong>
+            <ul style="margin:6px 0 0 18px; padding:0; font-size:12px;">
+              <li><strong>JSON</strong>: mảng câu hỏi, mỗi câu có {id, type, section, q, options, correct, exp, difficulty?}</li>
+              <li><strong>CSV</strong>: header dòng đầu — id,type,section,q,options,correct,exp,difficulty. Cell options/correct/exp dạng JSON.</li>
+              <li><strong>Cách dễ nhất:</strong> Export file trước, sửa, rồi Import lại.</li>
+            </ul>
+          </div>
+          <div style="display:flex; gap:8px; justify-content:flex-end;">
+            <button onclick="closeExportImportModal()" style="padding:8px 18px; background:#F3F4F6; color:var(--text); border:none; border-radius:6px; cursor:pointer;">Đóng</button>
+          </div>
+        `}
+      </div>
+    `}
+  `;
+}
+
+function switchIeMode(mode) {
+  _qedIeState.mode = mode;
+  _qedIeState.importData = null;
+  _qedIeState.importErrors = null;
+  renderExportImportBody();
+}
+
+function doExportQuestions() {
+  const mod = QUESTION_MODULES.find(m => m.key === _qedIeState.moduleKey);
+  if (!mod) return;
+  const filtered = QUESTIONS.filter(q => !q._deleted && mod.match(q.section || ''));
+  if (filtered.length === 0) {
+    alert('Module này không có câu hỏi nào để export.');
+    return;
+  }
+  // Strip internal _ fields
+  const clean = filtered.map(q => {
+    const out = {};
+    Object.keys(q).forEach(k => { if (!k.startsWith('_')) out[k] = q[k]; });
+    return out;
+  });
+
+  const tsPart = new Date().toISOString().slice(0, 10);
+  const baseName = 'questions_' + mod.key + '_' + tsPart;
+
+  let blob, filename;
+  if (_qedIeState.format === 'json') {
+    blob = new Blob([JSON.stringify(clean, null, 2)], { type: 'application/json' });
+    filename = baseName + '.json';
+  } else {
+    // CSV
+    const headers = ['id', 'type', 'section', 'q', 'options', 'correct', 'exp', 'difficulty', 'items', 'pairs'];
+    const rows = [headers.join(',')];
+    clean.forEach(q => {
+      const cells = headers.map(h => {
+        const v = q[h];
+        if (v === undefined || v === null) return '';
+        if (typeof v === 'string') return '"' + v.replace(/"/g, '""') + '"';
+        if (typeof v === 'number') return String(v);
+        return '"' + JSON.stringify(v).replace(/"/g, '""') + '"';
+      });
+      rows.push(cells.join(','));
+    });
+    // UTF-8 BOM cho Excel mở đúng tiếng Việt
+    blob = new Blob(['﻿' + rows.join('\n')], { type: 'text/csv;charset=utf-8' });
+    filename = baseName + '.csv';
+  }
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  // Brief success indicator
+  setTimeout(() => alert('✅ Đã tải xuống: ' + filename + '\n(' + clean.length + ' câu hỏi)'), 100);
+}
+
+function handleImportFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const text = e.target.result;
+    let parsed;
+    try {
+      if (file.name.toLowerCase().endsWith('.json')) {
+        parsed = parseImportJSON(text);
+      } else if (file.name.toLowerCase().endsWith('.csv')) {
+        parsed = parseImportCSV(text);
+      } else {
+        alert('Định dạng file không hỗ trợ. Vui lòng dùng .json hoặc .csv');
+        return;
+      }
+      const { valid, errors } = validateImportedQuestions(parsed);
+      if (valid.length === 0) {
+        alert('Không có câu hỏi hợp lệ trong file.\nLỗi: ' + (errors.slice(0, 3).join('; ') || 'unknown'));
+        console.error('Import errors:', errors);
+        return;
+      }
+      _qedIeState.importData = valid;
+      _qedIeState.importErrors = errors;
+      if (errors.length) console.warn('Import errors (sẽ skip):', errors);
+      renderExportImportBody();
+    } catch (err) {
+      alert('Lỗi đọc file: ' + err.message);
+    }
+  };
+  reader.readAsText(file, 'utf-8');
+}
+
+function parseImportJSON(text) {
+  // Strip BOM if present
+  const cleaned = text.replace(/^﻿/, '').trim();
+  const data = JSON.parse(cleaned);
+  if (!Array.isArray(data)) {
+    // Maybe wrapped in {questions: [...]}
+    if (data && Array.isArray(data.questions)) return data.questions;
+    throw new Error('JSON phải là mảng câu hỏi hoặc {questions: [...]}');
+  }
+  return data;
+}
+
+function parseImportCSV(text) {
+  // Strip BOM if present
+  const cleaned = text.replace(/^﻿/, '');
+  const lines = csvSplitLines(cleaned);
+  if (lines.length < 2) throw new Error('CSV cần ít nhất 1 dòng header + 1 dòng data');
+  const headers = csvSplitRow(lines[0]).map(h => h.trim());
+  const out = [];
+  for (let i = 1; i < lines.length; i++) {
+    if (!lines[i].trim()) continue;
+    const row = csvSplitRow(lines[i]);
+    const obj = {};
+    headers.forEach((h, idx) => {
+      let v = row[idx] !== undefined ? row[idx] : '';
+      // Numeric fields
+      if (h === 'id' || h === 'difficulty') {
+        if (v !== '') obj[h] = parseInt(v, 10);
+      } else if (h === 'options' || h === 'correct' || h === 'exp' || h === 'items' || h === 'pairs') {
+        // JSON-encoded
+        if (v && v.startsWith('[') || (v && v.startsWith('{'))) {
+          try { obj[h] = JSON.parse(v); } catch { obj[h] = v; }
+        } else if (v) {
+          obj[h] = v;
+        }
+      } else {
+        obj[h] = v;
+      }
+    });
+    out.push(obj);
+  }
+  return out;
+}
+
+// CSV utilities — handle quoted strings with embedded commas + newlines
+function csvSplitLines(text) {
+  const out = []; let cur = ''; let inQ = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (c === '"') { inQ = !inQ; cur += c; }
+    else if ((c === '\n' || c === '\r') && !inQ) {
+      if (cur) out.push(cur);
+      cur = '';
+      if (c === '\r' && text[i + 1] === '\n') i++;
+    } else { cur += c; }
+  }
+  if (cur) out.push(cur);
+  return out;
+}
+
+function csvSplitRow(line) {
+  const out = []; let cur = ''; let inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') {
+      if (inQ && line[i + 1] === '"') { cur += '"'; i++; }
+      else inQ = !inQ;
+    } else if (c === ',' && !inQ) {
+      out.push(cur); cur = '';
+    } else { cur += c; }
+  }
+  out.push(cur);
+  return out;
+}
+
+function validateImportedQuestions(arr) {
+  const valid = [], errors = [];
+  arr.forEach((q, idx) => {
+    if (!q || typeof q !== 'object') { errors.push('Row ' + idx + ': not an object'); return; }
+    if (typeof q.id !== 'number' || isNaN(q.id)) { errors.push('Row ' + idx + ': id phải là số'); return; }
+    if (!q.section || typeof q.section !== 'string') { errors.push('Row ' + idx + ' (id=' + q.id + '): thiếu section'); return; }
+    if (!q.q || typeof q.q !== 'string') { errors.push('Row ' + idx + ' (id=' + q.id + '): thiếu câu hỏi'); return; }
+    const type = q.type || 'single';
+    if (!['single', 'multi', 'sequence', 'matching'].includes(type)) { errors.push('Row ' + idx + ' (id=' + q.id + '): type không hợp lệ (' + type + ')'); return; }
+    if (type === 'single' || type === 'multi') {
+      if (!Array.isArray(q.options) || q.options.length < 2) { errors.push('Row ' + idx + ' (id=' + q.id + '): options phải là mảng ≥2'); return; }
+      if (type === 'single' && (typeof q.correct !== 'number' || q.correct < 0 || q.correct >= q.options.length)) { errors.push('Row ' + idx + ' (id=' + q.id + '): correct phải là chỉ số trong options'); return; }
+      if (type === 'multi' && (!Array.isArray(q.correct) || q.correct.length === 0)) { errors.push('Row ' + idx + ' (id=' + q.id + '): correct phải là mảng ≥1 (multi)'); return; }
+    } else if (type === 'sequence') {
+      if (!Array.isArray(q.items) || q.items.length < 2) { errors.push('Row ' + idx + ' (id=' + q.id + '): sequence cần items ≥2'); return; }
+    } else if (type === 'matching') {
+      if (!Array.isArray(q.pairs) || q.pairs.length < 2) { errors.push('Row ' + idx + ' (id=' + q.id + '): matching cần pairs ≥2'); return; }
+    }
+    valid.push(q);
+  });
+  return { valid, errors };
+}
+
+async function doImportQuestions() {
+  if (!_qedIeState.importData || _qedIeState.importData.length === 0) {
+    alert('Không có câu hỏi để import.');
+    return;
+  }
+  if (!window.fb || !window.fb.db) {
+    alert('Firebase chưa sẵn sàng.');
+    return;
+  }
+  const mode = _qedIeState.importMode;
+  const items = _qedIeState.importData;
+  const existingIds = new Set(QUESTIONS.map(q => q.id));
+  let added = 0, updated = 0, skipped = 0, failed = 0;
+
+  const summary = document.getElementById('qed-ie-body');
+  summary.innerHTML = '<div style="text-align:center; padding:30px;"><div style="font-size:18px; font-weight:600; color:var(--primary);">⏳ Đang import...</div><div id="ie-progress" style="margin-top:10px; color:var(--text-muted);">0 / ' + items.length + '</div></div>';
+
+  for (let i = 0; i < items.length; i++) {
+    const q = items[i];
+    const isExisting = existingIds.has(q.id);
+    if (isExisting && mode === 'addOnly') { skipped++; continue; }
+    const action = isExisting ? 'edit' : 'add';
+    const docData = { qid: q.id, action, data: q, updatedAt: window.fb.serverTimestamp() };
+    try {
+      const existingOv = _qedOverrides[q.id];
+      if (existingOv && existingOv.docId) {
+        await window.fb.updateDoc(window.fb.doc(window.fb.db, QED_COLLECTION, existingOv.docId), docData);
+        updated++;
+      } else {
+        const ref = await window.fb.addDoc(window.fb.collection(window.fb.db, QED_COLLECTION), docData);
+        _qedOverrides[q.id] = { ...docData, docId: ref.id };
+        if (isExisting) updated++; else added++;
+      }
+    } catch (e) {
+      console.error('Import error for qid ' + q.id, e);
+      failed++;
+    }
+    const prog = document.getElementById('ie-progress');
+    if (prog) prog.textContent = (i + 1) + ' / ' + items.length;
+  }
+
+  applyOverridesToQuestions();
+
+  summary.innerHTML = `
+    <div style="text-align:center; padding:20px;">
+      <div style="font-size:48px;">${failed === 0 ? '🎉' : '⚠️'}</div>
+      <h3 style="margin:10px 0; color:${failed === 0 ? 'var(--green)' : 'var(--warning)'};">Import hoàn tất</h3>
+      <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; margin:20px 0;">
+        <div style="background:var(--card); padding:14px; border-radius:8px; border:1px solid var(--border);">
+          <div style="font-size:11px; color:var(--text-muted);">Mới thêm</div>
+          <div style="font-size:24px; font-weight:700; color:var(--green);">${added}</div>
+        </div>
+        <div style="background:var(--card); padding:14px; border-radius:8px; border:1px solid var(--border);">
+          <div style="font-size:11px; color:var(--text-muted);">Cập nhật</div>
+          <div style="font-size:24px; font-weight:700; color:var(--primary);">${updated}</div>
+        </div>
+        <div style="background:var(--card); padding:14px; border-radius:8px; border:1px solid var(--border);">
+          <div style="font-size:11px; color:var(--text-muted);">Bỏ qua</div>
+          <div style="font-size:24px; font-weight:700; color:var(--text-muted);">${skipped}</div>
+        </div>
+        <div style="background:var(--card); padding:14px; border-radius:8px; border:1px solid var(--border);">
+          <div style="font-size:11px; color:var(--text-muted);">Lỗi</div>
+          <div style="font-size:24px; font-weight:700; color:${failed > 0 ? 'var(--danger)' : 'var(--text-muted)'};">${failed}</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:8px; justify-content:center;">
+        <button onclick="closeExportImportModal(); renderQuestionEditor();" style="padding:10px 24px; background:var(--primary); color:#FFF; border:none; border-radius:6px; cursor:pointer; font-weight:600;">✓ Hoàn tất</button>
+      </div>
+    </div>
+  `;
 }
 
 // ============ PLAYBOOK EDITOR (Admin) ============
