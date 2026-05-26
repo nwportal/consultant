@@ -2245,7 +2245,7 @@
     🔍 <span class="search-label">Tìm kiếm</span> <span class="kbd">/</span>
   </button>
   <div class="app-version-badge" id="app-version-badge" onclick="showVersionDetails()" title="Click để xem chi tiết version + force reload">
-    <span class="v-num" id="v-num">v3.1.2</span>
+    <span class="v-num" id="v-num">v3.3.0</span>
   </div>
   <h1>📘 HỌC VIỆN ERP CONSULTING</h1>
   <p>Giải pháp Dynamics và Hệ sinh thái Microsoft</p>
@@ -5054,9 +5054,16 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
 
 // ============ APP VERSION (kiểm soát thay đổi) ============
 const APP_VERSION = {
-  num: 'v3.1.2',
+  num: 'v3.3.0',
   date: '2026-05-26',
   notes: [
+    '🎓 Training Exercise — trainer BẮT BUỘC tạo bài tập (1-10 câu) khi đăng course',
+    '🎓 Điểm danh qua Exercise — member làm bài SAU training để được tính ĐÃ THAM GIA (actuallyAttended)',
+    '🎓 Member Points: thêm cột "Đã tham gia" hiển thị X/Y sessions + avg score % của bài tập',
+    '🎓 Training Calendar — view Tháng/Tuần/Danh sách, click event mở chi tiết, default = Tháng',
+    '🎓 Training Detail modal — hiện đầy đủ: instructor, đối tượng học, mô tả, meeting link',
+    '🎓 Rating 8 tiêu chí best-practice (Nội dung/Trình bày/Tương tác/Tài liệu/Time/Examples/Depth/Overall) — star UI tương tác',
+    '🎓 Trainer KPI — auto-compute avg rating từ tất cả courses, hiển thị ranking trong Member Points',
     '🎯 Competency UI cải tiến: Tên VN to 17px bold + EN italic màu primary; criteria font-weight 500 đậm hơn; ví dụ tốt/chưa tốt contrast cao + bold',
     '🎯 Khung Năng lực NaviWorld — 7 nhóm × 42 năng lực × 7 cấp độ + ví dụ tốt/chưa tốt mỗi cấp',
     '🎯 Admin Competency editor — sửa criteria + good/bad example cho 7 cấp',
@@ -12591,6 +12598,24 @@ async function deleteResourceCommunity(resourceId) {
 }
 
 // ============ TRAINING SESSIONS ============
+// ===== TRAINING with Calendar view (Month / Week / List) =====
+let _trainingView = 'month'; // 'month' | 'week' | 'list'
+let _trainingCalDate = new Date(); // current viewing month/week
+let _trainingCourses = [];
+let _trainingMyEnrolls = {};
+
+// Rating criteria — 8 best practices cho 1 buổi training
+const TRAINING_RATING_CRITERIA = [
+  { key: 'content', label: 'Nội dung', labelEn: 'Content quality', desc: 'Đầy đủ, sát thực tế, có insight giá trị' },
+  { key: 'delivery', label: 'Trình bày', labelEn: 'Delivery', desc: 'Rõ ràng, sinh động, dễ hiểu, năng lượng tốt' },
+  { key: 'engagement', label: 'Tương tác', labelEn: 'Engagement', desc: 'Q&A, hands-on, khuyến khích thảo luận' },
+  { key: 'materials', label: 'Tài liệu', labelEn: 'Materials', desc: 'Slides, handouts, references chất lượng' },
+  { key: 'timeMgmt', label: 'Quản lý thời gian', labelEn: 'Time Management', desc: 'Đúng giờ, pacing tốt, hoàn thành agenda' },
+  { key: 'examples', label: 'Ví dụ thực tế', labelEn: 'Real Examples', desc: 'Case studies, demo, kinh nghiệm cá nhân' },
+  { key: 'depth', label: 'Chuyên môn', labelEn: 'Knowledge Depth', desc: 'Sâu, có insight chuyên gia, trả lời câu hỏi khó' },
+  { key: 'overall', label: 'Tổng quát', labelEn: 'Overall Value', desc: 'Sẽ đề xuất cho đồng nghiệp khác? Ứng dụng được vào công việc?' }
+];
+
 async function renderTraining() {
   const root = document.getElementById('community-content');
   if (!root) return;
@@ -12607,16 +12632,416 @@ async function renderTraining() {
       const e = d.data();
       if (me && e.userUid === me.uid) myEnrolls[e.courseId] = { id: d.id, ...e };
     });
+    _trainingCourses = courses;
+    _trainingMyEnrolls = myEnrolls;
     const isAdminUser = me && isAdmin(me.email);
+
+    // Toolbar with view toggle + nav
     root.innerHTML = `
       <div style="display:flex; gap:8px; margin-bottom:14px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
-        <h3 style="margin:0;">🎓 Training Sessions từ Senior (${courses.length})</h3>
-        ${isAdminUser ? '<button onclick="openNewCourseModal()" style="padding:8px 16px; background:var(--primary); color:#FFF; border:none; border-radius:6px; cursor:pointer; font-weight:600;">➕ Đăng course (+20 điểm)</button>' : ''}
+        <h3 style="margin:0;">🎓 Training Sessions (${courses.length})</h3>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <div style="display:inline-flex; border:1px solid var(--border); border-radius:6px; overflow:hidden;">
+            <button onclick="setTrainingView('month')" style="padding:6px 14px; background:${_trainingView === 'month' ? 'var(--primary)' : 'transparent'}; color:${_trainingView === 'month' ? '#FFF' : 'var(--text)'}; border:none; cursor:pointer; font-size:13px;">📅 Tháng</button>
+            <button onclick="setTrainingView('week')" style="padding:6px 14px; background:${_trainingView === 'week' ? 'var(--primary)' : 'transparent'}; color:${_trainingView === 'week' ? '#FFF' : 'var(--text)'}; border:none; border-left:1px solid var(--border); cursor:pointer; font-size:13px;">📆 Tuần</button>
+            <button onclick="setTrainingView('list')" style="padding:6px 14px; background:${_trainingView === 'list' ? 'var(--primary)' : 'transparent'}; color:${_trainingView === 'list' ? '#FFF' : 'var(--text)'}; border:none; border-left:1px solid var(--border); cursor:pointer; font-size:13px;">📋 Danh sách</button>
+          </div>
+          ${isAdminUser ? '<button onclick="openNewCourseModal()" style="padding:8px 16px; background:var(--primary); color:#FFF; border:none; border-radius:6px; cursor:pointer; font-weight:600;">➕ Đăng course (+20 điểm)</button>' : ''}
+        </div>
       </div>
-      ${courses.length === 0 ? '<div style="background:var(--card); padding:40px; border-radius:10px; text-align:center; border:2px dashed var(--border);"><div style="font-size:48px;">🎓</div><h3>Chưa có course</h3></div>' :
-        '<div style="display:flex; flex-direction:column; gap:10px;">' + courses.map(c => renderCourseCardCommunity(c, myEnrolls[c.id], me, isAdminUser)).join('') + '</div>'}
+      <div id="training-view-root"></div>
     `;
+    renderTrainingViewContent();
   } catch (e) { root.innerHTML = '<div style="background:var(--card); padding:20px; border-radius:8px; color:var(--danger);">⚠️ ' + escapeHtml(e.message) + '</div>'; }
+}
+
+function setTrainingView(v) {
+  _trainingView = v;
+  renderTraining();
+}
+
+function renderTrainingViewContent() {
+  const root = document.getElementById('training-view-root');
+  if (!root) return;
+  if (_trainingView === 'month') root.innerHTML = renderTrainingMonth();
+  else if (_trainingView === 'week') root.innerHTML = renderTrainingWeek();
+  else root.innerHTML = renderTrainingList();
+}
+
+// ----- Calendar Month View -----
+function renderTrainingMonth() {
+  const date = _trainingCalDate;
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const startDow = (firstDay.getDay() + 6) % 7; // Monday=0
+  const daysInMonth = lastDay.getDate();
+  const totalCells = Math.ceil((startDow + daysInMonth) / 7) * 7;
+
+  // Map courses to date
+  const byDate = new Map();
+  _trainingCourses.forEach(c => {
+    const dt = c.scheduledAt && c.scheduledAt.toMillis ? new Date(c.scheduledAt.toMillis()) : null;
+    if (!dt) return;
+    if (dt.getFullYear() === year && dt.getMonth() === month) {
+      const d = dt.getDate();
+      if (!byDate.has(d)) byDate.set(d, []);
+      byDate.get(d).push(c);
+    }
+  });
+
+  const monthName = date.toLocaleString('vi-VN', { month: 'long' });
+  const today = new Date();
+  const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
+
+  const dowLabels = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+  let cells = '';
+  for (let i = 0; i < totalCells; i++) {
+    const d = i - startDow + 1;
+    const isValid = d >= 1 && d <= daysInMonth;
+    const isToday = isCurrentMonth && isValid && d === today.getDate();
+    const isWeekend = i % 7 >= 5;
+    const events = isValid ? (byDate.get(d) || []) : [];
+    cells += `
+      <div style="min-height:90px; border:1px solid var(--border); border-radius:6px; padding:6px; background:${isToday ? '#FEF3C7' : isWeekend ? 'var(--bg, #FAFBFC)' : 'var(--card)'}; opacity:${isValid ? 1 : 0.3};">
+        <div style="font-size:12px; font-weight:${isToday ? '700' : '500'}; color:${isToday ? '#92400E' : 'var(--text-muted)'}; margin-bottom:4px;">${isValid ? d : ''}</div>
+        ${events.map(ev => {
+          const dt = ev.scheduledAt.toMillis ? new Date(ev.scheduledAt.toMillis()) : null;
+          const time = dt ? dt.getHours().toString().padStart(2, '0') + ':' + dt.getMinutes().toString().padStart(2, '0') : '';
+          const isEnrolled = !!_trainingMyEnrolls[ev.id];
+          const safeId = JSON.stringify(ev.id);
+          return `<div onclick='openCourseDetail(${safeId})' style="background:${isEnrolled ? '#DCFCE7' : 'var(--blue-bg)'}; border-left:3px solid ${isEnrolled ? '#16A34A' : 'var(--primary)'}; padding:3px 6px; margin-bottom:3px; border-radius:4px; cursor:pointer; font-size:11px; line-height:1.4; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${escapeHtml(ev.title)}">${time ? '<strong>' + time + '</strong> ' : ''}${escapeHtml(ev.title.substring(0, 30))}${ev.title.length > 30 ? '...' : ''}</div>`;
+        }).join('')}
+      </div>
+    `;
+  }
+
+  return `
+    <div style="background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+        <div style="display:flex; gap:6px; align-items:center;">
+          <button onclick="navCalendar(-1)" style="padding:6px 12px; background:transparent; border:1px solid var(--border); border-radius:6px; cursor:pointer;">◀</button>
+          <button onclick="goCalendarToday()" style="padding:6px 12px; background:transparent; border:1px solid var(--border); border-radius:6px; cursor:pointer; font-size:12px;">Hôm nay</button>
+          <button onclick="navCalendar(1)" style="padding:6px 12px; background:transparent; border:1px solid var(--border); border-radius:6px; cursor:pointer;">▶</button>
+        </div>
+        <h4 style="margin:0; color:var(--primary);">${escapeHtml(monthName)} ${year}</h4>
+        <div style="font-size:12px; color:var(--text-muted);">📅 ${_trainingCourses.filter(c => { const dt = c.scheduledAt && c.scheduledAt.toMillis ? new Date(c.scheduledAt.toMillis()) : null; return dt && dt.getFullYear() === year && dt.getMonth() === month; }).length} session trong tháng</div>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(7, 1fr); gap:4px; margin-bottom:4px;">
+        ${dowLabels.map((d, i) => '<div style="text-align:center; font-size:11px; font-weight:600; color:' + (i >= 5 ? 'var(--danger)' : 'var(--text-muted)') + '; padding:4px;">' + d + '</div>').join('')}
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(7, 1fr); gap:4px;">${cells}</div>
+    </div>
+  `;
+}
+
+function navCalendar(delta) {
+  if (_trainingView === 'month') {
+    _trainingCalDate = new Date(_trainingCalDate.getFullYear(), _trainingCalDate.getMonth() + delta, 1);
+  } else if (_trainingView === 'week') {
+    _trainingCalDate = new Date(_trainingCalDate.getTime() + delta * 7 * 86400000);
+  }
+  renderTrainingViewContent();
+}
+
+function goCalendarToday() {
+  _trainingCalDate = new Date();
+  renderTrainingViewContent();
+}
+
+// ----- Calendar Week View -----
+function renderTrainingWeek() {
+  const date = _trainingCalDate;
+  const dow = (date.getDay() + 6) % 7; // Monday=0
+  const weekStart = new Date(date.getFullYear(), date.getMonth(), date.getDate() - dow);
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(weekStart.getTime() + i * 86400000);
+    days.push(d);
+  }
+
+  // Get courses in this week, sorted by time
+  const weekEnd = new Date(weekStart.getTime() + 7 * 86400000);
+  const weekCourses = _trainingCourses.filter(c => {
+    const dt = c.scheduledAt && c.scheduledAt.toMillis ? new Date(c.scheduledAt.toMillis()) : null;
+    return dt && dt >= weekStart && dt < weekEnd;
+  });
+
+  const today = new Date();
+  const todayStr = today.toDateString();
+  const dowLabels = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật'];
+
+  return `
+    <div style="background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+        <div style="display:flex; gap:6px;">
+          <button onclick="navCalendar(-1)" style="padding:6px 12px; background:transparent; border:1px solid var(--border); border-radius:6px; cursor:pointer;">◀ Tuần trước</button>
+          <button onclick="goCalendarToday()" style="padding:6px 12px; background:transparent; border:1px solid var(--border); border-radius:6px; cursor:pointer; font-size:12px;">Hôm nay</button>
+          <button onclick="navCalendar(1)" style="padding:6px 12px; background:transparent; border:1px solid var(--border); border-radius:6px; cursor:pointer;">Tuần sau ▶</button>
+        </div>
+        <h4 style="margin:0; color:var(--primary);">Tuần: ${weekStart.toLocaleDateString('vi-VN')} → ${new Date(weekEnd.getTime() - 1).toLocaleDateString('vi-VN')}</h4>
+        <div style="font-size:12px; color:var(--text-muted);">📅 ${weekCourses.length} session</div>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(7, 1fr); gap:6px;">
+        ${days.map((d, i) => {
+          const isToday = d.toDateString() === todayStr;
+          const isWeekend = i >= 5;
+          const dayCourses = weekCourses.filter(c => {
+            const dt = new Date(c.scheduledAt.toMillis());
+            return dt.toDateString() === d.toDateString();
+          });
+          return `
+            <div style="background:${isToday ? '#FEF3C7' : isWeekend ? 'var(--bg, #FAFBFC)' : 'var(--card)'}; border:1px solid ${isToday ? '#F59E0B' : 'var(--border)'}; border-radius:6px; padding:8px; min-height:200px;">
+              <div style="font-size:11px; font-weight:600; color:${isWeekend ? 'var(--danger)' : 'var(--text-muted)'}; margin-bottom:6px;">${escapeHtml(dowLabels[i])}</div>
+              <div style="font-size:18px; font-weight:700; color:${isToday ? '#92400E' : 'var(--text)'}; margin-bottom:8px;">${d.getDate()}</div>
+              ${dayCourses.map(c => {
+                const dt = new Date(c.scheduledAt.toMillis());
+                const time = dt.getHours().toString().padStart(2, '0') + ':' + dt.getMinutes().toString().padStart(2, '0');
+                const isEnrolled = !!_trainingMyEnrolls[c.id];
+                const safeId = JSON.stringify(c.id);
+                return `
+                  <div onclick='openCourseDetail(${safeId})' style="background:${isEnrolled ? '#DCFCE7' : 'var(--blue-bg)'}; border-left:3px solid ${isEnrolled ? '#16A34A' : 'var(--primary)'}; padding:6px 8px; border-radius:4px; cursor:pointer; margin-bottom:4px;">
+                    <div style="font-size:11px; font-weight:600; color:var(--primary);">${time} · ${escapeHtml(String(c.durationMin || '?'))}phút</div>
+                    <div style="font-size:12px; margin-top:2px; line-height:1.4;">${escapeHtml(c.title.substring(0, 50))}${c.title.length > 50 ? '...' : ''}</div>
+                    <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">👨‍🏫 ${escapeHtml(c.instructorName || '?')}</div>
+                  </div>
+                `;
+              }).join('')}
+              ${dayCourses.length === 0 ? '<div style="font-size:11px; color:var(--text-muted); text-align:center; padding:14px 0;">—</div>' : ''}
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// ----- List view -----
+function renderTrainingList() {
+  const me = getCurrentUserInfo();
+  const isAdminUser = me && isAdmin(me.email);
+  if (_trainingCourses.length === 0) {
+    return '<div style="background:var(--card); padding:40px; border-radius:10px; text-align:center; border:2px dashed var(--border);"><div style="font-size:48px;">🎓</div><h3>Chưa có course</h3></div>';
+  }
+  return '<div style="display:flex; flex-direction:column; gap:10px;">' + _trainingCourses.map(c => renderCourseCardCommunity(c, _trainingMyEnrolls[c.id], me, isAdminUser)).join('') + '</div>';
+}
+
+// ----- Detail modal with full info -----
+function openCourseDetail(courseId) {
+  const c = _trainingCourses.find(x => x.id === courseId);
+  if (!c) return;
+  const me = getCurrentUserInfo();
+  const myEnroll = _trainingMyEnrolls[courseId];
+  const isOwner = me && c.instructorUid === me.uid;
+  const isAdminUser = me && isAdmin(me.email);
+  const dt = c.scheduledAt && c.scheduledAt.toMillis ? new Date(c.scheduledAt.toMillis()) : null;
+  const dtStr = dt ? dt.toLocaleString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'TBA';
+  const isPast = dt && dt.getTime() < Date.now();
+  const cat = getCommunityCategoryByKey(c.category || 'other');
+  const safeCid = JSON.stringify(c.id);
+  const safeEid = myEnroll ? JSON.stringify(myEnroll.id) : 'null';
+
+  let modal = document.getElementById('course-detail-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'course-detail-modal';
+    modal.className = 'qed-modal';
+    modal.innerHTML = '<div class="qed-box" style="max-width:760px;"><button class="qed-close" onclick="document.getElementById(\'course-detail-modal\').classList.remove(\'show\')">×</button><div id="course-detail-body"></div></div>';
+    document.body.appendChild(modal);
+  }
+  document.getElementById('course-detail-body').innerHTML = `
+    <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px; flex-wrap:wrap;">
+      <span style="font-size:11px; padding:2px 8px; background:var(--blue-bg); color:var(--primary); border-radius:8px;">${cat.icon} ${escapeHtml(cat.label)}</span>
+      <span style="font-size:11px; padding:2px 8px; background:#F59E0B; color:#FFF; border-radius:8px;">${escapeHtml(c.level || 'all')}</span>
+      ${isPast ? '<span style="font-size:11px; padding:2px 8px; background:#6B7280; color:#FFF; border-radius:8px;">✓ Đã diễn ra</span>' : '<span style="font-size:11px; padding:2px 8px; background:#16A34A; color:#FFF; border-radius:8px;">📅 Sắp tới</span>'}
+    </div>
+    <h2 style="margin:0 0 12px 0;">${escapeHtml(c.title)}</h2>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:14px; background:var(--bg, #F9FAFB); padding:12px; border-radius:8px;">
+      <div>
+        <div style="font-size:11px; color:var(--text-muted); margin-bottom:2px;">👨‍🏫 Người dạy</div>
+        <div style="font-weight:600;">${escapeHtml(c.instructorName || '?')}</div>
+        <div style="font-size:12px; color:var(--text-muted);">${escapeHtml(c.instructorEmail || '')}</div>
+      </div>
+      <div>
+        <div style="font-size:11px; color:var(--text-muted); margin-bottom:2px;">🎯 Đối tượng học</div>
+        <div style="font-weight:600;">${escapeHtml(c.targetAudience || c.level || 'Tất cả consultant')}</div>
+      </div>
+      <div>
+        <div style="font-size:11px; color:var(--text-muted); margin-bottom:2px;">📅 Thời gian</div>
+        <div style="font-weight:600;">${escapeHtml(dtStr)}</div>
+      </div>
+      <div>
+        <div style="font-size:11px; color:var(--text-muted); margin-bottom:2px;">⏱️ Thời lượng</div>
+        <div style="font-weight:600;">${escapeHtml(String(c.durationMin || '?'))} phút</div>
+      </div>
+      <div>
+        <div style="font-size:11px; color:var(--text-muted); margin-bottom:2px;">👥 Đăng ký / Điểm danh</div>
+        <div style="font-weight:600;">${c.enrollCount || 0} đăng ký · <span style="color:var(--green);">${c.attendedCount || 0} đã điểm danh</span></div>
+        <div style="font-size:11px; color:var(--text-muted);">Max ${c.maxSeats || '∞'} seats</div>
+      </div>
+      <div>
+        <div style="font-size:11px; color:var(--text-muted); margin-bottom:2px;">⭐ Rating · 📝 Bài tập</div>
+        <div style="font-weight:600;">${c.avgRating ? c.avgRating.toFixed(2) + '/5 (' + (c.ratingCount || 0) + ' đánh giá)' : 'Chưa có rating'}</div>
+        <div style="font-size:11px; color:#F59E0B; font-weight:600;">${(c.exercises && c.exercises.length) ? c.exercises.length + ' câu kiểm tra' : 'Chưa có bài tập'}</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:14px;">
+      <div style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">📋 Mô tả nội dung</div>
+      <div style="white-space:pre-wrap; line-height:1.7; font-size:14px;">${escapeHtml(c.description || '')}</div>
+    </div>
+
+    ${c.meetingLink ? '<div style="margin-bottom:14px; padding:10px 14px; background:var(--blue-bg); border-left:4px solid var(--primary); border-radius:6px;"><strong>🔗 Meeting link:</strong> <a href="' + escapeHtml(c.meetingLink) + '" target="_blank" rel="noopener" style="color:var(--primary);">' + escapeHtml(c.meetingLink) + '</a></div>' : ''}
+
+    ${(c.exercises && c.exercises.length > 0) ? '<div style="margin-top:14px; padding:10px 14px; background:#FEF3C7; border-left:4px solid #F59E0B; border-radius:6px; font-size:13px;"><strong>📝 Bài tập kiểm tra bắt buộc:</strong> ' + c.exercises.length + ' câu hỏi. Hoàn thành bài này SAU buổi training để được tính ĐIỂM DANH.</div>' : ''}
+
+    <div style="display:flex; gap:8px; flex-wrap:wrap; padding-top:14px; border-top:1px solid var(--border);">
+      ${!myEnroll ? '<button onclick="enrollCourse(' + safeCid.replace(/"/g,"&quot;") + '); document.getElementById(\'course-detail-modal\').classList.remove(\'show\')" style="padding:8px 16px; background:var(--primary); color:#FFF; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:600;">📝 Đăng ký tham gia (+5 điểm)</button>' :
+        '<button onclick="unenrollCourse(' + safeEid.replace(/"/g,"&quot;") + ', ' + safeCid.replace(/"/g,"&quot;") + '); document.getElementById(\'course-detail-modal\').classList.remove(\'show\')" style="padding:8px 16px; background:#FEF3C7; color:#92400E; border:1px solid #F59E0B; border-radius:6px; cursor:pointer; font-size:13px;">✓ Đã đăng ký · Click huỷ</button>'}
+
+      ${myEnroll && isPast && !myEnroll.exerciseSubmittedAt ? '<button onclick="openExerciseModal(' + safeEid.replace(/"/g,"&quot;") + ', ' + safeCid.replace(/"/g,"&quot;") + '); document.getElementById(\'course-detail-modal\').classList.remove(\'show\')" style="padding:8px 16px; background:#F59E0B; color:#FFF; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:600;">📝 Làm bài kiểm tra (ĐIỂM DANH)</button>' : ''}
+      ${myEnroll && myEnroll.exerciseSubmittedAt ? '<span style="padding:8px 16px; background:#DCFCE7; color:#15803D; border-radius:6px; font-size:13px; font-weight:600;">✓ Đã làm bài: ' + (myEnroll.exerciseScore || 0) + '/' + (myEnroll.exerciseTotal || 0) + ' câu đúng</span>' : ''}
+
+      ${myEnroll && myEnroll.exerciseSubmittedAt && !myEnroll.rating && !myEnroll.ratings ? '<button onclick="openRateCourseModal(' + safeEid.replace(/"/g,"&quot;") + ', ' + safeCid.replace(/"/g,"&quot;") + '); document.getElementById(\'course-detail-modal\').classList.remove(\'show\')" style="padding:8px 16px; background:#16A34A; color:#FFF; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:600;">⭐ Đánh giá course (+1 điểm)</button>' : ''}
+      ${myEnroll && (myEnroll.rating || myEnroll.ratings) ? '<span style="padding:8px 16px; color:var(--green); font-size:13px;">⭐ Bạn đã đánh giá: ' + (myEnroll.rating || 0).toFixed(2) + '/5</span>' : ''}
+
+      ${(isOwner || isAdminUser) ? '<button onclick="deleteCourse(' + safeCid.replace(/"/g,"&quot;") + '); document.getElementById(\'course-detail-modal\').classList.remove(\'show\')" style="padding:8px 14px; background:transparent; color:#DC2626; border:1px solid #FCA5A5; border-radius:6px; cursor:pointer; font-size:12px;">🗑️ Xoá course</button>' : ''}
+    </div>
+  `;
+  modal.classList.add('show');
+}
+
+// ============ EXERCISE TAKING + ATTENDANCE ============
+function openExerciseModal(enrollmentId, courseId) {
+  const course = _trainingCourses.find(c => c.id === courseId);
+  if (!course || !course.exercises || course.exercises.length === 0) {
+    alert('Course này chưa có bài tập.'); return;
+  }
+  let modal = document.getElementById('exercise-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'exercise-modal';
+    modal.className = 'qed-modal';
+    modal.innerHTML = '<div class="qed-box" style="max-width:760px;"><button class="qed-close" onclick="document.getElementById(\'exercise-modal\').classList.remove(\'show\')">×</button><h3>📝 Bài kiểm tra Training</h3><div id="exercise-body"></div></div>';
+    document.body.appendChild(modal);
+  }
+  modal._answers = {};
+  modal._courseId = courseId;
+  modal._enrollmentId = enrollmentId;
+  modal._course = course;
+
+  document.getElementById('exercise-body').innerHTML = `
+    <div style="background:linear-gradient(135deg, #F59E0B 0%, #DC2626 100%); color:#FFF; padding:12px 16px; border-radius:8px; margin-bottom:14px;">
+      <div style="font-size:12px; opacity:0.92;">Bài kiểm tra cho session:</div>
+      <h4 style="margin:0 0 4px 0; color:#FFF;">${escapeHtml(course.title)}</h4>
+      <div style="font-size:12px; opacity:0.85;">👨‍🏫 ${escapeHtml(course.instructorName || '')} · ⚠️ Hoàn thành bài này để được tính ĐIỂM DANH</div>
+    </div>
+    <p style="font-size:13px; color:var(--text-muted); margin:0 0 14px 0;">Trả lời ${course.exercises.length} câu hỏi sau. Chọn 1 đáp án mỗi câu. Sau khi nộp sẽ xem điểm + giải thích.</p>
+    <div id="exercise-questions-render">
+      ${course.exercises.map((ex, qi) => `
+        <div style="background:var(--card); border:1px solid var(--border); border-radius:8px; padding:12px 14px; margin-bottom:10px;">
+          <div style="display:flex; align-items:flex-start; gap:8px; margin-bottom:10px;">
+            <span style="background:var(--primary); color:#FFF; font-size:12px; padding:3px 8px; border-radius:8px; font-weight:700; flex-shrink:0;">Câu ${qi + 1}</span>
+            <strong style="font-size:14px; line-height:1.5;">${escapeHtml(ex.q)}</strong>
+          </div>
+          ${ex.options.map((opt, oi) => opt ? `
+            <label style="display:flex; gap:8px; align-items:flex-start; padding:8px 10px; margin:4px 0; border:1px solid var(--border); border-radius:6px; cursor:pointer; background:var(--bg, #F9FAFB);" id="ex-opt-label-${qi}-${oi}">
+              <input type="radio" name="ex-answer-${qi}" value="${oi}" onchange="selectExerciseAnswer(${qi}, ${oi})" style="margin-top:3px;">
+              <span><strong style="color:var(--primary);">${String.fromCharCode(65 + oi)}.</strong> ${escapeHtml(opt)}</span>
+            </label>
+          ` : '').join('')}
+        </div>
+      `).join('')}
+    </div>
+    <div style="display:flex; gap:8px; justify-content:space-between; align-items:center; padding-top:10px; border-top:1px solid var(--border);">
+      <div id="exercise-progress" style="font-size:13px; color:var(--text-muted);">Đã trả lời 0 / ${course.exercises.length}</div>
+      <div style="display:flex; gap:8px;">
+        <button onclick="document.getElementById('exercise-modal').classList.remove('show')" style="padding:8px 18px; background:#F3F4F6; border:none; border-radius:6px; cursor:pointer;">Huỷ</button>
+        <button onclick="submitExercise()" style="padding:8px 18px; background:var(--primary); color:#FFF; border:none; border-radius:6px; cursor:pointer; font-weight:600;">📝 Nộp bài + Điểm danh</button>
+      </div>
+    </div>
+  `;
+  modal.classList.add('show');
+}
+
+function selectExerciseAnswer(qIdx, oIdx) {
+  const modal = document.getElementById('exercise-modal');
+  if (!modal) return;
+  modal._answers[qIdx] = oIdx;
+  // Visual feedback on label
+  const total = modal._course.exercises.length;
+  const answeredCount = Object.keys(modal._answers).length;
+  const prog = document.getElementById('exercise-progress');
+  if (prog) prog.innerHTML = '<strong>Đã trả lời ' + answeredCount + ' / ' + total + '</strong>';
+}
+
+async function submitExercise() {
+  const modal = document.getElementById('exercise-modal');
+  if (!modal || !modal._course) return;
+  const course = modal._course;
+  const answers = modal._answers || {};
+  const total = course.exercises.length;
+  const answered = Object.keys(answers).length;
+  if (answered < total) {
+    if (!confirm('Mới trả lời ' + answered + '/' + total + ' câu. Vẫn nộp?')) return;
+  }
+  // Compute score
+  let score = 0;
+  course.exercises.forEach((ex, qi) => {
+    if (answers[qi] === ex.correct) score++;
+  });
+
+  try {
+    // Update enrollment with exercise result + mark attendance
+    await window.fb.updateDoc(window.fb.doc(window.fb.db, TRAINING_ENROLLMENTS_COLLECTION, modal._enrollmentId), {
+      exerciseSubmittedAt: window.fb.serverTimestamp(),
+      exerciseScore: score,
+      exerciseTotal: total,
+      exerciseAnswers: answers,
+      actuallyAttended: true,
+      attendedAt: window.fb.serverTimestamp()
+    });
+    // Increment attendedCount on course
+    const courseRef = window.fb.doc(window.fb.db, TRAINING_COURSES_COLLECTION, course.id);
+    const courseSnap = await window.fb.getDoc(courseRef);
+    if (courseSnap.exists()) {
+      await window.fb.updateDoc(courseRef, { attendedCount: (courseSnap.data().attendedCount || 0) + 1 });
+    }
+
+    // Show results
+    document.getElementById('exercise-body').innerHTML = `
+      <div style="text-align:center; padding:20px 0;">
+        <div style="font-size:60px; margin-bottom:10px;">${score === total ? '🎉' : score >= total * 0.7 ? '👍' : score >= total * 0.5 ? '👌' : '📚'}</div>
+        <h3 style="margin:0 0 6px 0; color:${score === total ? 'var(--green)' : score >= total * 0.5 ? 'var(--primary)' : 'var(--warning)'};">${score} / ${total} câu đúng</h3>
+        <div style="font-size:14px; color:var(--text-muted); margin-bottom:14px;">✅ Bạn đã được ghi nhận ĐIỂM DANH cho session này.</div>
+      </div>
+      <h4 style="margin:14px 0 8px 0;">📋 Chi tiết kết quả:</h4>
+      ${course.exercises.map((ex, qi) => {
+        const userAns = answers[qi];
+        const isCorrect = userAns === ex.correct;
+        return `
+          <div style="background:${isCorrect ? '#DCFCE7' : '#FEE2E2'}; border-left:4px solid ${isCorrect ? '#16A34A' : '#DC2626'}; border-radius:6px; padding:10px 12px; margin-bottom:8px;">
+            <div style="display:flex; align-items:flex-start; gap:6px; margin-bottom:6px;">
+              <span style="font-size:14px;">${isCorrect ? '✅' : '❌'}</span>
+              <strong style="flex:1; font-size:13px;">Câu ${qi + 1}: ${escapeHtml(ex.q)}</strong>
+            </div>
+            <div style="font-size:12px; margin-left:22px;">
+              ${userAns !== undefined ? '<div>Bạn chọn: <strong>' + String.fromCharCode(65 + userAns) + '. ' + escapeHtml(ex.options[userAns] || '') + '</strong></div>' : '<div style="color:var(--text-muted);">Chưa trả lời</div>'}
+              ${!isCorrect ? '<div style="color:#15803D; margin-top:2px;">Đáp án đúng: <strong>' + String.fromCharCode(65 + ex.correct) + '. ' + escapeHtml(ex.options[ex.correct] || '') + '</strong></div>' : ''}
+              ${ex.exp ? '<div style="margin-top:4px; font-style:italic; color:var(--text-muted);">💡 ' + escapeHtml(ex.exp) + '</div>' : ''}
+            </div>
+          </div>
+        `;
+      }).join('')}
+      <div style="text-align:center; margin-top:14px;">
+        <button onclick="document.getElementById('exercise-modal').classList.remove('show'); renderTraining();" style="padding:8px 24px; background:var(--primary); color:#FFF; border:none; border-radius:6px; cursor:pointer; font-weight:600;">✓ Hoàn tất</button>
+      </div>
+    `;
+  } catch (e) {
+    alert('Lỗi khi nộp bài: ' + e.message);
+  }
 }
 
 function renderCourseCardCommunity(c, myEnroll, me, isAdminUser) {
@@ -12624,32 +13049,27 @@ function renderCourseCardCommunity(c, myEnroll, me, isAdminUser) {
   const dt = c.scheduledAt && c.scheduledAt.toMillis ? new Date(c.scheduledAt.toMillis()) : null;
   const dtStr = dt ? dt.toLocaleString('vi-VN') : 'TBA';
   const isPast = dt && dt.getTime() < Date.now();
-  const isOwner = me && c.instructorUid === me.uid;
   const safeCid = JSON.stringify(c.id);
-  const safeEid = myEnroll ? JSON.stringify(myEnroll.id) : 'null';
   return `
-    <div style="background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px;">
+    <div onclick='openCourseDetail(${safeCid})' style="background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px; cursor:pointer; transition:all 0.15s;"
+      onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
       <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px; flex-wrap:wrap;">
         <span style="font-size:11px; padding:2px 6px; background:var(--blue-bg); color:var(--primary); border-radius:8px;">${cat.icon} ${escapeHtml(cat.label)}</span>
         <span style="font-size:11px; padding:2px 6px; background:#F59E0B; color:#FFF; border-radius:8px;">${escapeHtml(c.level || 'all')}</span>
         ${isPast ? '<span style="font-size:11px; padding:2px 6px; background:#6B7280; color:#FFF; border-radius:8px;">✓ Đã diễn ra</span>' : '<span style="font-size:11px; padding:2px 6px; background:#16A34A; color:#FFF; border-radius:8px;">📅 Sắp tới</span>'}
+        ${myEnroll ? '<span style="font-size:11px; padding:2px 6px; background:#DCFCE7; color:#16A34A; border-radius:8px;">✓ Đã đăng ký</span>' : ''}
       </div>
       <h4 style="margin:0 0 6px 0;">${escapeHtml(c.title)}</h4>
-      <div style="font-size:13px; color:var(--text-muted); margin-bottom:10px; line-height:1.6;">${escapeHtml(c.description || '')}</div>
-      <div style="display:flex; gap:14px; font-size:12px; color:var(--text-muted); margin-bottom:10px; flex-wrap:wrap;">
+      <div style="font-size:13px; color:var(--text-muted); margin-bottom:10px; line-height:1.6;">${escapeHtml((c.description || '').substring(0, 150))}${(c.description || '').length > 150 ? '...' : ''}</div>
+      <div style="display:flex; gap:14px; font-size:12px; color:var(--text-muted); flex-wrap:wrap;">
         <span>👨‍🏫 ${escapeHtml(c.instructorName || '?')}</span>
+        <span>🎯 ${escapeHtml(c.targetAudience || c.level || 'all')}</span>
         <span>📅 ${escapeHtml(dtStr)}</span>
         <span>⏱️ ${escapeHtml(String(c.durationMin || '?'))} phút</span>
-        <span>👥 ${(c.enrollCount || 0)} / ${c.maxSeats || '∞'} seats</span>
-        ${c.avgRating ? '<span>⭐ ' + c.avgRating.toFixed(1) + ' (' + (c.ratingCount || 0) + ')</span>' : ''}
-      </div>
-      ${c.meetingLink ? '<div style="font-size:12px; margin-bottom:10px;"><a href="' + escapeHtml(c.meetingLink) + '" target="_blank" style="color:var(--primary);">🔗 Meeting link</a></div>' : ''}
-      <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        ${!myEnroll ? '<button onclick="enrollCourse(' + safeCid.replace(/"/g,"&quot;") + ')" style="padding:6px 14px; background:var(--primary); color:#FFF; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:600;">📝 Đăng ký (+5 điểm)</button>' :
-          '<button onclick="unenrollCourse(' + safeEid.replace(/"/g,"&quot;") + ', ' + safeCid.replace(/"/g,"&quot;") + ')" style="padding:6px 14px; background:#FEF3C7; color:#92400E; border:1px solid #F59E0B; border-radius:6px; cursor:pointer; font-size:13px;">✓ Đã đăng ký · Click huỷ</button>'}
-        ${myEnroll && isPast && !myEnroll.rating ? '<button onclick="openRateCourseModal(' + safeEid.replace(/"/g,"&quot;") + ', ' + safeCid.replace(/"/g,"&quot;") + ')" style="padding:6px 14px; background:#16A34A; color:#FFF; border:none; border-radius:6px; cursor:pointer; font-size:13px;">⭐ Đánh giá (+1 điểm)</button>' : ''}
-        ${myEnroll && myEnroll.rating ? '<span style="padding:6px 14px; color:var(--green); font-size:13px;">⭐ Đã rate: ' + myEnroll.rating + '/5</span>' : ''}
-        ${(isOwner || isAdminUser) ? '<button onclick="deleteCourse(' + safeCid.replace(/"/g,"&quot;") + ')" style="padding:6px 10px; background:transparent; color:#DC2626; border:1px solid #FCA5A5; border-radius:6px; cursor:pointer; font-size:12px;">🗑️</button>' : ''}
+        <span>👥 ${(c.enrollCount || 0)} / ${c.maxSeats || '∞'}</span>
+        ${(c.attendedCount !== undefined) ? '<span>✓ Đã điểm danh: ' + (c.attendedCount || 0) + '/' + (c.enrollCount || 0) + '</span>' : ''}
+        ${(c.exercises && c.exercises.length > 0) ? '<span style="color:#F59E0B; font-weight:600;">📝 ' + c.exercises.length + ' câu test</span>' : ''}
+        ${c.avgRating ? '<span>⭐ ' + c.avgRating.toFixed(2) + ' (' + (c.ratingCount || 0) + ')</span>' : ''}
       </div>
     </div>
   `;
@@ -12668,7 +13088,8 @@ function openNewCourseModal() {
   document.getElementById('course-new-body').innerHTML = `
     <div style="display:grid; gap:10px;">
       <label><div style="font-weight:600; font-size:13px;">Tiêu đề *</div><input type="text" id="crsnew-title" placeholder="Workshop Mock Recall 2h hands-on" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:6px;"></label>
-      <label><div style="font-weight:600; font-size:13px;">Mô tả *</div><textarea id="crsnew-description" rows="4" placeholder="Nội dung, agenda, prerequisite..." style="width:100%; padding:8px; border:1px solid var(--border); border-radius:6px; resize:vertical;"></textarea></label>
+      <label><div style="font-weight:600; font-size:13px;">Mô tả nội dung *</div><textarea id="crsnew-description" rows="4" placeholder="Nội dung, agenda, prerequisite..." style="width:100%; padding:8px; border:1px solid var(--border); border-radius:6px; resize:vertical;"></textarea></label>
+      <label><div style="font-weight:600; font-size:13px;">🎯 Đối tượng học (Target audience) *</div><input type="text" id="crsnew-audience" placeholder="vd: Junior consultant 0-2 năm, đã biết BC core" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:6px;"></label>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
         <label><div style="font-weight:600; font-size:13px;">Category</div>
           <select id="crsnew-category" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:6px;">${catOpts}</select></label>
@@ -12686,13 +13107,83 @@ function openNewCourseModal() {
           <input type="number" id="crsnew-seats" value="20" min="1" max="500" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:6px;"></label>
       </div>
       <label><div style="font-weight:600; font-size:13px;">Meeting link (Teams/Zoom)</div><input type="url" id="crsnew-meeting" placeholder="https://teams.microsoft.com/..." style="width:100%; padding:8px; border:1px solid var(--border); border-radius:6px;"></label>
+
+      <div style="background:var(--bg, #F9FAFB); border:2px solid var(--warning); border-radius:8px; padding:12px; margin-top:6px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+          <h4 style="margin:0;">📝 Bài tập kiểm tra (BẮT BUỘC — dùng để điểm danh)</h4>
+          <button type="button" onclick="addExerciseQuestion()" style="padding:6px 12px; background:var(--primary); color:#FFF; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:600;">➕ Thêm câu hỏi</button>
+        </div>
+        <p style="font-size:12px; color:var(--text-muted); margin:0 0 10px 0;">Member phải làm bài này SAU buổi training để được tính ĐIỂM DANH (đã tham gia). Tối thiểu 1 câu, tối đa 10 câu. Khuyên dùng 3-5 câu để check nhanh.</p>
+        <div id="exercise-questions-list"></div>
+      </div>
+
       <div style="display:flex; gap:8px; justify-content:flex-end;">
         <button onclick="document.getElementById('course-new-modal').classList.remove('show')" style="padding:8px 18px; background:#F3F4F6; border:none; border-radius:6px; cursor:pointer;">Huỷ</button>
         <button onclick="submitNewCourse()" style="padding:8px 18px; background:var(--primary); color:#FFF; border:none; border-radius:6px; cursor:pointer; font-weight:600;">📝 Đăng</button>
       </div>
     </div>
   `;
+  // Reset exercises state and add first question by default
+  modal._exercises = [];
+  addExerciseQuestion();
   modal.classList.add('show');
+}
+
+function addExerciseQuestion() {
+  const modal = document.getElementById('course-new-modal');
+  if (!modal._exercises) modal._exercises = [];
+  if (modal._exercises.length >= 10) { alert('Tối đa 10 câu hỏi.'); return; }
+  modal._exercises.push({ q: '', options: ['', '', '', ''], correct: 0, exp: '' });
+  renderExerciseQuestionsList();
+}
+
+function removeExerciseQuestion(idx) {
+  const modal = document.getElementById('course-new-modal');
+  if (modal._exercises.length <= 1) { alert('Phải có ít nhất 1 câu hỏi.'); return; }
+  // Save current values first
+  saveExerciseFormState();
+  modal._exercises.splice(idx, 1);
+  renderExerciseQuestionsList();
+}
+
+function saveExerciseFormState() {
+  const modal = document.getElementById('course-new-modal');
+  if (!modal._exercises) return;
+  modal._exercises.forEach((ex, idx) => {
+    const qInput = document.getElementById('ex-q-' + idx);
+    const expInput = document.getElementById('ex-exp-' + idx);
+    if (qInput) ex.q = qInput.value;
+    if (expInput) ex.exp = expInput.value;
+    for (let i = 0; i < 4; i++) {
+      const optInput = document.getElementById('ex-opt-' + idx + '-' + i);
+      if (optInput) ex.options[i] = optInput.value;
+      const corrInput = document.querySelector('input[name="ex-correct-' + idx + '"]:checked');
+      if (corrInput) ex.correct = parseInt(corrInput.value, 10);
+    }
+  });
+}
+
+function renderExerciseQuestionsList() {
+  const modal = document.getElementById('course-new-modal');
+  const list = document.getElementById('exercise-questions-list');
+  if (!list || !modal._exercises) return;
+  list.innerHTML = modal._exercises.map((ex, idx) => `
+    <div style="background:var(--card); border:1px solid var(--border); border-radius:6px; padding:10px 12px; margin-bottom:8px;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+        <span style="background:var(--primary); color:#FFF; font-size:12px; padding:2px 8px; border-radius:8px; font-weight:700;">Câu ${idx + 1}</span>
+        ${modal._exercises.length > 1 ? '<button type="button" onclick="removeExerciseQuestion(' + idx + ')" style="margin-left:auto; padding:3px 8px; background:transparent; color:#DC2626; border:1px solid #FCA5A5; border-radius:4px; cursor:pointer; font-size:11px;">🗑️ Xoá</button>' : ''}
+      </div>
+      <input type="text" id="ex-q-${idx}" value="${escapeHtml(ex.q || '')}" placeholder="Câu hỏi..." style="width:100%; padding:6px; border:1px solid var(--border); border-radius:4px; font-size:13px; margin-bottom:6px;">
+      ${[0, 1, 2, 3].map(oi => `
+        <label style="display:flex; gap:6px; align-items:center; margin-bottom:4px;">
+          <input type="radio" name="ex-correct-${idx}" value="${oi}" ${ex.correct === oi ? 'checked' : ''}>
+          <span style="font-size:11px; color:var(--text-muted); min-width:14px;">${String.fromCharCode(65 + oi)}.</span>
+          <input type="text" id="ex-opt-${idx}-${oi}" value="${escapeHtml(ex.options[oi] || '')}" placeholder="Đáp án ${String.fromCharCode(65 + oi)}" style="flex:1; padding:4px 6px; border:1px solid var(--border); border-radius:4px; font-size:12px;">
+        </label>
+      `).join('')}
+      <input type="text" id="ex-exp-${idx}" value="${escapeHtml(ex.exp || '')}" placeholder="Giải thích (optional)" style="width:100%; padding:5px; border:1px solid var(--border); border-radius:4px; font-size:11px; margin-top:4px; color:var(--text-muted);">
+    </div>
+  `).join('');
 }
 
 async function submitNewCourse() {
@@ -12700,21 +13191,41 @@ async function submitNewCourse() {
   if (!me) return alert('Cần đăng nhập.');
   const title = document.getElementById('crsnew-title').value.trim();
   const description = document.getElementById('crsnew-description').value.trim();
+  const targetAudience = document.getElementById('crsnew-audience').value.trim();
   const category = document.getElementById('crsnew-category').value;
   const level = document.getElementById('crsnew-level').value;
   const scheduledStr = document.getElementById('crsnew-scheduled').value;
   const durationMin = parseInt(document.getElementById('crsnew-duration').value, 10);
   const maxSeats = parseInt(document.getElementById('crsnew-seats').value, 10);
   const meetingLink = document.getElementById('crsnew-meeting').value.trim();
-  if (!title || !description || !scheduledStr) return alert('Điền đủ các trường bắt buộc.');
+  if (!title || !description || !targetAudience || !scheduledStr) return alert('Điền đủ các trường bắt buộc (có dấu *).');
+
+  // Capture + validate exercises
+  saveExerciseFormState();
+  const modal = document.getElementById('course-new-modal');
+  const exercises = (modal._exercises || []).map(ex => ({
+    q: (ex.q || '').trim(),
+    options: ex.options.map(o => (o || '').trim()),
+    correct: ex.correct,
+    exp: (ex.exp || '').trim()
+  })).filter(ex => ex.q);  // skip empty questions
+  if (exercises.length === 0) return alert('Bài tập kiểm tra bắt buộc: ít nhất 1 câu hỏi đầy đủ tiêu đề.');
+  for (let i = 0; i < exercises.length; i++) {
+    const ex = exercises[i];
+    if (ex.options.filter(o => o).length < 2) return alert('Câu ' + (i + 1) + ': cần ít nhất 2 đáp án.');
+    if (!ex.options[ex.correct]) return alert('Câu ' + (i + 1) + ': đáp án đúng (' + String.fromCharCode(65 + ex.correct) + ') chưa có nội dung.');
+  }
+
   const scheduledAt = new Date(scheduledStr);
   try {
     await window.fb.addDoc(window.fb.collection(window.fb.db, TRAINING_COURSES_COLLECTION), {
-      title, description, category, level,
+      title, description, targetAudience, category, level,
       scheduledAt, durationMin, maxSeats, meetingLink,
+      exercises,  // ← MỚI: bài tập bắt buộc
       instructorUid: me.uid, instructorEmail: me.email, instructorName: me.displayName,
       createdAt: window.fb.serverTimestamp(),
-      enrollCount: 0, avgRating: 0, ratingCount: 0
+      enrollCount: 0, attendedCount: 0,
+      avgRating: 0, ratingCount: 0
     });
     await awardPoints('training_teach', POINTS_RULES.training_teach);
     document.getElementById('course-new-modal').classList.remove('show');
@@ -12751,52 +13262,142 @@ async function unenrollCourse(enrollmentId, courseId) {
 }
 
 function openRateCourseModal(enrollmentId, courseId) {
+  const course = _trainingCourses.find(c => c.id === courseId);
   let modal = document.getElementById('rate-modal');
   if (!modal) {
     modal = document.createElement('div');
     modal.id = 'rate-modal';
     modal.className = 'qed-modal';
-    modal.innerHTML = '<div class="qed-box" style="max-width:480px;"><button class="qed-close" onclick="document.getElementById(\'rate-modal\').classList.remove(\'show\')">×</button><h3>⭐ Đánh giá course</h3><div id="rate-body"></div></div>';
+    modal.innerHTML = '<div class="qed-box" style="max-width:760px;"><button class="qed-close" onclick="document.getElementById(\'rate-modal\').classList.remove(\'show\')">×</button><h3>⭐ Đánh giá Training Session</h3><div id="rate-body"></div></div>';
     document.body.appendChild(modal);
   }
   const safeE = JSON.stringify(enrollmentId);
   const safeC = JSON.stringify(courseId);
+  const criteriaInputs = TRAINING_RATING_CRITERIA.map((cr, idx) => `
+    <div style="background:var(--bg, #F9FAFB); border:1px solid var(--border); border-radius:8px; padding:10px 12px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px;">
+        <div>
+          <strong style="font-size:14px; color:var(--text);">${idx + 1}. ${escapeHtml(cr.label)}</strong>
+          <span style="font-size:11px; color:var(--text-muted); font-style:italic; margin-left:6px;">${escapeHtml(cr.labelEn)}</span>
+        </div>
+        <div class="rate-stars" data-crit="${cr.key}" style="display:flex; gap:4px;">
+          ${[1, 2, 3, 4, 5].map(v => `<button type="button" data-val="${v}" onclick="setRateStar('${cr.key}', ${v})" style="background:transparent; border:none; cursor:pointer; font-size:22px; padding:0 2px; opacity:0.3;">★</button>`).join('')}
+        </div>
+      </div>
+      <div style="font-size:12px; color:var(--text-muted); line-height:1.5;">${escapeHtml(cr.desc)}</div>
+    </div>
+  `).join('');
   document.getElementById('rate-body').innerHTML = `
-    <div style="display:grid; gap:10px;">
-      <label><div style="font-weight:600; font-size:13px;">Điểm (1-5 sao) *</div>
-        <select id="rate-stars" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:6px;">
-          <option value="5">⭐⭐⭐⭐⭐ Xuất sắc</option><option value="4">⭐⭐⭐⭐ Tốt</option><option value="3">⭐⭐⭐ Trung bình</option><option value="2">⭐⭐ Yếu</option><option value="1">⭐ Kém</option>
-        </select></label>
-      <label><div style="font-weight:600; font-size:13px;">Feedback</div>
-        <textarea id="rate-feedback" rows="4" placeholder="Điểm mạnh / cải thiện..." style="width:100%; padding:8px; border:1px solid var(--border); border-radius:6px; resize:vertical;"></textarea></label>
-      <div style="display:flex; gap:8px; justify-content:flex-end;">
+    <div style="background:linear-gradient(135deg, #16A34A 0%, #1F3864 100%); color:#FFF; padding:14px 16px; border-radius:8px; margin-bottom:14px;">
+      <div style="font-size:13px; opacity:0.9; margin-bottom:2px;">Đánh giá session:</div>
+      <h4 style="margin:0 0 4px 0; color:#FFF;">${escapeHtml(course ? course.title : '')}</h4>
+      <div style="font-size:12px; opacity:0.85;">👨‍🏫 ${escapeHtml(course ? course.instructorName : '')}</div>
+    </div>
+    <p style="font-size:13px; color:var(--text-muted); margin-bottom:14px;">Đánh giá theo <strong>8 tiêu chí best-practice</strong> cho một buổi training. Mỗi tiêu chí cho điểm 1-5 sao. Tổng KPI của trainer = trung bình cộng các đánh giá.</p>
+    <div style="display:grid; gap:8px; margin-bottom:14px;">${criteriaInputs}</div>
+    <label style="display:block; margin-bottom:10px;">
+      <div style="font-weight:600; font-size:13px; margin-bottom:4px;">📝 Phản hồi chi tiết (optional)</div>
+      <textarea id="rate-feedback" rows="3" placeholder="Điểm mạnh / điều có thể cải thiện / đề xuất topic tiếp theo..." style="width:100%; padding:8px; border:1px solid var(--border); border-radius:6px; resize:vertical;"></textarea>
+    </label>
+    <div style="display:flex; gap:8px; justify-content:space-between; align-items:center; padding-top:10px; border-top:1px solid var(--border);">
+      <div id="rate-summary" style="font-size:13px; color:var(--text-muted);">Chưa chọn điểm nào</div>
+      <div style="display:flex; gap:8px;">
         <button onclick="document.getElementById('rate-modal').classList.remove('show')" style="padding:8px 18px; background:#F3F4F6; border:none; border-radius:6px; cursor:pointer;">Huỷ</button>
-        <button onclick='submitRateCourse(${safeE}, ${safeC})' style="padding:8px 18px; background:var(--primary); color:#FFF; border:none; border-radius:6px; cursor:pointer; font-weight:600;">⭐ Gửi</button>
+        <button onclick='submitRateCourse(${safeE}, ${safeC})' style="padding:8px 18px; background:var(--primary); color:#FFF; border:none; border-radius:6px; cursor:pointer; font-weight:600;">⭐ Gửi đánh giá (+1 điểm)</button>
       </div>
     </div>
   `;
+  modal._rateValues = {};
   modal.classList.add('show');
 }
 
+function setRateStar(critKey, val) {
+  const modal = document.getElementById('rate-modal');
+  if (!modal._rateValues) modal._rateValues = {};
+  modal._rateValues[critKey] = val;
+  // Update stars visual
+  const container = modal.querySelector('.rate-stars[data-crit="' + critKey + '"]');
+  if (container) {
+    container.querySelectorAll('button').forEach(b => {
+      const v = parseInt(b.dataset.val, 10);
+      b.style.opacity = v <= val ? '1' : '0.25';
+      b.style.color = v <= val ? '#F59E0B' : 'var(--text-muted)';
+    });
+  }
+  // Update summary
+  const vals = Object.values(modal._rateValues);
+  const sum = document.getElementById('rate-summary');
+  if (sum) {
+    if (vals.length === 0) sum.textContent = 'Chưa chọn điểm nào';
+    else {
+      const avg = vals.reduce((s, v) => s + v, 0) / vals.length;
+      sum.innerHTML = '<strong>' + vals.length + '/' + TRAINING_RATING_CRITERIA.length + '</strong> tiêu chí đã chọn · Avg: <strong style="color:var(--primary);">' + avg.toFixed(2) + '/5</strong>';
+    }
+  }
+}
+
 async function submitRateCourse(enrollmentId, courseId) {
-  const rating = parseInt(document.getElementById('rate-stars').value, 10);
+  const modal = document.getElementById('rate-modal');
+  const ratings = (modal && modal._rateValues) || {};
+  const filledCount = Object.keys(ratings).length;
+  if (filledCount < TRAINING_RATING_CRITERIA.length) {
+    if (!confirm('Mới đánh giá ' + filledCount + '/' + TRAINING_RATING_CRITERIA.length + ' tiêu chí. Tiếp tục gửi?')) return;
+  }
+  const vals = Object.values(ratings);
+  const avg = vals.length > 0 ? vals.reduce((s, v) => s + v, 0) / vals.length : 0;
   const feedback = document.getElementById('rate-feedback').value.trim();
   try {
     await window.fb.updateDoc(window.fb.doc(window.fb.db, TRAINING_ENROLLMENTS_COLLECTION, enrollmentId), {
-      rating, feedback, ratedAt: window.fb.serverTimestamp()
+      rating: avg, ratings, feedback, ratedAt: window.fb.serverTimestamp()
     });
+    // Recompute course avg rating (use detailed rating if available)
     const enrollSnap = await window.fb.getDocs(window.fb.collection(window.fb.db, TRAINING_ENROLLMENTS_COLLECTION));
     let total = 0, count = 0;
     enrollSnap.forEach(d => {
       const e = d.data();
-      if (e.courseId === courseId && e.rating) { total += e.rating; count++; }
+      if (e.courseId === courseId && (e.rating || e.ratings)) { total += (e.rating || 0); count++; }
     });
-    const avg = count > 0 ? total / count : 0;
-    await window.fb.updateDoc(window.fb.doc(window.fb.db, TRAINING_COURSES_COLLECTION, courseId), { avgRating: avg, ratingCount: count });
+    const courseAvg = count > 0 ? total / count : 0;
+    await window.fb.updateDoc(window.fb.doc(window.fb.db, TRAINING_COURSES_COLLECTION, courseId), {
+      avgRating: courseAvg, ratingCount: count
+    });
+    // Recompute trainer KPI for the instructor
+    const course = _trainingCourses.find(c => c.id === courseId);
+    if (course && course.instructorUid) await recomputeTrainerKPI(course.instructorUid);
     await awardPoints('training_rate', POINTS_RULES.training_rate);
     document.getElementById('rate-modal').classList.remove('show');
     renderTraining();
   } catch (e) { alert('Lỗi: ' + e.message); }
+}
+
+// ----- Recompute trainer KPI from all their courses -----
+async function recomputeTrainerKPI(instructorUid) {
+  try {
+    const coursesSnap = await window.fb.getDocs(window.fb.collection(window.fb.db, TRAINING_COURSES_COLLECTION));
+    const trainerCourses = [];
+    coursesSnap.forEach(d => { const c = d.data(); if (c.instructorUid === instructorUid) trainerCourses.push(c); });
+    let totalRatings = 0, ratingsCount = 0, totalSessions = trainerCourses.length, totalEnrolls = 0;
+    trainerCourses.forEach(c => {
+      if (c.avgRating && c.ratingCount) {
+        totalRatings += c.avgRating * c.ratingCount;
+        ratingsCount += c.ratingCount;
+      }
+      totalEnrolls += (c.enrollCount || 0);
+    });
+    const kpi = ratingsCount > 0 ? totalRatings / ratingsCount : 0;
+    // Save to member_points doc as trainerKPI subdoc
+    const ref = window.fb.doc(window.fb.db, POINTS_COLLECTION, instructorUid);
+    const snap = await window.fb.getDoc(ref);
+    const data = snap.exists() ? snap.data() : { uid: instructorUid, totalPoints: 0, breakdown: {} };
+    data.trainerKPI = {
+      avgRating: kpi,
+      totalSessions,
+      totalRatings: ratingsCount,
+      totalEnrollments: totalEnrolls,
+      updatedAt: Date.now()
+    };
+    await window.fb.setDoc(ref, data, { merge: true });
+  } catch (e) { console.warn('recomputeTrainerKPI:', e.message); }
 }
 
 async function deleteCourse(courseId) {
@@ -12820,10 +13421,33 @@ async function renderMemberPoints() {
     const me = getCurrentUserInfo();
     const myEntry = me ? members.find(m => m.uid === me.uid) : null;
     const myRank = myEntry ? members.indexOf(myEntry) + 1 : 0;
+
+    // Fetch enrollments to compute attendance per user
+    const attendanceByUid = {};
+    try {
+      const enrollSnap = await window.fb.getDocs(window.fb.collection(window.fb.db, TRAINING_ENROLLMENTS_COLLECTION));
+      enrollSnap.forEach(d => {
+        const e = d.data();
+        if (!attendanceByUid[e.userUid]) attendanceByUid[e.userUid] = { enrolled: 0, attended: 0, avgScore: 0, scoresSum: 0, scoresCount: 0 };
+        attendanceByUid[e.userUid].enrolled++;
+        if (e.actuallyAttended) {
+          attendanceByUid[e.userUid].attended++;
+          if (e.exerciseScore !== undefined && e.exerciseTotal) {
+            attendanceByUid[e.userUid].scoresSum += (e.exerciseScore / e.exerciseTotal);
+            attendanceByUid[e.userUid].scoresCount++;
+          }
+        }
+      });
+      Object.values(attendanceByUid).forEach(a => {
+        a.avgScore = a.scoresCount > 0 ? a.scoresSum / a.scoresCount : 0;
+      });
+    } catch (e) { /* ignore */ }
+    members.forEach(m => { m._attendance = attendanceByUid[m.uid] || { enrolled: 0, attended: 0, avgScore: 0 }; });
+
     root.innerHTML = `
       <div style="background:linear-gradient(135deg, #F59E0B 0%, #DC2626 100%); color:#FFF; padding:14px 18px; border-radius:10px; margin-bottom:14px;">
-        <h3 style="margin:0 0 4px 0; color:#FFF;">🏆 Bảng điểm Cộng đồng</h3>
-        <p style="margin:0; font-size:13px; opacity:0.92;">Điểm tích luỹ từ: đặt câu hỏi, trả lời, được upvote, answer accepted, đăng case, tham gia/dạy training.</p>
+        <h3 style="margin:0 0 4px 0; color:#FFF;">🏆 Bảng điểm Cộng đồng + Tham gia Training</h3>
+        <p style="margin:0; font-size:13px; opacity:0.92;">Điểm tích luỹ từ hoạt động cộng đồng + tham gia training (điểm danh qua bài kiểm tra bắt buộc).</p>
         ${myEntry ? '<div style="margin-top:8px; font-size:14px;">Bạn đang xếp hạng <strong style="font-size:18px;">#' + myRank + '</strong> với <strong>' + myEntry.totalPoints + '</strong> điểm.</div>' : '<div style="margin-top:8px; font-size:13px;">Hoạt động để có điểm đầu tiên!</div>'}
       </div>
       <div style="background:var(--card); padding:14px; border-radius:8px; margin-bottom:14px; font-size:12px;">
@@ -12831,19 +13455,51 @@ async function renderMemberPoints() {
         Đặt câu hỏi <strong>+${POINTS_RULES.forum_question}</strong> · Trả lời <strong>+${POINTS_RULES.forum_reply}</strong> · Được upvote <strong>+${POINTS_RULES.upvote_received}/lần</strong> · Answer accepted <strong>+${POINTS_RULES.answer_accepted}</strong> · Đăng case <strong>+${POINTS_RULES.case_post}</strong> · Đăng ký training <strong>+${POINTS_RULES.training_attend}</strong> · Rate training <strong>+${POINTS_RULES.training_rate}</strong> · Dạy training <strong>+${POINTS_RULES.training_teach}</strong>
       </div>
       ${members.length === 0 ? '<div style="background:var(--card); padding:40px; border-radius:10px; text-align:center;"><div style="font-size:48px;">🏆</div><p style="color:var(--text-muted);">Chưa có member nào có điểm.</p></div>' :
-        '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th style="width:60px;">Rank</th><th>Member</th><th style="width:90px;">Total</th><th>Breakdown</th></tr></thead><tbody>' +
+        '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th style="width:60px;">Rank</th><th>Member</th><th style="width:90px;">Total</th><th style="width:120px;">🎓 Đã tham gia</th><th>Breakdown</th></tr></thead><tbody>' +
         members.map((m, i) => {
           const rank = i + 1;
           const isMe = me && m.uid === me.uid;
           const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '#' + rank;
           const breakdown = Object.entries(m.breakdown || {}).map(([k, v]) => '<span style="font-size:11px; padding:1px 5px; background:var(--blue-bg); border-radius:6px; margin-right:3px;">' + escapeHtml(k.replace(/_/g, ' ')) + ': ' + v + '</span>').join('');
+          const att = m._attendance || { enrolled: 0, attended: 0, avgScore: 0 };
+          const attRate = att.enrolled > 0 ? Math.round(att.attended / att.enrolled * 100) : 0;
+          const attHtml = att.attended > 0
+            ? '<div style="font-weight:700; color:var(--green); font-size:15px;">' + att.attended + '/' + att.enrolled + '</div>' +
+              '<div style="font-size:10px; color:var(--text-muted);">' + attRate + '% · score ' + Math.round(att.avgScore * 100) + '%</div>'
+            : '<div style="color:var(--text-muted); font-size:13px;">' + (att.enrolled > 0 ? '0/' + att.enrolled : '—') + '</div>';
           return '<tr style="' + (isMe ? 'background:#FEF3C7;' : '') + '">' +
             '<td style="font-size:18px; font-weight:700;">' + medal + '</td>' +
             '<td><strong>' + escapeHtml(m.displayName || '?') + '</strong>' + (isMe ? ' <span style="background:#F59E0B; color:#FFF; padding:1px 6px; border-radius:6px; font-size:10px; margin-left:6px;">YOU</span>' : '') + '<br><span style="font-size:11px; color:var(--text-muted);">' + escapeHtml(m.email || '') + '</span></td>' +
             '<td><strong style="font-size:18px; color:var(--primary);">' + (m.totalPoints || 0) + '</strong></td>' +
+            '<td>' + attHtml + '</td>' +
             '<td>' + (breakdown || '<span style="color:var(--text-muted);">—</span>') + '</td>' +
             '</tr>';
         }).join('') + '</tbody></table></div>'}
+
+      ${(() => {
+        // Trainer KPI section
+        const trainers = members.filter(m => m.trainerKPI && m.trainerKPI.totalSessions > 0)
+          .sort((a, b) => (b.trainerKPI.avgRating || 0) - (a.trainerKPI.avgRating || 0));
+        if (trainers.length === 0) return '';
+        return '<div style="margin-top:24px;"><h3 style="margin:0 0 10px 0;">👨‍🏫 Trainer KPI Rankings</h3>' +
+          '<p style="color:var(--text-muted); font-size:12px; margin:0 0 10px 0;">Bảng xếp hạng KPI của instructor — trung bình rating từ 8 tiêu chí best-practice.</p>' +
+          '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th style="width:60px;">Rank</th><th>Trainer</th><th style="width:120px;">Avg KPI</th><th style="width:90px;">Sessions</th><th style="width:100px;">Ratings</th><th style="width:100px;">Total Enrolls</th></tr></thead><tbody>' +
+          trainers.map((m, i) => {
+            const rank = i + 1;
+            const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '#' + rank;
+            const kpi = m.trainerKPI || {};
+            const isMe = me && m.uid === me.uid;
+            const kpiColor = kpi.avgRating >= 4.5 ? 'var(--green)' : kpi.avgRating >= 3.5 ? 'var(--primary)' : kpi.avgRating >= 2.5 ? 'var(--warning)' : 'var(--danger)';
+            return '<tr style="' + (isMe ? 'background:#FEF3C7;' : '') + '">' +
+              '<td style="font-size:18px; font-weight:700;">' + medal + '</td>' +
+              '<td><strong>' + escapeHtml(m.displayName || '?') + '</strong>' + (isMe ? ' <span style="background:#F59E0B; color:#FFF; padding:1px 6px; border-radius:6px; font-size:10px; margin-left:6px;">YOU</span>' : '') + '<br><span style="font-size:11px; color:var(--text-muted);">' + escapeHtml(m.email || '') + '</span></td>' +
+              '<td><strong style="font-size:18px; color:' + kpiColor + ';">⭐ ' + (kpi.avgRating || 0).toFixed(2) + '/5</strong></td>' +
+              '<td>' + (kpi.totalSessions || 0) + '</td>' +
+              '<td>' + (kpi.totalRatings || 0) + '</td>' +
+              '<td>' + (kpi.totalEnrollments || 0) + '</td>' +
+              '</tr>';
+          }).join('') + '</tbody></table></div></div>';
+      })()}
     `;
   } catch (e) { root.innerHTML = '<div style="background:var(--card); padding:20px; border-radius:8px; color:var(--danger);">⚠️ ' + escapeHtml(e.message) + '</div>'; }
 }
