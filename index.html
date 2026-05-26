@@ -1949,6 +1949,7 @@
       <button class="menu-item tab-btn" data-tab="gotchas"><span class="icon">⚠️</span><span>Gotchas</span></button>
       <button class="menu-item tab-btn" data-tab="workshop"><span class="icon">📋</span><span>Workshop</span></button>
       <button class="menu-item tab-btn" data-tab="retail"><span class="icon">🏪</span><span>Retail</span></button>
+      <button class="menu-item tab-btn" data-tab="manufacturing"><span class="icon">🏭</span><span>Manufacturing</span></button>
       <button class="menu-item tab-btn" data-tab="glossary"><span class="icon">📖</span><span>Thuật ngữ</span></button>
     </div>
   </div>
@@ -1985,6 +1986,7 @@
   <div id="gotchas" class="panel"></div>
   <div id="workshop" class="panel"></div>
   <div id="retail" class="panel"></div>
+  <div id="manufacturing" class="panel"></div>
   <div id="glossary" class="panel"></div>
   <div id="bookmarks" class="panel"></div>
   <div id="leaderboard" class="panel"></div>
@@ -2102,6 +2104,7 @@
 
 <script src="data/questions.js"></script>
 <script src="data/retail.js"></script>
+<script src="data/manufacturing.js"></script>
 <script>
 // ============ DATA ============
 // QUESTIONS data is loaded from data/questions.js (window.QUESTIONS), with inline fallback.
@@ -4159,8 +4162,10 @@ function renderStats() {
     "Nhóm 6 — Dạng câu hỏi nâng cao": ["U. Nâng cao — Dạng câu hỏi mới"],
     "Nhóm 7 — BC 2026 / Copilot / Fabric / Power Platform": ["V. Copilot & AI trong BC", "W. Microsoft Fabric & Analytics", "X. BC 2026 Release Updates", "Y. E-invoice VN 2026 & Localization", "Z. Power Platform & Integration", "AA. AL Extension & Modern Dev"],
     "Nhóm 8 — Retail Industry Practice": (() => {
-      // Dynamically collect all Z*. Retail sections present in QUESTIONS
       return [...new Set(QUESTIONS.filter(q => q.section && q.section.match(/^Z\d/) && q.section.includes('Retail')).map(q => q.section))].sort();
+    })(),
+    "Nhóm 9 — Manufacturing Industry Practice": (() => {
+      return [...new Set(QUESTIONS.filter(q => q.section && q.section.match(/^M\d+\./) && q.section.includes('Mfg')).map(q => q.section))].sort();
     })()
   };
 
@@ -4322,6 +4327,7 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
     if (tab === "mock") renderMockHome();
     if (tab === "glossary") renderGlossary();
     if (tab === "retail") renderRetail();
+    if (tab === "manufacturing") renderManufacturing();
   });
 });
 
@@ -4335,8 +4341,9 @@ async function initApp() {
     try { localStorage.setItem(THEME_KEY, state.theme); } catch(e) {}
     applyTheme(state.theme);
   }
-  // Merge Retail questions into QUESTIONS array (from data/retail.js)
+  // Merge Retail + Manufacturing questions into QUESTIONS array
   mergeRetailQuestions();
+  mergeManufacturingQuestions();
   // Load question overrides from Firestore (silently fail if no permission)
   try { await loadQuestionOverrides(); } catch (e) {}
   renderQuiz();
@@ -6442,27 +6449,34 @@ function renderGlossaryList() {
   `).join('');
 }
 
-// ============ RETAIL PRACTICE ============
-function mergeRetailQuestions() {
-  if (!window.RETAIL_DATA || !window.RETAIL_DATA.questions) return;
-  if (window._retailMerged) return;
+// ============ RETAIL + MANUFACTURING PRACTICE ============
+function mergeExternalQuestions(dataObj, mergedFlagKey) {
+  if (!dataObj || !dataObj.questions) return;
+  if (window[mergedFlagKey]) return;
   const existingIds = new Set(QUESTIONS.map(q => q.id));
-  window.RETAIL_DATA.questions.forEach(q => {
+  dataObj.questions.forEach(q => {
     if (!existingIds.has(q.id)) QUESTIONS.push(q);
   });
   QUESTIONS.sort((a, b) => a.id - b.id);
-  window._retailMerged = true;
+  window[mergedFlagKey] = true;
   _searchIndex = null;
   if (window._QUESTIONS_BASE) {
     const baseIds = new Set(window._QUESTIONS_BASE.map(q => q.id));
-    window.RETAIL_DATA.questions.forEach(q => {
+    dataObj.questions.forEach(q => {
       if (!baseIds.has(q.id)) window._QUESTIONS_BASE.push(q);
     });
     window._QUESTIONS_BASE.sort((a, b) => a.id - b.id);
   }
 }
 
-function chapterAnchorId(idx) { return 'retail-chapter-' + idx; }
+function mergeRetailQuestions() {
+  mergeExternalQuestions(window.RETAIL_DATA, '_retailMerged');
+}
+function mergeManufacturingQuestions() {
+  mergeExternalQuestions(window.MFG_DATA, '_mfgMerged');
+}
+
+function chapterAnchorId(prefix, idx) { return prefix + '-chapter-' + idx; }
 
 function renderRetail() {
   const panel = document.getElementById('retail');
@@ -6489,7 +6503,7 @@ function renderRetail() {
     </div>
 
     ${theory.map((ch, i) => `
-      <div class="retail-chapter" id="${chapterAnchorId(i)}">
+      <div class="retail-chapter" id="${chapterAnchorId('retail', i)}">
         <div class="retail-chapter-head" onclick="toggleRetailChapter(${i})">
           <span>${escapeHtml(ch.title)}</span>
           <span class="toggle-icon">▼</span>
@@ -6527,18 +6541,103 @@ function renderRetail() {
 }
 
 function toggleRetailChapter(idx) {
-  const el = document.getElementById(chapterAnchorId(idx));
+  const el = document.getElementById(chapterAnchorId('retail', idx));
   if (el) el.classList.toggle('open');
 }
 
 function scrollToRetailChapter(idx) {
-  const el = document.getElementById(chapterAnchorId(idx));
+  const el = document.getElementById(chapterAnchorId('retail', idx));
   if (!el) return;
   el.classList.add('open');
   el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function practiceRetailChapter(label) {
+  const match = QUESTIONS.find(q => q.section && q.section.startsWith(label));
+  if (!match) { alert('Không tìm thấy câu hỏi cho chương này.'); return; }
+  state.filter = match.section;
+  state.currentIdx = 0;
+  saveState();
+  document.querySelector('[data-tab="quiz"]').click();
+  renderQuiz();
+}
+
+// ============ Manufacturing Practice (same pattern as Retail) ============
+function renderManufacturing() {
+  const panel = document.getElementById('manufacturing');
+  const data = window.MFG_DATA;
+  if (!data || !data.theory) {
+    panel.innerHTML = '<div class="srs-empty">⚠️ Không tải được nội dung Manufacturing (data/manufacturing.js).</div>';
+    return;
+  }
+  const theory = data.theory;
+  const totalQuestions = (data.questions || []).length;
+
+  panel.innerHTML = `
+    <div class="retail-intro" style="background:linear-gradient(135deg, #0891B2 0%, #0E7490 100%);">
+      <h2>🏭 Manufacturing Industry Practice</h2>
+      <p>Bộ kiến thức Sản xuất công nghiệp — ${theory.length} chương: Business of Mfg, Planning (MPS/MRP), BOM/Routing, Quality, MES, Lean/TPS, Industry 4.0, BC Manufacturing. ${totalQuestions} câu hỏi luyện tập đi kèm.</p>
+    </div>
+
+    <div class="retail-toc">
+      <h3>📑 MỤC LỤC</h3>
+      <div class="retail-toc-list">
+        ${theory.map((ch, i) => '<a onclick="scrollToMfgChapter(' + i + ')">' + escapeHtml(ch.title) + '</a>').join('')}
+      </div>
+      <div style="margin-top:10px; font-size:12px; color:var(--text-muted);">💡 Click chương để mở/đóng. Cuối mỗi chương có nút "Bắt đầu luyện" để filter câu hỏi theo chương.</div>
+    </div>
+
+    ${theory.map((ch, i) => `
+      <div class="retail-chapter" id="${chapterAnchorId('mfg', i)}">
+        <div class="retail-chapter-head" onclick="toggleMfgChapter(${i})" style="background:linear-gradient(135deg, #0891B2 0%, #0E7490 100%);">
+          <span>${escapeHtml(ch.title)}</span>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="retail-chapter-body">
+          ${ch.sections.map(sec => `
+            <div class="retail-section">
+              <h4>${escapeHtml(sec.title)}</h4>
+              ${sec.paras.map(para => '<p>' + highlightGlossaryTerms(escapeHtml(para)) + '</p>').join('')}
+            </div>
+          `).join('')}
+          ${(() => {
+            const m = ch.title.match(/CHƯƠNG (\d+)/);
+            if (!m) return '';
+            const chNum = m[1];
+            const label = 'M' + chNum + '.';
+            const count = (data.questions || []).filter(q => q.section && q.section.startsWith(label)).length;
+            if (count === 0) return '';
+            return `
+              <div class="retail-cta" style="background:linear-gradient(135deg, #CFFAFE 0%, #A5F3FC 100%); border-left-color:#0891B2;">
+                <span style="flex:1; font-size:13px;">📝 Có <strong>${count} câu hỏi luyện tập</strong> cho chương này.</span>
+                <button onclick="practiceMfgChapter('${label}')" style="background:#0891B2;">Bắt đầu luyện ${count} câu →</button>
+              </div>
+            `;
+          })()}
+        </div>
+      </div>
+    `).join('')}
+
+    <div style="background:var(--blue-bg); border-radius:8px; padding:14px; margin-top:14px; font-size:13px;">
+      <strong>💡 Mẹo học hiệu quả:</strong><br>
+      1️⃣ Đọc lý thuyết chương → 2️⃣ Click "Bắt đầu luyện" → 3️⃣ Sai đáp án, hệ thống KHÔNG tự hiện đáp án — bạn có cơ hội thử lại → 4️⃣ Sau ≥2 lần sai, có nút "Tôi xin chịu thua".
+    </div>
+  `;
+}
+
+function toggleMfgChapter(idx) {
+  const el = document.getElementById(chapterAnchorId('mfg', idx));
+  if (el) el.classList.toggle('open');
+}
+
+function scrollToMfgChapter(idx) {
+  const el = document.getElementById(chapterAnchorId('mfg', idx));
+  if (!el) return;
+  el.classList.add('open');
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function practiceMfgChapter(label) {
   const match = QUESTIONS.find(q => q.section && q.section.startsWith(label));
   if (!match) { alert('Không tìm thấy câu hỏi cho chương này.'); return; }
   state.filter = match.section;
