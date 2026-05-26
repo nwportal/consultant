@@ -2002,6 +2002,21 @@
     background: rgba(0,0,0,0.2); padding: 1px 6px; border-radius: 4px;
     font-size: 11px; margin-left: 4px;
   }
+  .app-version-badge {
+    position: absolute; top: 56px; left: 16px;
+    background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.95); padding: 4px 10px; border-radius: 12px;
+    font-size: 11px; font-family: 'SF Mono', Consolas, monospace;
+    display: flex; align-items: center; gap: 6px; cursor: pointer;
+    transition: all 0.15s; user-select: none;
+  }
+  .app-version-badge:hover { background: rgba(0,0,0,0.5); border-color: rgba(255,255,255,0.4); }
+  .app-version-badge .v-label { opacity: 0.7; font-size: 10px; }
+  .app-version-badge .v-num { font-weight: 700; letter-spacing: 0.3px; }
+  .app-version-badge .v-sw { opacity: 0.6; font-size: 10px; }
+  @media (max-width: 640px) {
+    .app-version-badge { top: 50px; padding: 3px 8px; font-size: 10px; }
+  }
   .search-modal {
     position: fixed; inset: 0; background: rgba(0,0,0,0.5);
     display: none; align-items: flex-start; justify-content: center; z-index: 999;
@@ -2220,6 +2235,11 @@
   <button class="search-trigger" onclick="openSearch()" id="search-trigger-btn" style="display:none;" title="Tìm kiếm (phím tắt: /)">
     🔍 <span class="search-label">Tìm kiếm</span> <span class="kbd">/</span>
   </button>
+  <div class="app-version-badge" id="app-version-badge" onclick="showVersionDetails()" title="Click để xem chi tiết version">
+    <span class="v-label">build</span>
+    <span class="v-num" id="v-num">v—</span>
+    <span class="v-sw" id="v-sw"></span>
+  </div>
   <h1>📘 HỌC VIỆN ERP CONSULTING</h1>
   <p>Giải pháp Dynamics và Hệ sinh thái Microsoft</p>
   <div id="user-menu" class="user-menu" style="display:none;">
@@ -4941,6 +4961,7 @@ function setupMenuDropdowns() {
 }
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', setupMenuDropdowns);
+  document.addEventListener('DOMContentLoaded', initVersionBadge);
 } else {
   setupMenuDropdowns();
 }
@@ -5000,6 +5021,98 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
     if (tab === "cert") renderCertExam();
   });
 });
+
+// ============ APP VERSION (kiểm soát thay đổi) ============
+const APP_VERSION = {
+  num: 'v2.6.1',
+  date: '2026-05-26',
+  notes: [
+    'Thêm Version Badge ở góc trái — hover thấy chi tiết, Force reload xoá cache',
+    'Rebalanced 309 câu hỏi — đáp án sai đã dài tương đương đáp án đúng',
+    'Cases gom 1 tab + Q&A check tự động cho 14 cases',
+    'Admin menu tách 6 mục riêng + Reset User Progress button',
+    'Import/Export câu hỏi theo 13 module (JSON+CSV)',
+    'Kế toán 2 cấp 24 chương + 72 câu multi-choice (TT 30/2025, NĐ 70/2025)',
+    'Principal milestone buttons hiển thị rõ ràng theo loại'
+  ]
+};
+
+function initVersionBadge() {
+  const vNum = document.getElementById('v-num');
+  const vSw = document.getElementById('v-sw');
+  if (vNum) vNum.textContent = APP_VERSION.num;
+  if (vSw && 'serviceWorker' in navigator) {
+    fetch('service-worker.js?v=' + Date.now()).then(r => r.text()).then(t => {
+      const m = t.match(/CACHE_VERSION\s*=\s*['"]([^'"]+)['"]/);
+      if (m && vSw) vSw.textContent = '· sw:' + m[1].replace('erp-pwa-', '');
+    }).catch(() => {});
+  }
+}
+
+function showVersionDetails() {
+  let modal = document.getElementById('version-detail-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'version-detail-modal';
+    modal.className = 'qed-modal';
+    modal.innerHTML = '<div class="qed-box" style="max-width:560px;"><button class="qed-close" onclick="document.getElementById(\'version-detail-modal\').classList.remove(\'show\')">×</button><h3>📦 Build Version</h3><div id="version-detail-body"></div></div>';
+    document.body.appendChild(modal);
+  }
+  const body = document.getElementById('version-detail-body');
+  body.innerHTML = `
+    <div style="background:linear-gradient(135deg, var(--primary) 0%, #1F3864 100%); color:#FFF; padding:14px 18px; border-radius:8px; margin-bottom:12px;">
+      <div style="font-size:11px; opacity:0.85;">APP BUILD</div>
+      <div style="font-size:28px; font-weight:700; font-family:'SF Mono', Consolas, monospace; letter-spacing:0.5px;">${APP_VERSION.num}</div>
+      <div style="font-size:12px; opacity:0.85; margin-top:4px;">📅 ${APP_VERSION.date}</div>
+    </div>
+    <div style="background:var(--card); padding:10px 14px; border-radius:6px; font-size:12px; margin-bottom:12px; border:1px solid var(--border);">
+      <div style="color:var(--text-muted); margin-bottom:4px;">SERVICE WORKER CACHE</div>
+      <div id="version-sw-detail" style="font-family:monospace; color:var(--primary);">đang kiểm tra...</div>
+    </div>
+    <div style="margin-bottom:12px;">
+      <div style="font-weight:600; margin-bottom:8px; font-size:13px;">📝 Thay đổi trong build này:</div>
+      <ul style="margin:0; padding-left:18px; font-size:13px; line-height:1.7;">
+        ${APP_VERSION.notes.map(n => '<li>' + escapeHtml(n) + '</li>').join('')}
+      </ul>
+    </div>
+    <div style="display:flex; gap:8px; justify-content:space-between; align-items:center;">
+      <button onclick="forceReloadApp()" style="padding:8px 14px; background:#DC2626; color:#FFF; border:none; border-radius:6px; cursor:pointer; font-size:12px;" title="Bỏ qua mọi cache + reload">🔄 Force reload (clear cache)</button>
+      <button onclick="document.getElementById('version-detail-modal').classList.remove('show')" style="padding:8px 18px; background:var(--primary); color:#FFF; border:none; border-radius:6px; cursor:pointer;">Đóng</button>
+    </div>
+  `;
+  modal.classList.add('show');
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistration().then(reg => {
+      const detail = document.getElementById('version-sw-detail');
+      if (!detail) return;
+      if (!reg) { detail.textContent = 'Chưa đăng ký (offline mode tắt)'; return; }
+      fetch('service-worker.js?v=' + Date.now()).then(r => r.text()).then(t => {
+        const m = t.match(/CACHE_VERSION\s*=\s*['"]([^'"]+)['"]/);
+        if (m) detail.textContent = m[1] + (reg.active ? ' (active)' : ' (đang cập nhật...)');
+        else detail.textContent = 'unknown';
+      }).catch(() => { detail.textContent = 'không đọc được'; });
+    });
+  } else {
+    const detail = document.getElementById('version-sw-detail');
+    if (detail) detail.textContent = 'Trình duyệt không hỗ trợ';
+  }
+}
+
+async function forceReloadApp() {
+  if (!confirm('Sẽ xoá toàn bộ cache app và reload. Tiếp tục?')) return;
+  try {
+    if ('serviceWorker' in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map(r => r.unregister()));
+    }
+    if ('caches' in window) {
+      const names = await caches.keys();
+      await Promise.all(names.map(n => caches.delete(n)));
+    }
+  } catch (e) { console.warn('Cache clear partial:', e); }
+  window.location.reload();
+}
 
 // ============ AUTH STATE & UI ============
 const ADMIN_EMAIL = "notabin@gmail.com";
