@@ -1378,6 +1378,218 @@
     background: linear-gradient(90deg, #5B8DEF 0%, #93C5FD 100%);
   }
 
+  /* ============ ARTICLES / BLOG ============ */
+  .art-toolbar {
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px; margin-bottom: 14px;
+  }
+  .art-toolbar input[type="search"] {
+    flex: 1; min-width: 200px; padding: 8px 12px;
+    border: 1px solid var(--border); border-radius: 6px;
+    background: var(--bg); color: var(--text); font-size: 13px;
+  }
+  .art-toolbar select { padding: 8px 10px; border-radius: 6px; font-size: 13px; }
+  .art-new-btn {
+    padding: 8px 16px; background: var(--primary); color: #FFF;
+    border: none; border-radius: 6px; font-weight: 700; cursor: pointer;
+    font-size: 13px; transition: background 0.15s;
+  }
+  .art-new-btn:hover { background: var(--primary-light); }
+
+  .art-tag-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .art-tag-chip {
+    padding: 4px 12px; border: 1px solid var(--border); background: var(--card);
+    color: var(--text); border-radius: 14px; font-size: 12px; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .art-tag-chip:hover { border-color: var(--primary); }
+  .art-tag-chip.active { background: var(--primary); color: #FFF; border-color: var(--primary); }
+
+  .art-list { display: grid; gap: 12px; }
+  .art-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px; transition: all 0.15s; cursor: pointer;
+    position: relative;
+  }
+  .art-card:hover { border-color: var(--primary); box-shadow: 0 4px 14px var(--shadow); transform: translateY(-1px); }
+  .art-card.featured { border-left: 4px solid #F59E0B; }
+  .art-card.hidden { opacity: 0.5; }
+  .art-card .art-featured-badge {
+    position: absolute; top: 12px; right: 12px;
+    background: #F59E0B; color: #FFF; font-size: 10px; font-weight: 800;
+    padding: 3px 8px; border-radius: 10px; letter-spacing: 0.5px;
+  }
+  .art-card h3 {
+    margin: 0 0 6px 0; font-size: 17px; color: var(--text); font-weight: 700;
+    line-height: 1.35;
+  }
+  .art-card .art-summary { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin: 0 0 10px 0; }
+  .art-card .art-meta {
+    display: flex; flex-wrap: wrap; gap: 12px; font-size: 12px;
+    color: var(--text-muted); align-items: center;
+  }
+  .art-card .art-meta strong { color: var(--text); }
+  .art-card .art-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .art-card .art-tag {
+    padding: 2px 8px; background: rgba(46,92,158,0.10);
+    color: var(--primary); border-radius: 8px; font-size: 11px; font-weight: 600;
+  }
+
+  /* Article Detail */
+  .art-detail-back {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: none; border: none; color: var(--primary); font-weight: 600;
+    cursor: pointer; padding: 6px 0; font-size: 14px; margin-bottom: 10px;
+  }
+  .art-detail {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 28px; margin-bottom: 14px;
+  }
+  .art-detail h1 {
+    margin: 0 0 10px 0; font-size: 28px; color: var(--text); line-height: 1.3;
+  }
+  .art-detail .art-detail-meta {
+    display: flex; flex-wrap: wrap; gap: 14px; align-items: center;
+    padding-bottom: 14px; margin-bottom: 18px;
+    border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-muted);
+  }
+  .art-detail .art-detail-meta strong { color: var(--text); }
+  .art-detail .art-body {
+    font-size: 15px; line-height: 1.75; color: var(--text);
+  }
+  .art-detail .art-body h2 { font-size: 22px; margin: 24px 0 10px 0; color: var(--primary); }
+  .art-detail .art-body h3 { font-size: 18px; margin: 18px 0 8px 0; color: var(--text); }
+  .art-detail .art-body p { margin: 0 0 12px 0; }
+  .art-detail .art-body ul, .art-detail .art-body ol { margin: 0 0 12px 24px; }
+  .art-detail .art-body li { margin-bottom: 4px; }
+  .art-detail .art-body code {
+    background: rgba(46,92,158,0.12); padding: 2px 6px; border-radius: 4px;
+    font-family: 'SF Mono', Consolas, monospace; font-size: 13px;
+  }
+  .art-detail .art-body pre {
+    background: rgba(0,0,0,0.06); padding: 12px 16px; border-radius: 8px;
+    overflow-x: auto; margin: 12px 0;
+  }
+  .art-detail .art-body pre code { background: none; padding: 0; }
+  .art-detail .art-body blockquote {
+    border-left: 4px solid var(--primary); padding: 6px 14px;
+    margin: 12px 0; background: rgba(46,92,158,0.06); color: var(--text-muted);
+    font-style: italic;
+  }
+  .art-detail .art-body a { color: var(--primary); text-decoration: underline; }
+  .art-detail .art-body img { max-width: 100%; border-radius: 6px; margin: 8px 0; }
+  .art-detail .art-body table { border-collapse: collapse; margin: 12px 0; width: 100%; }
+  .art-detail .art-body th, .art-detail .art-body td {
+    border: 1px solid var(--border); padding: 6px 10px; font-size: 13px;
+  }
+  .art-detail .art-body th { background: rgba(46,92,158,0.10); font-weight: 700; }
+
+  .art-actions {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    padding: 14px; background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; margin-bottom: 14px;
+  }
+  .art-upvote-btn {
+    padding: 8px 14px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;
+    color: var(--text); transition: all 0.15s;
+  }
+  .art-upvote-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .art-upvote-btn.voted { background: var(--primary); color: #FFF; border-color: var(--primary); }
+
+  /* Editor (3 tabs) */
+  .art-editor { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 22px; margin-bottom: 14px; }
+  .art-editor h2 { margin: 0 0 14px 0; color: var(--primary); font-size: 20px; }
+  .art-editor label { display: block; font-weight: 700; font-size: 13px; margin-bottom: 6px; color: var(--text); }
+  .art-editor input[type="text"], .art-editor textarea, .art-editor select {
+    width: 100%; padding: 9px 12px; border: 1px solid var(--border);
+    border-radius: 6px; background: var(--bg); color: var(--text);
+    font-size: 14px; margin-bottom: 12px; font-family: inherit;
+  }
+  .art-editor textarea { resize: vertical; min-height: 80px; }
+  .art-editor .art-editor-tabs {
+    display: flex; gap: 4px; border-bottom: 2px solid var(--border); margin-bottom: 0;
+  }
+  .art-editor .art-editor-tab {
+    padding: 10px 18px; border: none; background: none; cursor: pointer;
+    font-weight: 600; font-size: 13px; color: var(--text-muted);
+    border-bottom: 2px solid transparent; margin-bottom: -2px;
+    transition: all 0.15s;
+  }
+  .art-editor .art-editor-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+  .art-editor .art-editor-body { padding: 14px 0; }
+  .art-editor textarea.art-md-input {
+    min-height: 360px; font-family: 'SF Mono', Consolas, monospace; font-size: 13.5px;
+    line-height: 1.65;
+  }
+  .art-editor .art-preview {
+    min-height: 360px; padding: 14px; border: 1px solid var(--border);
+    border-radius: 6px; background: var(--bg);
+  }
+  .art-editor .art-visual-toolbar {
+    display: flex; flex-wrap: wrap; gap: 4px; padding: 6px;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 6px 6px 0 0;
+    border-bottom: none;
+  }
+  .art-editor .art-visual-toolbar button {
+    padding: 6px 10px; background: var(--card); border: 1px solid var(--border);
+    border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600;
+    color: var(--text); min-width: 32px;
+  }
+  .art-editor .art-visual-toolbar button:hover { background: var(--sidebar-hover); border-color: var(--primary); }
+  .art-editor .art-visual-area {
+    min-height: 360px; padding: 14px; border: 1px solid var(--border);
+    border-radius: 0 0 6px 6px; background: var(--bg); outline: none;
+    font-size: 15px; line-height: 1.7; color: var(--text);
+  }
+  .art-editor .art-editor-actions {
+    display: flex; gap: 10px; margin-top: 14px; padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .art-tag-input {
+    display: flex; flex-wrap: wrap; gap: 6px; padding: 8px;
+    border: 1px solid var(--border); border-radius: 6px;
+    background: var(--bg); min-height: 40px; margin-bottom: 12px;
+  }
+  .art-tag-input .art-tag-pill {
+    background: var(--primary); color: #FFF; padding: 3px 10px;
+    border-radius: 12px; font-size: 12px; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .art-tag-input .art-tag-pill .x { cursor: pointer; opacity: 0.7; }
+  .art-tag-input input {
+    border: none; outline: none; background: none; flex: 1; min-width: 100px;
+    padding: 4px; font-size: 13px; color: var(--text);
+  }
+
+  /* Comments (reuse forum_replies styling) */
+  .art-comments {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px; margin-bottom: 14px;
+  }
+  .art-comment {
+    padding: 12px; background: var(--bg); border-radius: 8px; margin-bottom: 10px;
+    border: 1px solid var(--border);
+  }
+  .art-comment-meta { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+  .art-comment-body { font-size: 13.5px; line-height: 1.6; color: var(--text); }
+
+  /* Top Authors leaderboard */
+  .art-authors-strip {
+    background: linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(245,158,11,0.02) 100%);
+    border: 1px solid rgba(245,158,11,0.30);
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 14px;
+  }
+  .art-authors-strip .ata-title { font-weight: 800; color: #B45309; font-size: 13px; margin-bottom: 8px; }
+  body[data-theme="dark"] .art-authors-strip .ata-title { color: #FCD34D; }
+  .art-authors-strip .ata-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .art-authors-strip .ata-item {
+    background: var(--card); padding: 4px 10px; border-radius: 8px;
+    font-size: 12px; border: 1px solid var(--border);
+  }
+  .art-authors-strip .ata-item strong { color: var(--primary); }
+
   .level-hero {
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
     color: white; border-radius: 14px; padding: 24px; margin-bottom: 16px;
@@ -2528,6 +2740,7 @@
     <button class="menu-trigger" data-group="community"><span class="label-icon">🌐</span><span class="label-text">Cộng đồng</span> <span class="chev">▼</span></button>
     <div class="menu-dropdown">
       <button class="menu-item tab-btn" data-tab="community" data-community-subtab="forum"><span class="icon">💬</span><span>Forum Q&amp;A</span></button>
+      <button class="menu-item tab-btn" data-tab="community" data-community-subtab="articles"><span class="icon">📰</span><span>Bài viết &amp; Kiến thức</span></button>
       <button class="menu-item tab-btn" data-tab="community" data-community-subtab="cases"><span class="icon">📝</span><span>Case Library</span></button>
       <button class="menu-item tab-btn" data-tab="community" data-community-subtab="resources"><span class="icon">📦</span><span>Resources</span></button>
       <button class="menu-item tab-btn" data-tab="community" data-community-subtab="training"><span class="icon">🎓</span><span>Training Sessions</span></button>
@@ -5263,9 +5476,15 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
 
 // ============ APP VERSION (kiểm soát thay đổi) ============
 const APP_VERSION = {
-  num: 'v3.6.2',
+  num: 'v3.7.0',
   date: '2026-05-27',
   notes: [
+    '📰 MỚI: Tab "Bài viết & Kiến thức" trong Cộng đồng — user contribute blog post + tóm tắt kiến thức',
+    '📰 Editor 3-tab: Markdown / Preview / Visual WYSIWYG (toolbar Bold/Italic/H2/H3/List/Quote/Link/Image/Code)',
+    '📰 14 tags chuyên ngành (Tutorial, Best Practice, Sales/Finance/Inventory/Production/Retail/Localization...)',
+    '📰 Upvote · Comment threaded · Featured pin (admin) · Hide/Show (admin) · Top tác giả leaderboard',
+    '📰 Auto-publish + admin moderate sau (ẩn / xóa / featured)',
+    '📰 Award điểm: viết bài +10đ · mỗi upvote nhận +2đ · bình luận +1đ — tích hợp Member Points',
     '🔐 FIX: User được cấp admin động giờ thực sự nhìn thấy menu admin sau khi refresh (trước đây check isAdmin chạy trước khi load state.role từ Firestore → fail)',
     '🔐 Hiển thị badge phân biệt "Super-Admin" vs "Admin" ở header user',
     '🌙 MỚI: Dark mode = mặc định cho user mới (vẫn đổi được sang Light/Auto trong Settings)',
@@ -12199,7 +12418,8 @@ const COMMUNITY_CATEGORIES = [
 
 const POINTS_RULES = {
   forum_question: 2, forum_reply: 1, upvote_received: 3, answer_accepted: 10,
-  case_post: 5, training_attend: 5, training_rate: 1, training_teach: 20
+  case_post: 5, training_attend: 5, training_rate: 1, training_teach: 20,
+  article_post: 10, article_upvote_received: 2, article_comment: 1
 };
 
 const POINTS_COLLECTION = 'member_points';
@@ -12207,6 +12427,7 @@ const FORUM_TOPICS_COLLECTION = 'forum_topics';
 const FORUM_REPLIES_COLLECTION = 'forum_replies';
 const COMMUNITY_CASES_COLLECTION = 'community_cases';
 const COMMUNITY_RESOURCES_COLLECTION = 'community_resources';
+const COMMUNITY_ARTICLES_COLLECTION = 'community_articles';
 const TRAINING_COURSES_COLLECTION = 'training_courses';
 const TRAINING_ENROLLMENTS_COLLECTION = 'training_enrollments';
 
@@ -12238,6 +12459,7 @@ function renderCommunity() {
     </div>
     <div class="admin-subtabs" style="margin-bottom:14px;">
       <button class="admin-subtab ${subtab === 'forum' ? 'active' : ''}" onclick="setCommunitySubtab('forum')">💬 Forum Q&A</button>
+      <button class="admin-subtab ${subtab === 'articles' ? 'active' : ''}" onclick="setCommunitySubtab('articles')">📰 Bài viết</button>
       <button class="admin-subtab ${subtab === 'cases' ? 'active' : ''}" onclick="setCommunitySubtab('cases')">📝 Case Library</button>
       <button class="admin-subtab ${subtab === 'resources' ? 'active' : ''}" onclick="setCommunitySubtab('resources')">📦 Resources</button>
       <button class="admin-subtab ${subtab === 'training' ? 'active' : ''}" onclick="setCommunitySubtab('training')">🎓 Training Sessions</button>
@@ -12246,6 +12468,7 @@ function renderCommunity() {
     <div id="community-content">⏳ Đang tải...</div>
   `;
   if (subtab === 'forum') renderForum();
+  else if (subtab === 'articles') renderArticles();
   else if (subtab === 'cases') renderCaseLibrary();
   else if (subtab === 'resources') renderResources();
   else if (subtab === 'training') renderTraining();
@@ -14304,6 +14527,538 @@ async function deleteCourse(courseId) {
     await window.fb.deleteDoc(window.fb.doc(window.fb.db, TRAINING_COURSES_COLLECTION, courseId));
     renderTraining();
   } catch (e) { alert('Lỗi: ' + e.message); }
+}
+
+// ============ ARTICLES / BLOG ============
+const ARTICLE_TAGS = [
+  { key: 'tutorial', label: 'Tutorial' },
+  { key: 'best-practice', label: 'Best Practice' },
+  { key: 'sales', label: 'Sales / CRM' },
+  { key: 'purchase', label: 'Purchase' },
+  { key: 'inventory', label: 'Inventory / WMS' },
+  { key: 'finance', label: 'Finance / GL' },
+  { key: 'production', label: 'Production / MRP' },
+  { key: 'retail', label: 'Retail / POS' },
+  { key: 'manufacturing', label: 'Manufacturing' },
+  { key: 'localization', label: 'VN Localization' },
+  { key: 'integration', label: 'Integration / API' },
+  { key: 'opinion', label: 'Opinion / Insight' },
+  { key: 'tip', label: 'Tip / Hack' },
+  { key: 'review', label: 'Review / So sánh' }
+];
+
+let _articlesFilter = { tag: '', search: '', sort: 'newest', showHidden: false };
+let _currentArticleId = null;
+let _articleEditorTab = 'markdown';
+
+function mdToHtml(md) {
+  if (!md) return '';
+  let html = md.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  html = html.replace(/```([\s\S]*?)```/g, (m, code) => '<pre><code>' + code.trim() + '</code></pre>');
+  html = html.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+  html = html.replace(/^###### (.*)$/gm, '<h6>$1</h6>');
+  html = html.replace(/^##### (.*)$/gm, '<h5>$1</h5>');
+  html = html.replace(/^#### (.*)$/gm, '<h4>$1</h4>');
+  html = html.replace(/^### (.*)$/gm, '<h3>$1</h3>');
+  html = html.replace(/^## (.*)$/gm, '<h2>$1</h2>');
+  html = html.replace(/^# (.*)$/gm, '<h1>$1</h1>');
+  html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/__([^_]+)__/g, '<strong>$1</strong>');
+  html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+  html = html.replace(/_([^_]+)_/g, '<em>$1</em>');
+  html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (m, alt, url) => {
+    const safe = /^(https?:|\/)/i.test(url) ? url : '';
+    return safe ? '<img src="' + safe + '" alt="' + alt + '"/>' : '';
+  });
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (m, txt, url) => {
+    const safe = /^(https?:|mailto:|\/|#)/i.test(url) ? url : '#';
+    return '<a href="' + safe + '" target="_blank" rel="noopener">' + txt + '</a>';
+  });
+  html = html.replace(/^> (.*)$/gm, '<blockquote>$1</blockquote>');
+  html = html.replace(/(^|\n)([-*] .+(?:\n[-*] .+)*)/g, (m, pre, lst) => {
+    const items = lst.split('\n').map(l => l.replace(/^[-*] /, '<li>') + '</li>').join('');
+    return pre + '<ul>' + items + '</ul>';
+  });
+  html = html.replace(/(^|\n)(\d+\. .+(?:\n\d+\. .+)*)/g, (m, pre, lst) => {
+    const items = lst.split('\n').map(l => l.replace(/^\d+\. /, '<li>') + '</li>').join('');
+    return pre + '<ol>' + items + '</ol>';
+  });
+  html = html.replace(/^---+$/gm, '<hr/>');
+  html = html.split(/\n{2,}/).map(blk => {
+    const trimmed = blk.trim();
+    if (!trimmed) return '';
+    if (/^<(h[1-6]|ul|ol|pre|blockquote|hr|table|img|p)/i.test(trimmed)) return trimmed;
+    return '<p>' + trimmed.replace(/\n/g, '<br/>') + '</p>';
+  }).join('\n');
+  return html;
+}
+
+async function renderArticles() {
+  const root = document.getElementById('community-content');
+  if (!root) return;
+  if (_currentArticleId) { renderArticleDetail(_currentArticleId); return; }
+  root.innerHTML = '<div style="padding:30px; text-align:center; color:var(--text-muted);">⏳ Đang tải bài viết...</div>';
+  try {
+    const snap = await window.fb.getDocs(window.fb.collection(window.fb.db, COMMUNITY_ARTICLES_COLLECTION));
+    const articles = [];
+    snap.forEach(d => articles.push({ id: d.id, ...d.data() }));
+    window._articles = articles;
+    renderArticlesList();
+  } catch (e) {
+    root.innerHTML = '<div style="background:var(--card); padding:20px; border-radius:8px; color:var(--danger);">⚠️ Không tải được Bài viết: ' + escapeHtml(e.message) + '<br><br>Cần Firestore rule cho <code>community_articles</code>.</div>';
+  }
+}
+
+function renderArticlesList() {
+  const root = document.getElementById('community-content');
+  if (!root) return;
+  const all = (window._articles || []).slice();
+  const me = getCurrentUserInfo();
+  const isAdminUser = me && isAdmin(me.email);
+
+  let list = all.filter(a => (a.status !== 'hidden') || (isAdminUser && _articlesFilter.showHidden));
+  if (_articlesFilter.tag) list = list.filter(a => (a.tags || []).includes(_articlesFilter.tag));
+  if (_articlesFilter.search) {
+    const s = _articlesFilter.search.toLowerCase();
+    list = list.filter(a =>
+      (a.title || '').toLowerCase().includes(s) ||
+      (a.summary || '').toLowerCase().includes(s) ||
+      (a.body || '').toLowerCase().includes(s)
+    );
+  }
+  if (_articlesFilter.sort === 'newest') {
+    list.sort((a, b) => (b.createdAt && b.createdAt.toMillis ? b.createdAt.toMillis() : 0) - (a.createdAt && a.createdAt.toMillis ? a.createdAt.toMillis() : 0));
+  } else if (_articlesFilter.sort === 'hot') {
+    list.sort((a, b) => (b.upvoteCount || 0) - (a.upvoteCount || 0));
+  } else if (_articlesFilter.sort === 'views') {
+    list.sort((a, b) => (b.viewCount || 0) - (a.viewCount || 0));
+  }
+  list.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+
+  const authorMap = {};
+  all.filter(a => a.status !== 'hidden').forEach(a => {
+    const k = a.authorUid || 'anon';
+    if (!authorMap[k]) authorMap[k] = { name: a.authorName || 'Ẩn danh', count: 0, votes: 0 };
+    authorMap[k].count += 1;
+    authorMap[k].votes += (a.upvoteCount || 0);
+  });
+  const topAuthors = Object.values(authorMap).sort((a, b) => (b.count * 5 + b.votes) - (a.count * 5 + a.votes)).slice(0, 5);
+
+  root.innerHTML =
+    (topAuthors.length ? '<div class="art-authors-strip">' +
+      '<div class="ata-title">🏆 Top tác giả đóng góp</div>' +
+      '<div class="ata-list">' +
+        topAuthors.map((a, i) => '<div class="ata-item">' + ['🥇','🥈','🥉','4️⃣','5️⃣'][i] + ' <strong>' + escapeHtml(a.name) + '</strong> · ' + a.count + ' bài · ' + a.votes + ' upvote</div>').join('') +
+      '</div></div>' : '') +
+    '<div class="art-toolbar">' +
+      '<input type="search" placeholder="🔍 Tìm theo tiêu đề, nội dung..." value="' + escapeHtml(_articlesFilter.search) + '" oninput="_articlesFilter.search=this.value; renderArticlesList()"/>' +
+      '<select onchange="_articlesFilter.sort=this.value; renderArticlesList()">' +
+        '<option value="newest"' + (_articlesFilter.sort === 'newest' ? ' selected' : '') + '>📅 Mới nhất</option>' +
+        '<option value="hot"' + (_articlesFilter.sort === 'hot' ? ' selected' : '') + '>🔥 Nhiều upvote</option>' +
+        '<option value="views"' + (_articlesFilter.sort === 'views' ? ' selected' : '') + '>👁️ Nhiều xem</option>' +
+      '</select>' +
+      (isAdminUser ? '<label style="font-size:12px; color:var(--text-muted); display:inline-flex; align-items:center; gap:4px;"><input type="checkbox"' + (_articlesFilter.showHidden ? ' checked' : '') + ' onchange="_articlesFilter.showHidden=this.checked; renderArticlesList()"/> Hiện bài ẩn</label>' : '') +
+      (me ? '<button class="art-new-btn" onclick="openArticleEditor()">✍️ Viết bài mới</button>' : '') +
+    '</div>' +
+    '<div class="art-tag-chips">' +
+      '<button class="art-tag-chip ' + (!_articlesFilter.tag ? 'active' : '') + '" onclick="_articlesFilter.tag=\'\'; renderArticlesList()">Tất cả</button>' +
+      ARTICLE_TAGS.map(t => '<button class="art-tag-chip ' + (_articlesFilter.tag === t.key ? 'active' : '') + '" onclick="_articlesFilter.tag=\'' + t.key + '\'; renderArticlesList()">' + escapeHtml(t.label) + '</button>').join('') +
+    '</div>' +
+    (list.length === 0
+      ? '<div style="text-align:center; padding:40px; color:var(--text-muted); background:var(--card); border-radius:10px;"><div style="font-size:48px; margin-bottom:10px;">📰</div>Chưa có bài viết nào.' + (me ? '<br><button class="art-new-btn" style="margin-top:14px;" onclick="openArticleEditor()">✍️ Viết bài đầu tiên</button>' : '') + '</div>'
+      : '<div class="art-list">' + list.map(a => renderArticleCard(a, isAdminUser)).join('') + '</div>');
+}
+
+function renderArticleCard(a, isAdminUser) {
+  const tagsHtml = (a.tags || []).slice(0, 4).map(t => {
+    const tagDef = ARTICLE_TAGS.find(x => x.key === t);
+    return '<span class="art-tag">' + escapeHtml(tagDef ? tagDef.label : t) + '</span>';
+  }).join('');
+  const date = a.createdAt && a.createdAt.toMillis ? new Date(a.createdAt.toMillis()).toLocaleDateString('vi-VN') : '';
+  return '<div class="art-card ' + (a.featured ? 'featured ' : '') + (a.status === 'hidden' ? 'hidden' : '') + '" onclick="openArticleDetail(\'' + a.id + '\')">' +
+    (a.featured ? '<div class="art-featured-badge">⭐ FEATURED</div>' : '') +
+    '<h3>' + escapeHtml(a.title || '(không tiêu đề)') + (a.status === 'hidden' ? ' <span style="font-size:11px; color:var(--danger);">[ẨN]</span>' : '') + '</h3>' +
+    (a.summary ? '<p class="art-summary">' + escapeHtml(a.summary) + '</p>' : '') +
+    '<div class="art-meta">' +
+      '<span>✍️ <strong>' + escapeHtml(a.authorName || 'Ẩn danh') + '</strong></span>' +
+      (date ? '<span>📅 ' + date + '</span>' : '') +
+      '<span>👍 ' + (a.upvoteCount || 0) + '</span>' +
+      '<span>👁️ ' + (a.viewCount || 0) + '</span>' +
+      '<span>💬 ' + (a.commentCount || 0) + '</span>' +
+      (tagsHtml ? '<span class="art-tags">' + tagsHtml + '</span>' : '') +
+    '</div>' +
+  '</div>';
+}
+
+async function openArticleDetail(id) {
+  _currentArticleId = id;
+  try {
+    const ref = window.fb.doc(window.fb.db, COMMUNITY_ARTICLES_COLLECTION, id);
+    await window.fb.updateDoc(ref, { viewCount: window.fb.increment(1) });
+  } catch (e) {}
+  renderArticleDetail(id);
+}
+
+async function renderArticleDetail(id) {
+  const root = document.getElementById('community-content');
+  if (!root) return;
+  root.innerHTML = '<div style="padding:30px; text-align:center; color:var(--text-muted);">⏳ Đang tải bài viết...</div>';
+  try {
+    const ref = window.fb.doc(window.fb.db, COMMUNITY_ARTICLES_COLLECTION, id);
+    const snap = await window.fb.getDoc(ref);
+    if (!snap.exists()) {
+      root.innerHTML = '<div class="art-detail">Bài viết không tồn tại. <button class="art-detail-back" onclick="closeArticleDetail()">← Quay lại</button></div>';
+      return;
+    }
+    const a = { id: snap.id, ...snap.data() };
+    const me = getCurrentUserInfo();
+    const isAdminUser = me && isAdmin(me.email);
+    const isAuthor = me && a.authorUid === me.uid;
+    const hasVoted = me && (a.upvotedBy || []).includes(me.uid);
+    const date = a.createdAt && a.createdAt.toMillis ? new Date(a.createdAt.toMillis()).toLocaleString('vi-VN') : '';
+    const tagsHtml = (a.tags || []).map(t => {
+      const tagDef = ARTICLE_TAGS.find(x => x.key === t);
+      return '<span class="art-tag">' + escapeHtml(tagDef ? tagDef.label : t) + '</span>';
+    }).join('');
+
+    root.innerHTML =
+      '<button class="art-detail-back" onclick="closeArticleDetail()">← Quay lại danh sách</button>' +
+      '<div class="art-detail">' +
+        '<h1>' + escapeHtml(a.title) + '</h1>' +
+        '<div class="art-detail-meta">' +
+          '<span>✍️ <strong>' + escapeHtml(a.authorName || 'Ẩn danh') + '</strong></span>' +
+          (date ? '<span>📅 ' + date + '</span>' : '') +
+          '<span>👁️ ' + (a.viewCount || 0) + ' lượt xem</span>' +
+          (tagsHtml ? '<span class="art-tags">' + tagsHtml + '</span>' : '') +
+        '</div>' +
+        '<div class="art-body">' + mdToHtml(a.body || '') + '</div>' +
+      '</div>' +
+      '<div class="art-actions">' +
+        (me ? '<button class="art-upvote-btn ' + (hasVoted ? 'voted' : '') + '" onclick="toggleArticleUpvote(\'' + a.id + '\')">' + (hasVoted ? '✓ Đã upvote' : '👍 Upvote') + ' (' + (a.upvoteCount || 0) + ')</button>' : '') +
+        (isAuthor ? '<button class="art-upvote-btn" onclick="openArticleEditor(\'' + a.id + '\')">✏️ Sửa</button>' : '') +
+        (isAuthor || isAdminUser ? '<button class="art-upvote-btn" style="color:var(--danger);" onclick="deleteArticle(\'' + a.id + '\')">🗑️ Xóa</button>' : '') +
+        (isAdminUser ? '<button class="art-upvote-btn" onclick="toggleArticleFeatured(\'' + a.id + '\', ' + !!a.featured + ')">' + (a.featured ? '⬇️ Bỏ Featured' : '⭐ Đặt Featured') + '</button>' : '') +
+        (isAdminUser ? '<button class="art-upvote-btn" onclick="toggleArticleHidden(\'' + a.id + '\', \'' + (a.status === 'hidden' ? 'show' : 'hide') + '\')">' + (a.status === 'hidden' ? '👁️ Hiện lại' : '🙈 Ẩn') + '</button>' : '') +
+      '</div>' +
+      renderArticleComments(a.id, me);
+    loadArticleComments(a.id);
+  } catch (e) {
+    root.innerHTML = '<div class="art-detail" style="color:var(--danger);">Lỗi: ' + escapeHtml(e.message) + '<br><br><button class="art-detail-back" onclick="closeArticleDetail()">← Quay lại</button></div>';
+  }
+}
+
+function renderArticleComments(articleId, me) {
+  return '<div class="art-comments">' +
+    '<h3 style="margin:0 0 12px 0; font-size:16px; color:var(--text);">💬 Bình luận</h3>' +
+    (me ? '<div style="margin-bottom:12px;">' +
+      '<textarea id="art-comment-input" rows="3" placeholder="Chia sẻ góc nhìn của bạn..." style="width:100%; padding:9px; border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--text); font-family:inherit; font-size:13px;"></textarea>' +
+      '<button class="art-new-btn" style="margin-top:6px;" onclick="postArticleComment(\'' + articleId + '\')">Gửi bình luận</button>' +
+    '</div>' : '<div style="color:var(--text-muted); font-size:13px; margin-bottom:12px;">Đăng nhập để bình luận.</div>') +
+    '<div id="art-comments-list">⏳ Đang tải...</div>' +
+  '</div>';
+}
+
+async function loadArticleComments(articleId) {
+  const list = document.getElementById('art-comments-list');
+  if (!list) return;
+  try {
+    const q = window.fb.query(
+      window.fb.collection(window.fb.db, FORUM_REPLIES_COLLECTION),
+      window.fb.where('topicId', '==', 'article-' + articleId)
+    );
+    const snap = await window.fb.getDocs(q);
+    const comments = [];
+    snap.forEach(d => comments.push({ id: d.id, ...d.data() }));
+    comments.sort((a, b) => (a.createdAt && a.createdAt.toMillis ? a.createdAt.toMillis() : 0) - (b.createdAt && b.createdAt.toMillis ? b.createdAt.toMillis() : 0));
+    list.innerHTML = comments.length === 0
+      ? '<div style="color:var(--text-muted); font-size:13px; padding:12px 0;">Chưa có bình luận. Hãy là người đầu tiên!</div>'
+      : comments.map(c => {
+          const date = c.createdAt && c.createdAt.toMillis ? new Date(c.createdAt.toMillis()).toLocaleString('vi-VN') : '';
+          return '<div class="art-comment">' +
+            '<div class="art-comment-meta">✍️ <strong>' + escapeHtml(c.authorName || 'Ẩn danh') + '</strong> · ' + date + '</div>' +
+            '<div class="art-comment-body">' + mdToHtml(c.body || '') + '</div>' +
+          '</div>';
+        }).join('');
+  } catch (e) {
+    list.innerHTML = '<div style="color:var(--danger); font-size:12px;">Không tải được bình luận: ' + escapeHtml(e.message) + '</div>';
+  }
+}
+
+async function postArticleComment(articleId) {
+  const me = getCurrentUserInfo();
+  if (!me) return alert('Cần đăng nhập.');
+  const ta = document.getElementById('art-comment-input');
+  const body = (ta.value || '').trim();
+  if (!body) return alert('Nhập nội dung bình luận.');
+  try {
+    await window.fb.addDoc(window.fb.collection(window.fb.db, FORUM_REPLIES_COLLECTION), {
+      topicId: 'article-' + articleId,
+      authorUid: me.uid, authorName: me.displayName || me.email.split('@')[0], authorEmail: me.email,
+      body: body, createdAt: window.fb.serverTimestamp()
+    });
+    try {
+      await window.fb.updateDoc(window.fb.doc(window.fb.db, COMMUNITY_ARTICLES_COLLECTION, articleId), {
+        commentCount: window.fb.increment(1)
+      });
+    } catch (e) {}
+    await awardPoints('article_comment', POINTS_RULES.article_comment);
+    ta.value = '';
+    loadArticleComments(articleId);
+  } catch (e) { alert('Lỗi: ' + e.message); }
+}
+
+function closeArticleDetail() {
+  _currentArticleId = null;
+  renderArticles();
+}
+
+async function toggleArticleUpvote(id) {
+  const me = getCurrentUserInfo();
+  if (!me) return alert('Cần đăng nhập để upvote.');
+  try {
+    const ref = window.fb.doc(window.fb.db, COMMUNITY_ARTICLES_COLLECTION, id);
+    const snap = await window.fb.getDoc(ref);
+    if (!snap.exists()) return;
+    const a = snap.data();
+    const upvotedBy = a.upvotedBy || [];
+    const has = upvotedBy.includes(me.uid);
+    const newList = has ? upvotedBy.filter(x => x !== me.uid) : [...upvotedBy, me.uid];
+    await window.fb.updateDoc(ref, { upvotedBy: newList, upvoteCount: newList.length });
+    if (!has && a.authorUid && a.authorUid !== me.uid) {
+      await awardPointsToUser(a.authorUid, a.authorEmail, a.authorName, 'article_upvote_received', POINTS_RULES.article_upvote_received);
+    }
+    renderArticleDetail(id);
+  } catch (e) { alert('Lỗi upvote: ' + e.message); }
+}
+
+async function toggleArticleFeatured(id, currentlyFeatured) {
+  const me = getCurrentUserInfo();
+  if (!me || !isAdmin(me.email)) return alert('Chỉ admin được Feature.');
+  try {
+    await window.fb.updateDoc(window.fb.doc(window.fb.db, COMMUNITY_ARTICLES_COLLECTION, id), {
+      featured: !currentlyFeatured
+    });
+    renderArticleDetail(id);
+  } catch (e) { alert('Lỗi: ' + e.message); }
+}
+
+async function toggleArticleHidden(id, action) {
+  const me = getCurrentUserInfo();
+  if (!me || !isAdmin(me.email)) return alert('Chỉ admin được ẩn bài.');
+  try {
+    await window.fb.updateDoc(window.fb.doc(window.fb.db, COMMUNITY_ARTICLES_COLLECTION, id), {
+      status: action === 'hide' ? 'hidden' : 'published'
+    });
+    renderArticleDetail(id);
+  } catch (e) { alert('Lỗi: ' + e.message); }
+}
+
+async function deleteArticle(id) {
+  const me = getCurrentUserInfo();
+  if (!me) return;
+  if (!confirm('Xóa bài viết này? Không thể hoàn tác.')) return;
+  try {
+    await window.fb.deleteDoc(window.fb.doc(window.fb.db, COMMUNITY_ARTICLES_COLLECTION, id));
+    closeArticleDetail();
+  } catch (e) { alert('Lỗi xóa: ' + e.message); }
+}
+
+let _editingArticle = { id: null, title: '', summary: '', body: '', tags: [] };
+
+async function openArticleEditor(id) {
+  const me = getCurrentUserInfo();
+  if (!me) return alert('Cần đăng nhập để viết bài.');
+  _articleEditorTab = 'markdown';
+  if (id) {
+    try {
+      const snap = await window.fb.getDoc(window.fb.doc(window.fb.db, COMMUNITY_ARTICLES_COLLECTION, id));
+      if (snap.exists()) {
+        const a = snap.data();
+        _editingArticle = { id, title: a.title || '', summary: a.summary || '', body: a.body || '', tags: a.tags || [] };
+      }
+    } catch (e) { alert('Không tải được bài: ' + e.message); return; }
+  } else {
+    _editingArticle = { id: null, title: '', summary: '', body: '', tags: [] };
+  }
+  renderArticleEditor();
+}
+
+function renderArticleEditor() {
+  const root = document.getElementById('community-content');
+  if (!root) return;
+  const a = _editingArticle;
+  root.innerHTML = '<div class="art-editor">' +
+    '<h2>' + (a.id ? '✏️ Sửa bài viết' : '✍️ Viết bài mới') + '</h2>' +
+    '<label>Tiêu đề</label>' +
+    '<input type="text" id="art-edit-title" placeholder="VD: Cách config FEFO cho ngành thực phẩm trong BC" value="' + escapeHtml(a.title) + '"/>' +
+    '<label>Tóm tắt (2-3 câu — hiển thị ở list)</label>' +
+    '<textarea id="art-edit-summary" rows="2" placeholder="Tóm tắt ngắn giúp người đọc nắm ý chính...">' + escapeHtml(a.summary) + '</textarea>' +
+    '<label>Tags (chọn 1-4 tag phù hợp)</label>' +
+    '<div class="art-tag-chips" style="margin-bottom:12px;">' +
+      ARTICLE_TAGS.map(t => {
+        const sel = a.tags.includes(t.key);
+        return '<button class="art-tag-chip ' + (sel ? 'active' : '') + '" onclick="toggleEditTag(\'' + t.key + '\')">' + (sel ? '✓ ' : '') + escapeHtml(t.label) + '</button>';
+      }).join('') +
+    '</div>' +
+    '<label>Nội dung</label>' +
+    '<div class="art-editor-tabs">' +
+      '<button class="art-editor-tab ' + (_articleEditorTab === 'markdown' ? 'active' : '') + '" onclick="switchEditorTab(\'markdown\')">📝 Markdown</button>' +
+      '<button class="art-editor-tab ' + (_articleEditorTab === 'preview' ? 'active' : '') + '" onclick="switchEditorTab(\'preview\')">👁️ Preview</button>' +
+      '<button class="art-editor-tab ' + (_articleEditorTab === 'visual' ? 'active' : '') + '" onclick="switchEditorTab(\'visual\')">🎨 Visual</button>' +
+    '</div>' +
+    '<div class="art-editor-body" id="art-editor-body">' +
+      buildEditorPane() +
+    '</div>' +
+    '<div class="art-editor-actions">' +
+      '<button class="art-new-btn" onclick="saveArticle()">' + (a.id ? '💾 Lưu thay đổi' : '🚀 Đăng bài') + '</button>' +
+      '<button class="art-upvote-btn" onclick="closeArticleEditor()">Hủy</button>' +
+    '</div>' +
+  '</div>';
+}
+
+function buildEditorPane() {
+  const a = _editingArticle;
+  if (_articleEditorTab === 'markdown') {
+    return '<textarea class="art-md-input" id="art-edit-body" oninput="_editingArticle.body=this.value" placeholder="# Tiêu đề lớn&#10;## Tiêu đề phụ&#10;&#10;Đoạn văn bình thường. **Bold**, *italic*, [link](https://...), `code inline`.&#10;&#10;- List item 1&#10;- List item 2&#10;&#10;```&#10;Code block&#10;```&#10;&#10;&gt; Trích dẫn">' + escapeHtml(a.body) + '</textarea>' +
+      '<div style="font-size:11px; color:var(--text-muted); margin-top:6px;">Hỗ trợ Markdown: # H1-H6 · **bold** · *italic* · [link](url) · ![alt](img) · `code` · ```block``` · &gt; quote · - list · 1. ordered · --- hr</div>';
+  } else if (_articleEditorTab === 'preview') {
+    return '<div class="art-preview art-body">' + (mdToHtml(a.body) || '<em style="color:var(--text-muted);">Chưa có nội dung. Chuyển sang tab Markdown hoặc Visual để soạn.</em>') + '</div>';
+  } else {
+    return '<div class="art-visual-toolbar">' +
+      '<button onclick="vCmd(\'bold\')" title="Bold"><b>B</b></button>' +
+      '<button onclick="vCmd(\'italic\')" title="Italic"><i>I</i></button>' +
+      '<button onclick="vCmd(\'underline\')" title="Underline"><u>U</u></button>' +
+      '<button onclick="vCmd(\'formatBlock\',\'H2\')">H2</button>' +
+      '<button onclick="vCmd(\'formatBlock\',\'H3\')">H3</button>' +
+      '<button onclick="vCmd(\'formatBlock\',\'P\')">P</button>' +
+      '<button onclick="vCmd(\'insertUnorderedList\')">• List</button>' +
+      '<button onclick="vCmd(\'insertOrderedList\')">1. List</button>' +
+      '<button onclick="vCmd(\'formatBlock\',\'BLOCKQUOTE\')">❝ Quote</button>' +
+      '<button onclick="vInsertLink()">🔗 Link</button>' +
+      '<button onclick="vInsertImage()">🖼️ Image</button>' +
+      '<button onclick="vInsertCode()">&lt;/&gt; Code</button>' +
+    '</div>' +
+    '<div class="art-visual-area art-body" id="art-visual-area" contenteditable="true" oninput="syncVisualToBody()">' + mdToHtml(a.body) + '</div>';
+  }
+}
+
+function switchEditorTab(name) {
+  if (_articleEditorTab === 'markdown') {
+    const ta = document.getElementById('art-edit-body');
+    if (ta) _editingArticle.body = ta.value;
+  } else if (_articleEditorTab === 'visual') {
+    syncVisualToBody();
+  }
+  _articleEditorTab = name;
+  const body = document.getElementById('art-editor-body');
+  if (body) body.innerHTML = buildEditorPane();
+  document.querySelectorAll('.art-editor-tab').forEach(b => b.classList.remove('active'));
+  const idx = ['markdown', 'preview', 'visual'].indexOf(name);
+  const btns = document.querySelectorAll('.art-editor-tab');
+  if (btns[idx]) btns[idx].classList.add('active');
+}
+
+function syncVisualToBody() {
+  const area = document.getElementById('art-visual-area');
+  if (!area) return;
+  _editingArticle.body = htmlToMd(area.innerHTML);
+}
+
+function htmlToMd(html) {
+  let md = html;
+  md = md.replace(/<h1[^>]*>([\s\S]*?)<\/h1>/gi, '\n# $1\n');
+  md = md.replace(/<h2[^>]*>([\s\S]*?)<\/h2>/gi, '\n## $1\n');
+  md = md.replace(/<h3[^>]*>([\s\S]*?)<\/h3>/gi, '\n### $1\n');
+  md = md.replace(/<h4[^>]*>([\s\S]*?)<\/h4>/gi, '\n#### $1\n');
+  md = md.replace(/<(strong|b)>([\s\S]*?)<\/(strong|b)>/gi, '**$2**');
+  md = md.replace(/<(em|i)>([\s\S]*?)<\/(em|i)>/gi, '*$2*');
+  md = md.replace(/<u>([\s\S]*?)<\/u>/gi, '$1');
+  md = md.replace(/<blockquote[^>]*>([\s\S]*?)<\/blockquote>/gi, (m, c) => '\n> ' + c.replace(/\n/g, '\n> ') + '\n');
+  md = md.replace(/<a [^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi, '[$2]($1)');
+  md = md.replace(/<img [^>]*src="([^"]+)"[^>]*alt="([^"]*)"[^>]*\/?>/gi, '![$2]($1)');
+  md = md.replace(/<img [^>]*src="([^"]+)"[^>]*\/?>/gi, '![]($1)');
+  md = md.replace(/<pre[^>]*><code[^>]*>([\s\S]*?)<\/code><\/pre>/gi, '\n```\n$1\n```\n');
+  md = md.replace(/<code[^>]*>([\s\S]*?)<\/code>/gi, '`$1`');
+  md = md.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, '- $1\n');
+  md = md.replace(/<(ul|ol)[^>]*>/gi, '\n');
+  md = md.replace(/<\/(ul|ol)>/gi, '\n');
+  md = md.replace(/<p[^>]*>([\s\S]*?)<\/p>/gi, '\n$1\n');
+  md = md.replace(/<br\s*\/?>/gi, '\n');
+  md = md.replace(/<hr\s*\/?>/gi, '\n---\n');
+  md = md.replace(/<[^>]+>/g, '');
+  md = md.replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
+  return md.replace(/\n{3,}/g, '\n\n').trim();
+}
+
+function vCmd(cmd, val) { document.execCommand(cmd, false, val || null); syncVisualToBody(); }
+function vInsertLink() { const url = prompt('Nhập URL:', 'https://'); if (url) vCmd('createLink', url); }
+function vInsertImage() { const url = prompt('Nhập URL hình ảnh:', 'https://'); if (url) vCmd('insertImage', url); }
+function vInsertCode() {
+  const sel = window.getSelection();
+  if (sel && sel.toString()) document.execCommand('insertHTML', false, '<code>' + sel.toString() + '</code>');
+  else document.execCommand('insertHTML', false, '<pre><code>// code block\n</code></pre>');
+  syncVisualToBody();
+}
+
+function toggleEditTag(key) {
+  const idx = _editingArticle.tags.indexOf(key);
+  if (idx >= 0) _editingArticle.tags.splice(idx, 1);
+  else if (_editingArticle.tags.length < 4) _editingArticle.tags.push(key);
+  else { alert('Tối đa 4 tag.'); return; }
+  renderArticleEditor();
+}
+
+async function saveArticle() {
+  const me = getCurrentUserInfo();
+  if (!me) return alert('Cần đăng nhập.');
+  if (_articleEditorTab === 'markdown') {
+    const ta = document.getElementById('art-edit-body');
+    if (ta) _editingArticle.body = ta.value;
+  } else if (_articleEditorTab === 'visual') {
+    syncVisualToBody();
+  }
+  const title = (document.getElementById('art-edit-title').value || '').trim();
+  const summary = (document.getElementById('art-edit-summary').value || '').trim();
+  const body = (_editingArticle.body || '').trim();
+  if (!title) return alert('Nhập tiêu đề.');
+  if (!body || body.length < 50) return alert('Nội dung quá ngắn (tối thiểu 50 ký tự).');
+  if (_editingArticle.tags.length === 0) return alert('Chọn ít nhất 1 tag.');
+
+  const data = {
+    title, summary, body,
+    tags: _editingArticle.tags,
+    authorUid: me.uid,
+    authorName: me.displayName || me.email.split('@')[0],
+    authorEmail: me.email,
+    updatedAt: window.fb.serverTimestamp(),
+    status: 'published'
+  };
+
+  try {
+    if (_editingArticle.id) {
+      await window.fb.updateDoc(window.fb.doc(window.fb.db, COMMUNITY_ARTICLES_COLLECTION, _editingArticle.id), data);
+      alert('✓ Đã lưu thay đổi.');
+      _currentArticleId = _editingArticle.id;
+      renderArticleDetail(_editingArticle.id);
+    } else {
+      data.createdAt = window.fb.serverTimestamp();
+      data.viewCount = 0;
+      data.upvoteCount = 0;
+      data.upvotedBy = [];
+      data.commentCount = 0;
+      data.featured = false;
+      const ref = await window.fb.addDoc(window.fb.collection(window.fb.db, COMMUNITY_ARTICLES_COLLECTION), data);
+      await awardPoints('article_post', POINTS_RULES.article_post);
+      alert('🚀 Đã đăng bài! +' + POINTS_RULES.article_post + ' điểm.');
+      _currentArticleId = ref.id;
+      renderArticleDetail(ref.id);
+    }
+  } catch (e) { alert('Lỗi lưu: ' + e.message); }
+}
+
+function closeArticleEditor() {
+  if (_currentArticleId) renderArticleDetail(_currentArticleId);
+  else { _currentArticleId = null; renderArticles(); }
 }
 
 // ============ MEMBER POINTS ============
