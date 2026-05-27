@@ -5587,10 +5587,11 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
 
 // ============ APP VERSION (kiểm soát thay đổi) ============
 const APP_VERSION = {
-  num: 'v3.13.0',
+  num: 'v3.13.1',
   date: '2026-05-27',
   notes: [
-    '🔗 NÂNG CẤP: Nút Chia sẻ giờ mở MODAL với 8 kênh + Copy link: Facebook · Zalo · Microsoft Teams · X/Twitter · LinkedIn · Telegram · WhatsApp · Email. Mobile vẫn có nút "Mở menu chia sẻ HĐH" dùng Web Share API native.',
+    '🐛 FIX NẶNG: Nút Share KHÔNG hoạt động — do dùng JSON.stringify(title) trong onclick attribute, dấu " trong JSON xung đột HTML attribute. Đã escape thành &quot;. Giờ click 🔗 hiện modal đầy đủ.',
+    '🔗 Nâng cấp Modal Chia sẻ: 8 kênh + Copy link: Facebook · Zalo · Microsoft Teams · X/Twitter · LinkedIn · Telegram · WhatsApp · Email. Mobile vẫn có nút "Mở menu chia sẻ HĐH" dùng Web Share API native.',
     '📋 Copy link là nút primary to ở trên, các kênh khác xếp grid 4 cột dạng icon + tên — tap vào mở thẳng share page của từng nền tảng.',
     '🐛 FIX: User menu trong guest mode giờ hiển thị "🔑 Đăng nhập" + "✨ Đăng ký mới" (trước đây vẫn show "Đăng xuất" sai logic). CSS toggle qua class body.guest-mode.',
     '🔓 Admin → "Quyền Guest" — checkbox cấu hình tab nào guest xem được, lưu vào Firestore settings/guest_access. Click 1 phát save áp dụng toàn hệ thống.',
@@ -6352,7 +6353,7 @@ function showShareModal(url, title) {
       '</div>' +
 
       // Native share (mobile)
-      (navigator.share ? '<button onclick="nativeShare(' + JSON.stringify(url) + ',' + JSON.stringify(title) + ')" style="width:100%; margin-top:12px; padding:10px; background:transparent; color:var(--primary); border:1.5px dashed var(--primary); border-radius:8px; cursor:pointer; font-weight:600; font-size:13px;">📤 Mở menu chia sẻ của hệ điều hành...</button>' : '') +
+      (navigator.share ? '<button onclick="nativeShare(' + JSON.stringify(url).replace(/"/g, '&quot;') + ',' + JSON.stringify(title).replace(/"/g, '&quot;') + ')" style="width:100%; margin-top:12px; padding:10px; background:transparent; color:var(--primary); border:1.5px dashed var(--primary); border-radius:8px; cursor:pointer; font-weight:600; font-size:13px;">📤 Mở menu chia sẻ của hệ điều hành...</button>' : '') +
     '</div>';
   modal.style.display = 'flex';
 }
@@ -15468,7 +15469,7 @@ function renderArticleCard(a, isAdminUser) {
   const date = a.createdAt && a.createdAt.toMillis ? new Date(a.createdAt.toMillis()).toLocaleDateString('vi-VN') : '';
   return '<div class="art-card ' + (a.featured ? 'featured ' : '') + (a.status === 'hidden' ? 'hidden' : '') + '" onclick="openArticleDetail(\'' + a.id + '\')">' +
     (a.featured ? '<div class="art-featured-badge">⭐ FEATURED</div>' : '') +
-    '<button onclick="event.stopPropagation(); shareLink(\'article\', \'' + a.id + '\', ' + JSON.stringify(a.title || '') + ')" title="Chia sẻ" style="position:absolute; top:10px; right:10px; background:transparent; border:none; cursor:pointer; font-size:15px; padding:4px 8px; border-radius:4px; color:var(--text-muted);" onmouseover="this.style.background=\'var(--sidebar-hover)\'; this.style.color=\'var(--primary)\'" onmouseout="this.style.background=\'transparent\'; this.style.color=\'var(--text-muted)\'">🔗</button>' +
+    '<button onclick="event.stopPropagation(); shareLink(\'article\', \'' + a.id + '\', ' + JSON.stringify(a.title || '').replace(/"/g, '&quot;') + ')" title="Chia sẻ" style="position:absolute; top:10px; right:10px; background:transparent; border:none; cursor:pointer; font-size:15px; padding:4px 8px; border-radius:4px; color:var(--text-muted);" onmouseover="this.style.background=\'var(--sidebar-hover)\'; this.style.color=\'var(--primary)\'" onmouseout="this.style.background=\'transparent\'; this.style.color=\'var(--text-muted)\'">🔗</button>' +
     '<h3 style="padding-right:32px;">' + escapeHtml(a.title || '(không tiêu đề)') + (a.status === 'hidden' ? ' <span style="font-size:11px; color:var(--danger);">[ẨN]</span>' : '') + '</h3>' +
     (a.summary ? '<p class="art-summary">' + escapeHtml(a.summary) + '</p>' : '') +
     '<div class="art-meta">' +
@@ -15527,7 +15528,7 @@ async function renderArticleDetail(id) {
         '<div class="art-body">' + mdToHtml(a.body || '') + '</div>' +
       '</div>' +
       '<div class="art-actions">' +
-        '<button class="art-upvote-btn" onclick="shareLink(\'article\', \'' + a.id + '\', ' + JSON.stringify(a.title || '') + ')">🔗 Chia sẻ</button>' +
+        '<button class="art-upvote-btn" onclick="shareLink(\'article\', \'' + a.id + '\', ' + JSON.stringify(a.title || '').replace(/"/g, '&quot;') + ')">🔗 Chia sẻ</button>' +
         '<button class="art-upvote-btn ' + (hasVoted ? 'voted' : '') + '" onclick="' + (window._isGuest ? 'requireLogin(\'Đăng nhập để upvote bài viết.\')' : ('toggleArticleUpvote(\'' + a.id + '\')')) + '">' + (hasVoted ? '✓ Đã upvote' : '👍 Upvote') + ' (' + (a.upvoteCount || 0) + ')</button>' +
         (isAuthor ? '<button class="art-upvote-btn" onclick="openArticleEditor(\'' + a.id + '\')">✏️ Sửa</button>' : '') +
         (isAuthor || isAdminUser ? '<button class="art-upvote-btn" style="color:var(--danger);" onclick="deleteArticle(\'' + a.id + '\')">🗑️ Xóa</button>' : '') +
