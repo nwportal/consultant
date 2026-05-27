@@ -1178,6 +1178,120 @@
   }
 
   /* Level Assessment */
+
+  /* === ROADMAP JOURNEY (Junior → Principal) === */
+  .roadmap-journey {
+    position: relative;
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 32px 24px 28px;
+    margin-bottom: 18px;
+    overflow: hidden;
+  }
+  .roadmap-journey::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, #94A3B8 0%, #2E5C9E 33%, #16A34A 66%, #7C3AED 100%);
+  }
+  .roadmap-title {
+    font-size: 18px; font-weight: 800; color: var(--primary);
+    text-align: center; margin: 0 0 6px 0; letter-spacing: 0.3px;
+  }
+  .roadmap-subtitle {
+    font-size: 12.5px; color: var(--text-muted); text-align: center;
+    margin: 0 0 24px 0;
+  }
+  .roadmap-svg-wrap {
+    position: relative; width: 100%; overflow-x: auto; padding-bottom: 4px;
+  }
+  .roadmap-svg-wrap svg {
+    display: block; width: 100%; min-width: 720px; height: auto;
+  }
+  .roadmap-stages {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 10px; margin-top: 14px; min-width: 720px;
+  }
+  .roadmap-stage {
+    text-align: center;
+    background: #FFFFFF;
+    border: 2px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 14px 10px 12px;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    position: relative;
+  }
+  .roadmap-stage:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,0.08); }
+  .roadmap-stage.achieved { border-color: #16A34A; background: linear-gradient(180deg, #F0FDF4 0%, #FFFFFF 100%); }
+  .roadmap-stage.current {
+    border-color: var(--primary); border-width: 3px;
+    background: linear-gradient(180deg, #EFF6FF 0%, #FFFFFF 100%);
+    box-shadow: 0 0 0 4px rgba(46,92,158,0.15), 0 8px 22px rgba(46,92,158,0.18);
+  }
+  .roadmap-stage.future { opacity: 0.55; }
+  .roadmap-stage .rs-check {
+    position: absolute; top: -10px; right: -10px;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: #16A34A; color: #FFF; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; box-shadow: 0 3px 8px rgba(22,163,74,0.4);
+  }
+  .roadmap-stage .rs-now {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--primary); color: #FFF;
+    padding: 3px 10px; border-radius: 10px;
+    font-size: 10px; font-weight: 800; letter-spacing: 0.8px;
+    text-transform: uppercase; white-space: nowrap;
+    box-shadow: 0 3px 8px rgba(46,92,158,0.35);
+    animation: rs-pulse 2s ease-in-out infinite;
+  }
+  @keyframes rs-pulse {
+    0%, 100% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.08); }
+  }
+  .roadmap-stage .rs-icon { font-size: 32px; line-height: 1; margin-bottom: 6px; }
+  .roadmap-stage .rs-level {
+    font-size: 10px; font-weight: 700; color: var(--text-muted);
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px;
+  }
+  .roadmap-stage .rs-name {
+    font-size: 15px; font-weight: 800; color: var(--text);
+    line-height: 1.25; margin-bottom: 4px;
+  }
+  .roadmap-stage.current .rs-name { color: var(--primary); }
+  .roadmap-stage.achieved .rs-name { color: #15803D; }
+  .roadmap-stage .rs-years {
+    font-size: 11px; font-weight: 700; color: var(--primary);
+    background: rgba(46,92,158,0.08); padding: 2px 8px; border-radius: 8px;
+    display: inline-block; margin-bottom: 8px;
+  }
+  .roadmap-stage.achieved .rs-years { background: rgba(22,163,74,0.10); color: #15803D; }
+  .roadmap-stage .rs-role {
+    font-size: 11.5px; line-height: 1.45; color: var(--text-muted);
+    text-align: left; min-height: 50px;
+  }
+  .roadmap-progress-strip {
+    margin-top: 18px; padding: 12px 16px;
+    background: linear-gradient(90deg, rgba(46,92,158,0.06) 0%, rgba(46,92,158,0.02) 100%);
+    border-left: 4px solid var(--primary);
+    border-radius: 8px;
+    font-size: 13px; color: var(--text);
+  }
+  .roadmap-progress-strip strong { color: var(--primary); }
+  .roadmap-progress-strip .rps-bar {
+    height: 8px; background: #E2E8F0; border-radius: 4px;
+    margin-top: 8px; overflow: hidden;
+  }
+  .roadmap-progress-strip .rps-fill {
+    height: 100%; background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+    border-radius: 4px; transition: width 0.6s ease;
+  }
+  @media (max-width: 768px) {
+    .roadmap-journey { padding: 22px 14px 18px; }
+    .roadmap-stage .rs-role { font-size: 11px; min-height: 70px; }
+    .roadmap-stage .rs-icon { font-size: 28px; }
+    .roadmap-stage .rs-name { font-size: 13.5px; }
+  }
+
   .level-hero {
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
     color: white; border-radius: 14px; padding: 24px; margin-bottom: 16px;
@@ -2291,7 +2405,7 @@
     <button class="menu-trigger" data-group="learning"><span class="label-icon">📚</span><span class="label-text">Học tập</span> <span class="chev">▼</span></button>
     <div class="menu-dropdown">
       <button class="menu-item tab-btn" data-tab="roadmap"><span class="icon">🗺️</span><span>Lộ trình học</span></button>
-      <button class="menu-item tab-btn active" data-tab="quiz"><span class="icon">📝</span><span>Trắc nghiệm</span></button>
+      <button class="menu-item tab-btn" data-tab="quiz"><span class="icon">📝</span><span>Trắc nghiệm</span></button>
       <button class="menu-item tab-btn" data-tab="srs"><span class="icon">🔁</span><span>Ôn tập SRS</span><span id="srs-badge" class="badge" style="display:none;"></span></button>
       <button class="menu-item tab-btn" data-tab="mock"><span class="icon">🎯</span><span>Thi thử (Self-test)</span></button>
       <button class="menu-item tab-btn" data-tab="cert"><span class="icon">📜</span><span>Cert Exam (chính thức)</span></button>
@@ -2319,7 +2433,7 @@
     <div class="menu-dropdown">
       <button class="menu-item tab-btn" data-tab="bookmarks"><span class="icon">📌</span><span>Bookmarks</span></button>
       <button class="menu-item tab-btn" data-tab="stats"><span class="icon">📊</span><span>Tiến độ</span></button>
-      <button class="menu-item tab-btn" data-tab="level"><span class="icon">🎓</span><span>Cấp độ Consultant</span></button>
+      <button class="menu-item tab-btn active" data-tab="level"><span class="icon">🎓</span><span>Cấp độ Consultant</span></button>
       <button class="menu-item tab-btn" data-tab="competency"><span class="icon">🎯</span><span>Khung Năng lực</span></button>
     </div>
   </div>
@@ -2354,7 +2468,7 @@
 
 <main>
   <div id="roadmap" class="panel"></div>
-  <div id="quiz" class="panel active"></div>
+  <div id="quiz" class="panel"></div>
   <div id="srs" class="panel"></div>
   <div id="mock" class="panel"></div>
   <div id="cert" class="panel"></div>
@@ -2370,7 +2484,7 @@
   <div id="library" class="panel"></div>
   <div id="community" class="panel"></div>
   <div id="competency" class="panel"></div>
-  <div id="level" class="panel"></div>
+  <div id="level" class="panel active"></div>
   <div id="glossary" class="panel"></div>
   <div id="bookmarks" class="panel"></div>
   <div id="leaderboard" class="panel"></div>
@@ -5065,6 +5179,8 @@ const APP_VERSION = {
   num: 'v3.6.0',
   date: '2026-05-27',
   notes: [
+    '🗺️ MỚI: Trang mặc định = "Cấp độ Consultant" với bản đồ Roadmap horizontal — 4 chặng Junior→Mid→Senior→Principal, vị trí hiện tại pulse animation, job role + dải năm KN từng cấp',
+    '🗺️ Roadmap SVG: đường cong nối 4 milestone, chặng đã đạt màu xanh ✓, chặng hiện tại highlight, chặng tương lai mờ',
     '🔐 MỚI: Phân quyền Admin động — Super-Admin có thể cấp/gỡ quyền admin cho user trực tiếp từ trang quản trị (nút ⬆️ Cấp admin / ⬇️ Gỡ admin trong bảng Users)',
     '🔐 Badge phân biệt: Super-Admin (hardcoded, không gỡ được) vs Admin (cấp động, lưu Firestore field users/{uid}.role)',
     '🔐 Bảo mật: chỉ super-admin được phép cấp quyền; cần cập nhật Firestore Security Rules (xem hướng dẫn)',
@@ -5216,6 +5332,8 @@ async function initApp() {
   // Mark current active tab in menu groups
   const activeBtn = document.querySelector('.tab-btn.active');
   if (activeBtn) updateMenuActiveStates(activeBtn.dataset.tab);
+  // Default landing tab = "level" (Cấp độ Consultant). Render roadmap + level assessment.
+  try { renderLevelAssessment(); } catch (e) { console.warn('renderLevelAssessment failed:', e); }
 }
 
 async function handleAuthStateChange(user) {
@@ -15783,12 +15901,101 @@ function drawRadarChart(canvas, competencies) {
   }
 }
 
+// Job responsibilities for each consultant level (used in roadmap)
+const LEVEL_ROLES = {
+  1: 'Hỗ trợ senior, làm config cơ bản, demo module đơn giản, viết user manual, training cấp 1.',
+  2: 'Tự lead 1 module (Sales/Purchase/Inventory), design fit-gap, troubleshoot bug, mentor junior, viết FDD.',
+  3: 'Lead multi-module project, cross-industry, design solution architecture, mentor team, presales support.',
+  4: 'Define methodology, lead complex multi-industry projects, pre-sales strategy, mentor senior team, owner framework.'
+};
+
+function buildRoadmapJourney(currentLevel, nextLevelResult) {
+  // Build horizontal journey: Junior → Mid → Senior → Principal
+  // Active stage = currentLevel; achieved = < currentLevel; future = > currentLevel
+  const stages = CONSULTANT_LEVELS.map(lvl => {
+    let status = 'future';
+    if (currentLevel > lvl.level) status = 'achieved';
+    else if (currentLevel === lvl.level) status = 'current';
+    return { ...lvl, status, role: LEVEL_ROLES[lvl.level] || '' };
+  });
+
+  // SVG path connecting 4 stage points (horizontal journey curve)
+  // 4 points at x = 90, 330, 570, 810 (out of 900 viewBox width), y = 50
+  const svg = '<svg viewBox="0 0 900 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' +
+    // Background dashed track
+    '<path d="M 90 50 Q 210 20, 330 50 T 570 50 T 810 50" stroke="#E2E8F0" stroke-width="4" fill="none" stroke-dasharray="6,6"/>' +
+    // Achieved path (solid, gradient green)
+    (currentLevel >= 1 ? buildJourneySegment(1, currentLevel) : '') +
+    // 4 stage milestones
+    stages.map((s, i) => {
+      const cx = 90 + i * 240;
+      const fill = s.status === 'achieved' ? '#16A34A' : (s.status === 'current' ? '#2E5C9E' : '#CBD5E1');
+      const ring = s.status === 'current' ? '<circle cx="' + cx + '" cy="50" r="22" fill="none" stroke="#2E5C9E" stroke-width="2" opacity="0.35"><animate attributeName="r" values="22;30;22" dur="1.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.35;0;0.35" dur="1.8s" repeatCount="indefinite"/></circle>' : '';
+      return ring +
+        '<circle cx="' + cx + '" cy="50" r="16" fill="' + fill + '" stroke="#FFF" stroke-width="3"/>' +
+        '<text x="' + cx + '" y="56" text-anchor="middle" font-size="16" fill="#FFF" font-weight="700">' + s.level + '</text>';
+    }).join('') +
+    '</svg>';
+
+  const stageCards = stages.map(s => {
+    const checkOrNow = s.status === 'achieved' ? '<div class="rs-check">✓</div>'
+      : s.status === 'current' ? '<div class="rs-now">Bạn ở đây</div>' : '';
+    return '<div class="roadmap-stage ' + s.status + '">' +
+      checkOrNow +
+      '<div class="rs-icon">' + s.icon + '</div>' +
+      '<div class="rs-level">Level ' + s.level + '</div>' +
+      '<div class="rs-name">' + escapeHtml(s.name.replace(' Consultant', '')) + '</div>' +
+      '<div class="rs-years">' + s.range + '</div>' +
+      '<div class="rs-role">' + escapeHtml(s.role) + '</div>' +
+    '</div>';
+  }).join('');
+
+  // Progress strip to next level
+  let progressStrip = '';
+  if (nextLevelResult) {
+    const satisfied = nextLevelResult.evals.filter(e => e.satisfied).length;
+    const total = nextLevelResult.evals.length;
+    const pct = Math.round((satisfied / total) * 100);
+    progressStrip = '<div class="roadmap-progress-strip">' +
+      '⏳ Tiến độ lên <strong>' + nextLevelResult.level.icon + ' ' + escapeHtml(nextLevelResult.level.name) + '</strong>: đạt <strong>' + satisfied + '/' + total + '</strong> yêu cầu (' + pct + '%)' +
+      '<div class="rps-bar"><div class="rps-fill" style="width:' + pct + '%;"></div></div>' +
+    '</div>';
+  } else if (currentLevel >= 4) {
+    progressStrip = '<div class="roadmap-progress-strip">👑 <strong>Bạn đã đạt mức cao nhất — Principal Consultant.</strong> Tiếp tục đóng góp lại community: viết blog, mentor junior, speak at meetup.</div>';
+  } else {
+    progressStrip = '<div class="roadmap-progress-strip">🚀 Bắt đầu hành trình — làm bài để đạt <strong>Level 1 Junior Consultant</strong>.</div>';
+  }
+
+  return '<div class="roadmap-journey">' +
+    '<h3 class="roadmap-title">🗺️ Hành trình Consultant — từ Junior đến Principal</h3>' +
+    '<div class="roadmap-subtitle">4 chặng phát triển sự nghiệp tư vấn ERP. Vị trí hiện tại của bạn được đánh dấu.</div>' +
+    '<div class="roadmap-svg-wrap">' + svg + '</div>' +
+    '<div class="roadmap-stages">' + stageCards + '</div>' +
+    progressStrip +
+  '</div>';
+}
+
+function buildJourneySegment(fromLvl, toLvl) {
+  // Draw solid green segment from level 1 up to currentLevel
+  // Each segment between level N and N+1
+  const segments = [];
+  for (let i = fromLvl; i < toLvl && i < 4; i++) {
+    const x1 = 90 + (i - 1) * 240;
+    const x2 = 90 + i * 240;
+    const cx = (x1 + x2) / 2;
+    const cy = i % 2 === 1 ? 20 : 80; // alternating curve
+    segments.push('<path d="M ' + x1 + ' 50 Q ' + cx + ' ' + cy + ', ' + x2 + ' 50" stroke="#16A34A" stroke-width="5" fill="none" stroke-linecap="round"/>');
+  }
+  return segments.join('');
+}
+
 function renderLevelAssessment() {
   const panel = document.getElementById('level');
   const result = assessLevel();
   const { currentLevel, levelResults, nextLevelResult, ctx, specialty } = result;
   const currentLvlInfo = currentLevel > 0 ? CONSULTANT_LEVELS[currentLevel - 1] : null;
   panel.innerHTML = '' +
+    buildRoadmapJourney(currentLevel, nextLevelResult) +
     '<div class="level-hero lvl-' + currentLevel + '">' +
       (currentLvlInfo
         ? '<div class="level-badge">' + currentLvlInfo.icon + ' CẤP ĐỘ HIỆN TẠI</div>' +
